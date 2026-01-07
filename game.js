@@ -2,9 +2,10 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebas
 import { getDatabase, ref, set, onValue, get, child, update} from "https://www.gstatic.com/firebasejs/12.7.0/firebase-database.js";
 import { correctList } from "./keywords.js";
 import { firebaseConfig } from "./config.js";
-import { Chat, pickRandom, shuffleStrings } from "./modules.js";
+import { Chat, pickRandom, shuffleStrings, Alert } from "./modules.js";
 
-const { chatStart, chatClear, addChatMessage, chatClose } = Chat(onSendClick);
+const { chatStart, chatClear, addChatMessage, chatClose } = Chat(sendClick);
+const { showAlert } = Alert(closeClick);
 
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
@@ -620,15 +621,6 @@ function stopTimer() {
   timerField.innerText = "";
 }
 
-const closealertField = document.getElementById("close-alert");
-
-closealertField.addEventListener("click",()=>{
-  if(restart){
-    location.reload();
-  }
-  closeAlert();
-});
-
 sespectInputField.addEventListener("click",sendSusepct);
 
 function sendSusepct(){
@@ -641,26 +633,6 @@ function sendSusepct(){
   }
 
   updateData(result);
-}
-
-function showAlert(title, message) {
-  if(checkShowAlert()){
-    document.getElementById('alertTitle').innerText = title;
-    document.getElementById('alertMessage').innerText = message;
-    return;
-  }
-
-  document.getElementById('alertTitle').innerText = title;
-  document.getElementById('alertMessage').innerText = message;
-  document.getElementById('customAlert').style.display = 'flex';
-}
-
-function checkShowAlert(){
-  return document.getElementById('customAlert').style.display === 'flex';
-}
-
-function closeAlert() {
-  document.getElementById('customAlert').style.display = 'none';
 }
 
 function reloadEvent(){
@@ -680,7 +652,7 @@ function outGameEvent(e){
   }
 }
 
-function onSendClick(msg){
+function sendClick(msg){
   if (msg) {
     let result = {};
 
@@ -696,5 +668,11 @@ function onSendClick(msg){
     result[chatHistoryKey] = chatHistory;
 
     updateData(result, chatDataKey);
+  }
+}
+
+function closeClick(){
+  if(restart){
+    location.reload();
   }
 }

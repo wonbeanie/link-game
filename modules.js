@@ -1,4 +1,4 @@
-export function Chat(onSendClick){
+export function Chat(onSendClick = ()=>{}){
   const chatInput = document.getElementById('chat-input');
   const chatSend = document.getElementById('chat-send');
   const chatWindow = document.getElementById('chat-window');
@@ -66,4 +66,43 @@ export function shuffleStrings(array) {
 export function pickRandom(array) {
   if (array.length === 0) return null;
   return array[Math.floor(Math.random() * array.length)];
+}
+
+
+export function Alert(closeClick = ()=>{}){
+  const titleElement = document.getElementById('alertTitle');
+  const messageElement = document.getElementById('alertMessage');
+  const alertElement = document.getElementById('alert');
+  const closeAlertElement = document.getElementById("close-alert");
+
+  function showAlert(title, message) {
+    if(checkShowAlert()){
+      titleElement.innerText = title;
+      messageElement.innerText = message;
+      return;
+    }
+
+    titleElement.innerText = title;
+    messageElement.innerText = message;
+    alertElement.style.display = 'flex';
+  }
+
+  function checkShowAlert(){
+    return alertElement.style.display === 'flex';
+  }
+
+  function closeAlert() {
+    alertElement.style.display = 'none';
+  }
+
+  closeAlertElement.addEventListener("click",onCloseClick);
+
+  function onCloseClick(){
+    closeClick();
+    closeAlert();
+  }
+
+  return {
+    showAlert
+  }
 }
