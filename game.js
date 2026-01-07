@@ -2,7 +2,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebas
 import { getDatabase, ref, set, onValue, get, child, update} from "https://www.gstatic.com/firebasejs/12.7.0/firebase-database.js";
 import { correctList } from "./keywords.js";
 import { firebaseConfig } from "./config.js";
-import { Chat } from "./modules.js";
+import { Chat, pickRandom, shuffleStrings } from "./modules.js";
 
 const { chatStart, chatClear, addChatMessage, chatClose } = Chat(onSendClick);
 
@@ -339,6 +339,7 @@ function gameSetting(snapshot){
 
     if(suspect !== data){
       showAlert("범인이 아닙니다.", `범인은 ${suspect}였습니다.`);
+      chatClose();
       return;
     }
 
@@ -559,14 +560,6 @@ function setPlayerList(data){
   });
 }
 
-function shuffleStrings(array) {
-  for (let i = array.length - 1; i > 0; i--) {
-    let j = Math.floor(Math.random() * (i + 1));
-    [array[i], array[j]] = [array[j], array[i]];
-  }
-  return array;
-}
-
 function startGame() {
   let correctTemp = nickname === suspect ? fakeCorrect : correct;
 
@@ -670,11 +663,6 @@ function closeAlert() {
   document.getElementById('customAlert').style.display = 'none';
 }
 
-function pickRandom(array) {
-  if (array.length === 0) return null;
-  return array[Math.floor(Math.random() * array.length)];
-}
-
 function reloadEvent(){
   removeReloadEvent();
   window.addEventListener('beforeunload', outGameEvent);
@@ -691,49 +679,6 @@ function outGameEvent(e){
     updateData(result);
   }
 }
-
-// const chatInput = document.getElementById('chat-input');
-// const chatSend = document.getElementById('chat-send');
-// const chatWindow = document.getElementById('chat-window');
-
-// function addChatMessage(nickname, message) {
-//   const msgDiv = document.createElement('div');
-//   msgDiv.className = 'chat-msg';
-//   msgDiv.innerHTML = `<b>${nickname}:</b> ${message}`;
-//   chatWindow.appendChild(msgDiv);
-//   chatWindow.scrollTop = chatWindow.scrollHeight;
-// }
-
-// chatSend.addEventListener('click', () => {
-//   if(gameState === ""){
-//     return;
-//   }
-
-//   const msg = chatInput.value.trim();
-//   if (msg) {
-//     let result = {};
-
-//     if(chatHistory.length >= 30){
-//       chatHistory.shift();
-//     }
-
-//     chatHistory.push({
-//       nickname : nickname,
-//       message : msg
-//     });
-
-//     result[chatHistoryKey] = chatHistory;
-
-//     updateData(result, chatDataKey);
-
-//     chatInput.value = '';
-//   }
-// });
-
-// chatInput.addEventListener('keypress', (e) => {
-//   if (e.key === 'Enter') chatSend.click();
-// });
-
 
 function onSendClick(msg){
   if (msg) {
