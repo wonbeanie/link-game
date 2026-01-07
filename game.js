@@ -2,6 +2,9 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebas
 import { getDatabase, ref, set, onValue, get, child, update} from "https://www.gstatic.com/firebasejs/12.7.0/firebase-database.js";
 import { correctList } from "./keywords.js";
 import { firebaseConfig } from "./config.js";
+import { Chat } from "./modules.js";
+
+const { chatStart, chatClear, addChatMessage, chatClose } = Chat(onSendClick);
 
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
@@ -114,7 +117,7 @@ onValue(ref(db, chatDataKey), (snapshot) => {
   chatHistory = data[chatHistoryKey];
 
   
-  chatWindow.innerText = "";
+  chatClear();
   chatHistory.forEach((chat)=>{
     addChatMessage(chat.nickname, chat.message);
   });
@@ -261,6 +264,7 @@ function gameSetting(snapshot){
   suspect = snapshot[suspectKey];
 
   if(startKey in snapshot){
+    chatStart();
     gameState = startKey;
     let result = {};
     result[startKey] = null;
@@ -326,6 +330,7 @@ function gameSetting(snapshot){
 
     stopTimer();
     reloadEvent();
+    chatClose();
     return;
   }
 
@@ -687,24 +692,50 @@ function outGameEvent(e){
   }
 }
 
-const chatInput = document.getElementById('chat-input');
-const chatSend = document.getElementById('chat-send');
-const chatWindow = document.getElementById('chat-window');
+// const chatInput = document.getElementById('chat-input');
+// const chatSend = document.getElementById('chat-send');
+// const chatWindow = document.getElementById('chat-window');
 
-function addChatMessage(nickname, message) {
-  const msgDiv = document.createElement('div');
-  msgDiv.className = 'chat-msg';
-  msgDiv.innerHTML = `<b>${nickname}:</b> ${message}`;
-  chatWindow.appendChild(msgDiv);
-  chatWindow.scrollTop = chatWindow.scrollHeight;
-}
+// function addChatMessage(nickname, message) {
+//   const msgDiv = document.createElement('div');
+//   msgDiv.className = 'chat-msg';
+//   msgDiv.innerHTML = `<b>${nickname}:</b> ${message}`;
+//   chatWindow.appendChild(msgDiv);
+//   chatWindow.scrollTop = chatWindow.scrollHeight;
+// }
 
-chatSend.addEventListener('click', () => {
-  if(gameState === ""){
-    return;
-  }
+// chatSend.addEventListener('click', () => {
+//   if(gameState === ""){
+//     return;
+//   }
 
-  const msg = chatInput.value.trim();
+//   const msg = chatInput.value.trim();
+//   if (msg) {
+//     let result = {};
+
+//     if(chatHistory.length >= 30){
+//       chatHistory.shift();
+//     }
+
+//     chatHistory.push({
+//       nickname : nickname,
+//       message : msg
+//     });
+
+//     result[chatHistoryKey] = chatHistory;
+
+//     updateData(result, chatDataKey);
+
+//     chatInput.value = '';
+//   }
+// });
+
+// chatInput.addEventListener('keypress', (e) => {
+//   if (e.key === 'Enter') chatSend.click();
+// });
+
+
+function onSendClick(msg){
   if (msg) {
     let result = {};
 
@@ -720,11 +751,5 @@ chatSend.addEventListener('click', () => {
     result[chatHistoryKey] = chatHistory;
 
     updateData(result, chatDataKey);
-
-    chatInput.value = '';
   }
-});
-
-chatInput.addEventListener('keypress', (e) => {
-  if (e.key === 'Enter') chatSend.click();
-});
+}
