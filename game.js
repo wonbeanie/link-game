@@ -96,10 +96,6 @@ if(admin){
   document.getElementById('admin-btn').className = "show";
 }
 
-const gameDataKey = "GameData/";
-
-const chatDataKey = "Chat/";
-
 onValueListener(KEY.CHAT_DATA_KEY, (data) => {
   chatHistory = data[chatHistoryKey];
   chatClear();
@@ -566,7 +562,7 @@ function sendClick(msg){
 
     result[chatHistoryKey] = chatHistory;
 
-    updateData(result, chatDataKey);
+    updateData(result, KEY.CHAT_DATA_KEY);
   }
 }
 
