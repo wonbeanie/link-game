@@ -36,8 +36,6 @@ let playerList = [];
 
 let suspect = "";
 
-let inteval = null;
-
 let playSequence = [];
 
 const startKey = "START";
@@ -75,7 +73,6 @@ const correctKey = "Correct";
 const fakeCorrectKey = "FakeCorrect";
 
 const lastAnswerKey = "LastAnswer";
-const lastAnswerRef = ref(db, lastAnswerKey);
 
 const outGameKey = "OutGame";
 
@@ -155,10 +152,6 @@ onValue(ref(db, gameDataKey), (snapshot) => {
         return;
       }
 
-      if(key === lastAnswerRef){
-        return;
-      }
-
       if(key === startKey){
         return;
       }
@@ -235,7 +228,6 @@ function gameSetting(snapshot){
   correct = snapshot[correctKey];
   fakeCorrect = snapshot[fakeCorrectKey];
   category = snapshot[categoryKey];
-  lastAnswer = snapshot[lastAnswerRef];
   suspect = snapshot[suspectKey];
 
   if(startKey in snapshot){
