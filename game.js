@@ -2,10 +2,11 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebas
 import { getDatabase, ref, set, onValue, get, child, update} from "https://www.gstatic.com/firebasejs/12.7.0/firebase-database.js";
 import { correctList } from "./keywords.js";
 import { firebaseConfig } from "./config.js";
-import { Chat, pickRandom, shuffleStrings, Alert } from "./modules.js";
+import { Chat, pickRandom, shuffleStrings, Alert, Log } from "./modules.js";
 
 const { chatStart, chatClear, addChatMessage, chatClose } = Chat(sendClick);
 const { showAlert } = Alert(closeClick);
+const { setLog, clearLog } = Log();
 
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
@@ -14,7 +15,6 @@ const dbRef = ref(getDatabase());
 const nicknameField = document.getElementById('nickname');
 const nicknameInputField = document.getElementById('nickname-input');
 const confirmField = document.getElementById("confirm");
-const display = document.getElementById('display');
 const startField = document.getElementById("start");
 const clearField = document.getElementById("clear");
 const timerField = document.getElementById("timer");
@@ -133,7 +133,7 @@ onValue(ref(db, gameDataKey), (snapshot) => {
 
   gameSetting(data);
 
-  display.innerHTML = "";
+  clearLog();
 
   let playerHints = {};
 
@@ -228,32 +228,6 @@ onValue(ref(db, gameDataKey), (snapshot) => {
       setLog(player, playerHints[player]);
     });
 });
-
-function setLog(player, text){
-  const playerElement = document.createElement("div");
-  playerElement.className = "player-hint-item"; 
-
-  const playerNameElement = document.createElement("span");
-  playerNameElement.style.fontWeight = "bold";
-  playerNameElement.style.color = "var(--primary-color)";
-  playerNameElement.innerText = player;
-
-  const separator = document.createElement("span");
-  separator.innerText = " : ";
-  separator.style.color = "#a0aec0";
-
-  const hintElement = document.createElement("span");
-  hintElement.style.color = "var(--text-color)";
-  hintElement.innerText = text;
-
-  playerElement.appendChild(playerNameElement);
-  playerElement.appendChild(separator);
-  playerElement.appendChild(hintElement);
-
-  display.appendChild(playerElement);
-
-  display.scrollTop = display.scrollHeight;
-}
 
 function gameSetting(snapshot){
   playerSelectCheck = [];

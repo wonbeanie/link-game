@@ -106,3 +106,42 @@ export function Alert(closeClick = ()=>{}){
     showAlert
   }
 }
+
+export function Log(){
+  const display = document.getElementById('display');
+
+  function setLog(player, text){
+    const playerElement = document.createElement("div");
+    playerElement.className = "player-hint-item"; 
+
+    const playerNameElement = document.createElement("span");
+    playerNameElement.style.fontWeight = "bold";
+    playerNameElement.style.color = "var(--primary-color)";
+    playerNameElement.innerText = player;
+
+    const separator = document.createElement("span");
+    separator.innerText = " : ";
+    separator.style.color = "#a0aec0";
+
+    const hintElement = document.createElement("span");
+    hintElement.style.color = "var(--text-color)";
+    hintElement.innerText = text;
+
+    playerElement.appendChild(playerNameElement);
+    playerElement.appendChild(separator);
+    playerElement.appendChild(hintElement);
+
+    display.appendChild(playerElement);
+
+    display.scrollTop = display.scrollHeight;
+  }
+
+  function clearLog(){
+    display.innerHTML = "";
+  }
+
+  return {
+    setLog,
+    clearLog
+  }
+}
