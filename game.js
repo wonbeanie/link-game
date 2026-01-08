@@ -2,11 +2,12 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebas
 import { getDatabase, ref, set, onValue, get, child, update} from "https://www.gstatic.com/firebasejs/12.7.0/firebase-database.js";
 import { correctList } from "./keywords.js";
 import { firebaseConfig } from "./config.js";
-import { Chat, pickRandom, shuffleStrings, Alert, Log } from "./modules.js";
+import { Chat, pickRandom, shuffleStrings, Alert, Log, Timer } from "./modules.js";
 
 const { chatStart, chatClear, addChatMessage, chatClose } = Chat(sendClick);
 const { showAlert } = Alert(closeClick);
 const { setLog, clearLog } = Log();
+const { startTimer, stopTimer} = Timer();
 
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
@@ -17,7 +18,6 @@ const nicknameInputField = document.getElementById('nickname-input');
 const confirmField = document.getElementById("confirm");
 const startField = document.getElementById("start");
 const clearField = document.getElementById("clear");
-const timerField = document.getElementById("timer");
 const hintFiled = document.getElementById("hint");
 const hintBtnField = document.getElementById("hint-btn");
 const playerSelectField = document.getElementById("player-select");
@@ -253,7 +253,7 @@ function gameSetting(snapshot){
     if(data === "end"){
       // 토론시간
       showAlert("토론시간", "1분의 토론시간이 주어집니다.");
-      timer(60,()=>{
+      startTimer(60,()=>{
         selectTimeout = true;
         sendSusepct();
       });
@@ -286,7 +286,7 @@ function gameSetting(snapshot){
     const data = snapshot[reSelectCulpritKey];
     showAlert("투표 동점", `${data.join(",")}중에 한명을 선택해주세요.`);
     setPlayerList(data);
-    timer(60,sendSusepct);
+    startTimer(60,sendSusepct);
     let result = {};
     result[reSelectCulpritKey] = null;
     result[sequenceKey] = null;
@@ -326,11 +326,11 @@ function gameSetting(snapshot){
       lastAnswer = data;
       hintBtnField.className = "none";
       answerField.className = "show";
-      timer(60, sendLastAnswer);
+      startTimer(60, sendLastAnswer);
     }
     else {
       showAlert("범인을 찾았습니다.", "범인이 답을 입력하고 있습니다.");
-      timer(60);
+      startTimer(60);
     }
   }
 
@@ -497,7 +497,7 @@ function sendHint(){
     else {
       result[sequenceKey] = "end";
       showAlert("토론시간", "1분의 토론시간이 주어집니다.");
-      timer(60,sendSusepct);
+      startTimer(60,sendSusepct);
       hintFiled.className = "none";
     }
 
@@ -544,14 +544,14 @@ function startGame() {
   stateInfoField.innerText = `${playSequence[0]}님이 입력하고 있습니다.`;
 
   if(myTurn()){
-    timer(30, sendHint);
+    startTimer(30, sendHint);
     showAlert("당신 순서입니다.",`카테고리는 ${category}, 제시어는 ${correctTemp}입니다.`);
     gameState = "Playing";
     hintFiled.className = "show";
     return;
   }
   else {
-    timer(30);
+    startTimer(30);
   }
   
   if(gameState === startKey){
@@ -562,37 +562,6 @@ function startGame() {
 
 function myTurn() {
   return playSequence[0] === nickname;
-}
-
-function timer(timeLimit = 30, timeoutCallback = () => {}) {
-  let time = timeLimit;
-
-  if (inteval) {
-    stopTimer();
-  }
-
-  inteval = setInterval(() => {
-    if (time < 0) {
-      stopTimer();
-      timeoutCallback();
-      return;
-    }
-
-    const minutes = Math.floor(time / 60);
-    const seconds = time % 60;
-
-    const displayMinutes = String(minutes).padStart(2, '0');
-    const displaySeconds = String(seconds).padStart(2, '0');
-
-    timerField.innerText = `${displayMinutes}:${displaySeconds}`;
-    
-    time -= 1;
-  }, 1000);
-}
-
-function stopTimer() {
-  clearInterval(inteval);
-  timerField.innerText = "";
 }
 
 sespectInputField.addEventListener("click",sendSusepct);

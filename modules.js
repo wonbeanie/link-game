@@ -145,3 +145,45 @@ export function Log(){
     clearLog
   }
 }
+
+export function Timer(){
+  const timerField = document.getElementById("timer");
+  let inteval = null;
+  
+  
+  function startTimer(timeLimit = 30, timeoutCallback = () => {}) {
+    let time = timeLimit;
+
+    if (inteval) {
+      stopTimer();
+    }
+
+    inteval = setInterval(() => {
+      if (time < 0) {
+        stopTimer();
+        timeoutCallback();
+        return;
+      }
+
+      const minutes = Math.floor(time / 60);
+      const seconds = time % 60;
+
+      const displayMinutes = String(minutes).padStart(2, '0');
+      const displaySeconds = String(seconds).padStart(2, '0');
+
+      timerField.innerText = `${displayMinutes}:${displaySeconds}`;
+      
+      time -= 1;
+    }, 1000);
+  }
+
+  function stopTimer() {
+    clearInterval(inteval);
+    timerField.innerText = "";
+  }
+
+  return {
+    startTimer,
+    stopTimer
+  }
+}
