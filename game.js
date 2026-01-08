@@ -1,17 +1,12 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
-import { getDatabase, ref, set, onValue, get, child, update} from "https://www.gstatic.com/firebasejs/12.7.0/firebase-database.js";
 import { correctList } from "./keywords.js";
-import { firebaseConfig } from "./config.js";
 import { Chat, pickRandom, shuffleStrings, Alert, Log, Timer } from "./modules.js";
+import GameDatabase from "./database.js";
 
 const { chatStart, chatClear, addChatMessage, chatClose } = Chat(sendClick);
 const { showAlert } = Alert(closeClick);
 const { setLog, clearLog } = Log();
 const { startTimer, stopTimer} = Timer();
-
-const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
-const dbRef = ref(getDatabase());
+const { clearDatabase, KEY, onValueListener, updateData, getData } = GameDatabase();
 
 const nicknameField = document.getElementById('nickname');
 const nicknameInputField = document.getElementById('nickname-input');
@@ -105,29 +100,15 @@ const gameDataKey = "GameData/";
 
 const chatDataKey = "Chat/";
 
-onValue(ref(db, chatDataKey), (snapshot) => {
-  if(null === snapshot.val()){
-    return;
-  }
-
-  let data = snapshot.val();
-
+onValueListener(KEY.CHAT_DATA_KEY, (data) => {
   chatHistory = data[chatHistoryKey];
-
-  
   chatClear();
   chatHistory.forEach((chat)=>{
     addChatMessage(chat.nickname, chat.message);
   });
-});
+})
 
-onValue(ref(db, gameDataKey), (snapshot) => {
-  if(null === snapshot.val()){
-    return;
-  }
-
-  let data = snapshot.val();
-
+onValueListener(KEY.GAME_DATA_KEY, (data) => {
   gameSetting(data);
 
   clearLog();
@@ -136,10 +117,7 @@ onValue(ref(db, gameDataKey), (snapshot) => {
 
   let votingList = {};
 
-  snapshot.forEach((childSnapshot, i) => {
-      const key = childSnapshot.key;
-      const data = childSnapshot.val();
-
+  Object.entries(data).forEach(([key, value], i) => {
       if(key === correctKey){
         return;
       }
@@ -173,7 +151,7 @@ onValue(ref(db, gameDataKey), (snapshot) => {
       }
 
       if(key.includes(suspectListKey)){
-        votingList[key.split("-")[1]] = data;
+        votingList[key.split("-")[1]] = value;
         return;
       }
 
@@ -190,14 +168,14 @@ onValue(ref(db, gameDataKey), (snapshot) => {
       }
 
       if(key.includes(chatHistoryKey)){
-        chatHistory = data;
+        chatHistory = value;
         return;
       }
 
-      playerHints[key] = data;
+      playerHints[key] = value;
 
       if(startPlaySequenceTemp.length === 0){
-        setLog(key, data);
+        setLog(key, value);
       }
     });
 
@@ -420,42 +398,36 @@ function gameInit(){
 }
 
 startField.addEventListener("click",()=>{
-  get(child(dbRef, gameDataKey)).then((snapshot) => {
-    if (snapshot.exists()) {
-      let list = [];
+  getData(KEY.GAME_DATA_KEY).then((data) => {
+    let list = [];
 
-      snapshot.forEach((childSnapshot) => {
-        const key = childSnapshot.key;
-
-        if(key === startKey){
-          return;
-        }
-
-        list.push(key);
-      });
-
-      let result = gameInit();
-
-      const shuffleList = shuffleStrings(list);
-
-      suspect = pickRandom(shuffleList);
-
-      result[sequenceKey] = shuffleList;
-      result[suspectKey] = suspect;
-
-      categoryField.innerText = category;
-      
-      if(nickname === suspect){
-        correctField.innerText = fakeCorrect;
-      }
-      else {
-        correctField.innerText = correct;
+    Object.entries(data).forEach(([key, value]) => {
+      if(key === startKey){
+        return;
       }
 
-      updateData(result);
-    } else {
-      console.log("데이터가 없습니다.");
+      list.push(key);
+    });
+
+    let result = gameInit();
+
+    const shuffleList = shuffleStrings(list);
+
+    suspect = pickRandom(shuffleList);
+
+    result[sequenceKey] = shuffleList;
+    result[suspectKey] = suspect;
+
+    categoryField.innerText = category;
+    
+    if(nickname === suspect){
+      correctField.innerText = fakeCorrect;
     }
+    else {
+      correctField.innerText = correct;
+    }
+
+    updateData(result);
   });
 
   clearDatabase();
@@ -464,17 +436,9 @@ startField.addEventListener("click",()=>{
   updateData(result);
 });
 
-function updateData(data, table = gameDataKey) {
-  update(ref(db, table), data);
-}
-
 clearField.addEventListener("click",()=>{
   clearDatabase();
 });
-
-function clearDatabase() {
-  set(ref(db, '/'), null);
-}
 
 hintBtnField.addEventListener("click", sendHint);
 
