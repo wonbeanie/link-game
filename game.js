@@ -185,6 +185,34 @@ function gameStartInit(){
   reloadEvent();
 }
 
+function gameHintSequence(data){
+  if(data === "end"){
+    showAlert("토론시간", "1분의 토론시간이 주어집니다.");
+    startTimer(60,()=>{
+      selectTimeout = true;
+      sendSusepct();
+    });
+    let result = {};
+    result[sequenceKey] = null;
+    updateData(result);
+
+    selectPlayerField.className = "show";
+    hintFiled.className = "none";
+    return;
+  }
+
+  const notSettingPlayList = playerList.length === 0;
+  if(notSettingPlayList) {
+    setPlayerList(data);
+    nicknameField.className = "none";
+    startPlaySequence = data;
+  }
+
+  playSequence = data;
+
+  startGame();
+}
+
 function gameSetting(snapshot){
   playerSelectCheck = [];
 
@@ -199,37 +227,7 @@ function gameSetting(snapshot){
 
   if(sequenceKey in snapshot){
     const data = snapshot[sequenceKey];
-
-    if(data === "end"){
-      // 토론시간
-      showAlert("토론시간", "1분의 토론시간이 주어집니다.");
-      startTimer(60,()=>{
-        selectTimeout = true;
-        sendSusepct();
-      });
-      let result = {};
-      result[sequenceKey] = null;
-      updateData(result);
-
-      selectPlayerField.className = "show";
-      hintFiled.className = "none";
-    }
-    else if(playSequence.length === 0) {
-      if(playerList.length === 0){
-        setPlayerList(data);
-        nicknameField.className = "none";
-        startPlaySequence = data;
-      }
-
-      playSequence = data;
-
-      startGame(); 
-    }
-    else {
-      playSequence = data;
-
-      startGame();
-    }
+    gameHintSequence(data);
   }
 
   if(reSelectCulpritKey in snapshot){
@@ -460,7 +458,7 @@ function setPlayerList(data){
 
   playerSelectField.innerText = "";
 
-  
+
   
   JSON.parse(JSON.stringify(data)).sort().forEach((player)=>{
     const optionElement = document.createElement("option");
