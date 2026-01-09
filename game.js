@@ -188,13 +188,7 @@ function gameStartInit(){
 function gameHintSequence(data){
   if(data === "end"){
     showAlert("토론시간", "1분의 토론시간이 주어집니다.");
-    startTimer(60,()=>{
-      selectTimeout = true;
-      sendSusepct();
-    });
-    let result = {};
-    result[sequenceKey] = null;
-    updateData(result);
+    votesInit();
 
     selectPlayerField.className = "show";
     hintFiled.className = "none";
@@ -216,10 +210,21 @@ function gameHintSequence(data){
 function tieOfVotes(data){
   showAlert("투표 동점", `${data.join(",")}중에 한명을 선택해주세요.`);
   setPlayerList(data);
-  startTimer(5,sendSusepct);
+  votesInit();
+}
+
+function votesInit(){
+  const VOTE_TIME = 60;
+  startTimer(VOTE_TIME,()=>{
+    selectTimeout = true;
+    sendSusepct();
+  });
+
   let result = {};
   result[reSelectCulpritKey] = null;
   result[sequenceKey] = null;
+  result[selectTimeoutKey] = null;
+  selectTimeout = false;
   updateData(result);
 }
 
