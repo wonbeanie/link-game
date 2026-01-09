@@ -176,6 +176,15 @@ function hintLog(playerHints){
   });
 }
 
+function gameStartInit(){
+  chatStart();
+  gameState = startKey;
+  let result = {};
+  result[startKey] = null;
+  updateData(result);
+  reloadEvent();
+}
+
 function gameSetting(snapshot){
   playerSelectCheck = [];
 
@@ -185,12 +194,7 @@ function gameSetting(snapshot){
   suspect = snapshot[suspectKey];
 
   if(startKey in snapshot){
-    chatStart();
-    gameState = startKey;
-    let result = {};
-    result[startKey] = null;
-    updateData(result);
-    reloadEvent();
+    gameStartInit();
   }
 
   if(sequenceKey in snapshot){
