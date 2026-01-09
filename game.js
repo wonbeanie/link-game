@@ -213,6 +213,16 @@ function gameHintSequence(data){
   startGame();
 }
 
+function tieOfVotes(data){
+  showAlert("투표 동점", `${data.join(",")}중에 한명을 선택해주세요.`);
+  setPlayerList(data);
+  startTimer(5,sendSusepct);
+  let result = {};
+  result[reSelectCulpritKey] = null;
+  result[sequenceKey] = null;
+  updateData(result);
+}
+
 function gameSetting(snapshot){
   playerSelectCheck = [];
 
@@ -232,13 +242,7 @@ function gameSetting(snapshot){
 
   if(reSelectCulpritKey in snapshot){
     const data = snapshot[reSelectCulpritKey];
-    showAlert("투표 동점", `${data.join(",")}중에 한명을 선택해주세요.`);
-    setPlayerList(data);
-    startTimer(60,sendSusepct);
-    let result = {};
-    result[reSelectCulpritKey] = null;
-    result[sequenceKey] = null;
-    updateData(result);
+    tieOfVotes(data);
   }
 
   if(lastAnswerKey in snapshot){
