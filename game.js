@@ -248,6 +248,32 @@ function gameOver(data, findSusepct = false){
   chatClose();
 }
 
+function votesEnd(){
+  const failFindSuspect = suspect !== data;
+  if(failFindSuspect){
+    gameOver(data);
+    return;
+  }
+
+  selectPlayerField.className = "none";
+  stopTimer();
+
+  const suspectPlayer = suspect === data;
+  const SUSEPCT_ANSWER_TIME = 60;
+
+  if(suspectPlayer){
+    showAlert("범인인것을 걸렸습니다.", "정답을 맞춰주세요.");
+    lastAnswer = data;
+    hintBtnField.className = "none";
+    answerField.className = "show";
+    startTimer(SUSEPCT_ANSWER_TIME, sendLastAnswer);
+  }
+  else {
+    showAlert("범인을 찾았습니다.", "범인이 답을 입력하고 있습니다.");
+    startTimer(SUSEPCT_ANSWER_TIME);
+  }
+}
+
 function gameSetting(snapshot){
   playerSelectCheck = [];
 
@@ -278,26 +304,7 @@ function gameSetting(snapshot){
 
   if(selectCulpritKey in snapshot){
     const data = snapshot[selectCulpritKey];
-
-    if(suspect !== data){
-      gameOver(data);
-      return;
-    }
-
-    selectPlayerField.className = "none";
-    stopTimer();
-
-    if(nickname === data){
-      showAlert("범인인것을 걸렸습니다.", "정답을 맞춰주세요.");
-      lastAnswer = data;
-      hintBtnField.className = "none";
-      answerField.className = "show";
-      startTimer(60, sendLastAnswer);
-    }
-    else {
-      showAlert("범인을 찾았습니다.", "범인이 답을 입력하고 있습니다.");
-      startTimer(60);
-    }
+    votesEnd(data);
   }
 
 
