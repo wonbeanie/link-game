@@ -214,7 +214,7 @@ function tieOfVotes(data){
 }
 
 function votesInit(){
-  const VOTE_TIME = 60;
+  const VOTE_TIME = 5;
   startTimer(VOTE_TIME,()=>{
     selectTimeout = true;
     sendSusepct();
@@ -226,6 +226,26 @@ function votesInit(){
   result[selectTimeoutKey] = null;
   selectTimeout = false;
   updateData(result);
+}
+
+function gameOver(data, findSusepct = false){
+  if(findSusepct){
+    if(correct === data){
+      showAlert("범인 승리", `범인이 정답(${data})을 맞췄습니다.\n 범인의 제시어 ${fakeCorrect}\n 시민의 제시어 ${correct}`);
+    }
+    else {
+      showAlert("시민 승리",`범인의 최종 답은 ${data}으로 답하였습니다.\n 범인의 제시어 ${fakeCorrect}\n 시민의 제시어 ${correct}`);
+    }
+  }
+  else {
+    if(suspect !== data){
+      showAlert("범인이 아닙니다.", `범인은 ${suspect}였습니다.`);
+    }
+  }
+
+  stopTimer();
+  reloadEvent();
+  chatClose();
 }
 
 function gameSetting(snapshot){
@@ -252,17 +272,7 @@ function gameSetting(snapshot){
 
   if(lastAnswerKey in snapshot){
     const data = snapshot[lastAnswerKey];
-
-    if(correct === data){
-      showAlert("범인 승리", `범인이 정답(${data})을 맞췄습니다.\n 범인의 제시어 ${fakeCorrect}\n 시민의 제시어 ${correct}`);
-    }
-    else {
-      showAlert("시민 승리",`범인의 최종 답은 ${data}으로 답하였습니다.\n 범인의 제시어 ${fakeCorrect}\n 시민의 제시어 ${correct}`);
-    }
-
-    stopTimer();
-    reloadEvent();
-    chatClose();
+    gameOver(data, true);
     return;
   }
 
@@ -270,8 +280,7 @@ function gameSetting(snapshot){
     const data = snapshot[selectCulpritKey];
 
     if(suspect !== data){
-      showAlert("범인이 아닙니다.", `범인은 ${suspect}였습니다.`);
-      chatClose();
+      gameOver(data);
       return;
     }
 
