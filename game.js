@@ -39,7 +39,7 @@ const sequenceKey = "Sequence";
 
 const suspectKey = "Suspect";
 
-let suspectListKey = "SuspectList";
+const suspectListKey = "SuspectList";
 
 let playerSelectCheck = [];
 
@@ -88,7 +88,7 @@ confirmField.addEventListener("click", (e) => {
 const hintInputField = document.getElementById('hint-input');
 const answerInputField = document.getElementById('answer-input');
 
-let startPlaySequenceTemp = [];
+let startPlaySequence = [];
 
 let restart = false;
 
@@ -109,92 +109,72 @@ onValueListener(KEY.GAME_DATA_KEY, (data) => {
 
   clearLog();
 
+  logSetting(data);
+});
+
+function logSetting(data){
   let playerHints = {};
 
   let votingList = {};
 
-  Object.entries(data).forEach(([key, value], i) => {
-      if(key === correctKey){
-        return;
-      }
+  const startPlaySequenceString = startPlaySequence.join(",");
 
-      if(key === fakeCorrectKey){
-        return;
-      }
-
-      if(key === categoryKey){
-        return;
-      }
-
-      if(key === startKey){
-        return;
-      }
-
-      if(key === sequenceKey){
-        return;
-      }
-
-      if(key === suspectKey){
-        return;
-      }
-
-      if(key === reSelectCulpritKey){
-        return;
-      }
-
-      if(key === selectCulpritKey){
-        return;
-      }
-
-      if(key.includes(suspectListKey)){
-        votingList[key.split("-")[1]] = value;
-        return;
-      }
-
-      if(key === lastAnswerKey){
-        return;
-      }
-
-      if(key === outGameKey){
-        return;
-      }
-      
-      if(key === selectTimeoutKey){
-        return;
-      }
-
-      if(key.includes(chatHistoryKey)){
-        chatHistory = value;
-        return;
-      }
-
+  Object.entries(data).forEach(([key, value]) => {
+    if(startPlaySequenceString.includes(key) || gameState === ""){
       playerHints[key] = value;
 
-      if(startPlaySequenceTemp.length === 0){
+      if(startPlaySequence.length === 0){
         setLog(key, value);
       }
-    });
-
-    if(gameState !== ""){
-      setLog(`투표`, '---------------');
+      return;
     }
 
-    Object.keys(votingList).forEach((player)=>{
-      setLog(`${player}`, `${votingList[player]}님을 투표하였습니다.`);
-    });
-
-    if(gameState !== ""){
-      setLog(`힌트`, '---------------');
+    if(key.includes(suspectListKey)){
+      votingList[key.split("-")[1]] = value;
+      return;
     }
 
-    startPlaySequenceTemp.forEach((player)=>{
-      if(!playerHints[player]){
-        return;
-      }
-      
-      setLog(player, playerHints[player]);
-    });
-});
+    if(key.includes(chatHistoryKey)){
+      chatHistory = value;
+      return;
+    }
+  });
+
+  activityLog({
+    playerHints,
+    votingList
+  });
+}
+
+function activityLog({playerHints,votingList}){
+  votingLog(votingList);
+
+  hintLog(playerHints);
+}
+
+function votingLog(votingList){
+  if(gameState !== ""){
+    setLog(`투표`, '---------------');
+  }
+
+  Object.keys(votingList).forEach((player)=>{
+    setLog(`${player}`, `${votingList[player]}님을 투표하였습니다.`);
+  });
+}
+
+function hintLog(playerHints){
+  if(gameState !== ""){
+    setLog(`힌트`, '---------------');
+  }
+
+  startPlaySequence.forEach((player)=>{
+    if(!playerHints[player]){
+      return;
+    }
+    
+    setLog(player, playerHints[player]);
+  });
+}
 
 function gameSetting(snapshot){
   playerSelectCheck = [];
@@ -234,7 +214,7 @@ function gameSetting(snapshot){
       if(playerList.length === 0){
         setPlayerList(data);
         nicknameField.className = "none";
-        startPlaySequenceTemp = data;
+        startPlaySequence = data;
       }
 
       playSequence = data;
