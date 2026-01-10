@@ -310,11 +310,15 @@ function gameSetting(snapshot){
   votes(snapshot);
 
   if(outGameKey in snapshot){
-    showAlert("알림","플레이어중 한명이 나갔습니다.\n게임을 초기화합니다.");
-    clearDatabase();
-    removeReloadEvent();
-    restart = true;
+    outGame();
   }
+}
+
+function outGame(){
+  showAlert("알림","플레이어중 한명이 나갔습니다.\n게임을 초기화합니다.");
+  clearDatabase();
+  removeReloadEvent();
+  restart = true;
 }
 
 function votes(snapshot){
