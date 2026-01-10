@@ -248,7 +248,7 @@ function gameOver(data, findSusepct = false){
   chatClose();
 }
 
-function votesEnd(){
+function votesEnd(data){
   const failFindSuspect = suspect !== data;
   if(failFindSuspect){
     gameOver(data);
@@ -258,7 +258,7 @@ function votesEnd(){
   selectPlayerField.className = "none";
   stopTimer();
 
-  const suspectPlayer = suspect === data;
+  const suspectPlayer = suspect === nickname;
   const SUSEPCT_ANSWER_TIME = 60;
 
   if(suspectPlayer){
