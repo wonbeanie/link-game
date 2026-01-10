@@ -50,3 +50,19 @@ export default function GameDatabase() {
     getData
   }
 }
+
+export const TABLE_KEYS = Object.freeze({
+  CATEGORY : "Category",
+  CORRECT : "Correct",
+  FAKE_CORRECT : "FakeCorrect",
+  LAST_ANSWER : "LastAnswer",
+  OUT_GAME : "OutGame",
+  CHAT_HISTORY : "ChatHistory",
+  START : "Start",
+  SEQUENCE : "Sequence",
+  SUSPECT : "Suspect",
+  SUSPECT_LIST : "SuspectList",
+  SELECT_CULPRIT : "SelectCulprit",
+  RE_SELECT_CULPRIT : "ReSelectCulprit",
+  SELECT_TIMEOUT : "SelectTimeout"
+});

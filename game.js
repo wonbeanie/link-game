@@ -1,6 +1,6 @@
 import { correctList } from "./keywords.js";
 import { Chat, pickRandom, shuffleStrings, Alert, Log, Timer } from "./modules.js";
-import GameDatabase from "./database.js";
+import GameDatabase, { TABLE_KEYS } from "./database.js";
 
 const { chatStart, chatClear, addChatMessage, chatClose } = Chat(sendClick);
 const { showAlert } = Alert(closeClick);
@@ -33,28 +33,14 @@ let suspect = "";
 
 let playSequence = [];
 
-const startKey = "START";
-
-const sequenceKey = "Sequence";
-
-const suspectKey = "Suspect";
-
-const suspectListKey = "SuspectList";
-
 let playerSelectCheck = [];
-
-const selectCulpritKey = "SelectCulprit";
 
 let nickname = localStorage.getItem('userNickname') || "";
 nicknameInputField.value = nickname
 
-const reSelectCulpritKey = "ReSelectCulprit";
-
 let sameList = [];
 
 let lastAnswer = "";
-
-const selectTimeoutKey = "SelectTimeout";
 let selectTimeout = false;
 
 let category = "";
@@ -63,15 +49,6 @@ let fakeCorrect = "";
 
 let gameState = "";
 
-const categoryKey = "Category";
-const correctKey = "Correct";
-const fakeCorrectKey = "FakeCorrect";
-
-const lastAnswerKey = "LastAnswer";
-
-const outGameKey = "OutGame";
-
-const chatHistoryKey = "ChatHistory";
 let chatHistory = [];
 
 confirmField.addEventListener("click", (e) => {
@@ -97,7 +74,7 @@ if(admin){
 }
 
 onValueListener(KEY.CHAT_DATA_KEY, (data) => {
-  chatHistory = data[chatHistoryKey];
+  chatHistory = data[TABLE_KEYS.CHAT_HISTORY];
   chatClear();
   chatHistory.forEach((chat)=>{
     addChatMessage(chat.nickname, chat.message);
@@ -129,12 +106,12 @@ function logSetting(data){
       return;
     }
 
-    if(key.includes(suspectListKey)){
+    if(key.includes(TABLE_KEYS.SUSPECT_LIST)){
       votingList[key.split("-")[1]] = value;
       return;
     }
 
-    if(key.includes(chatHistoryKey)){
+    if(key.includes(TABLE_KEYS.CHAT_HISTORY)){
       chatHistory = value;
       return;
     }
@@ -178,9 +155,9 @@ function hintLog(playerHints){
 
 function gameStartInit(){
   chatStart();
-  gameState = startKey;
+  gameState = TABLE_KEYS.START;
   let result = {};
-  result[startKey] = null;
+  result[TABLE_KEYS.START] = null;
   updateData(result);
   reloadEvent();
 }
@@ -214,16 +191,16 @@ function tieOfVotes(data){
 }
 
 function votesInit(){
-  const VOTE_TIME = 60;
+  const VOTE_TIME = 5;
   startTimer(VOTE_TIME,()=>{
     selectTimeout = true;
     sendSusepct();
   });
 
   let result = {};
-  result[reSelectCulpritKey] = null;
-  result[sequenceKey] = null;
-  result[selectTimeoutKey] = null;
+  result[TABLE_KEYS.RE_SELECT_CULPRIT] = null;
+  result[TABLE_KEYS.SEQUENCE] = null;
+  result[TABLE_KEYS.SELECT_TIMEOUT] = null;
   selectTimeout = false;
   updateData(result);
 }
@@ -277,39 +254,39 @@ function votesEnd(data){
 function gameSetting(snapshot){
   playerSelectCheck = [];
 
-  correct = snapshot[correctKey];
-  fakeCorrect = snapshot[fakeCorrectKey];
-  category = snapshot[categoryKey];
-  suspect = snapshot[suspectKey];
+  correct = snapshot[TABLE_KEYS.CORRECT];
+  fakeCorrect = snapshot[TABLE_KEYS.FAKE_CORRECT];
+  category = snapshot[TABLE_KEYS.CATEGORY];
+  suspect = snapshot[TABLE_KEYS.SUSPECT];
 
-  if(startKey in snapshot){
+  if(TABLE_KEYS.START in snapshot){
     gameStartInit();
   }
 
-  if(sequenceKey in snapshot){
-    const data = snapshot[sequenceKey];
+  if(TABLE_KEYS.SEQUENCE in snapshot){
+    const data = snapshot[TABLE_KEYS.SEQUENCE];
     gameHintSequence(data);
   }
 
-  if(reSelectCulpritKey in snapshot){
-    const data = snapshot[reSelectCulpritKey];
+  if(TABLE_KEYS.RE_SELECT_CULPRIT in snapshot){
+    const data = snapshot[TABLE_KEYS.RE_SELECT_CULPRIT];
     tieOfVotes(data);
   }
 
-  if(lastAnswerKey in snapshot){
-    const data = snapshot[lastAnswerKey];
+  if(TABLE_KEYS.LAST_ANSWER in snapshot){
+    const data = snapshot[TABLE_KEYS.LAST_ANSWER];
     gameOver(data, true);
     return;
   }
 
-  if(selectCulpritKey in snapshot){
-    const data = snapshot[selectCulpritKey];
+  if(TABLE_KEYS.SELECT_CULPRIT in snapshot){
+    const data = snapshot[TABLE_KEYS.SELECT_CULPRIT];
     votesEnd(data);
   }
 
   votes(snapshot);
 
-  if(outGameKey in snapshot){
+  if(TABLE_KEYS.OUT_GAME in snapshot){
     outGame();
   }
 }
@@ -323,12 +300,12 @@ function outGame(){
 
 function votes(snapshot){
   Object.keys(snapshot).forEach((key)=>{
-    if(key.includes(suspectListKey)){
+    if(key.includes(TABLE_KEYS.SUSPECT_LIST)){
       playerSelectCheck[key.split("-")[1]] = snapshot[key];
     }
   });
 
-  if(selectTimeoutKey in snapshot){
+  if(TABLE_KEYS.SELECT_TIMEOUT in snapshot){
     if(Object.keys(playerSelectCheck).length === playerList.length && admin){
       selectCulprit();
     }
@@ -369,14 +346,14 @@ function selectCulprit(){
   let result = {};
 
   if(sameList.length > 1){
-    result[reSelectCulpritKey] = sameList;
+    result[TABLE_KEYS.RE_SELECT_CULPRIT] = sameList;
 
     playerList.forEach((player)=>{
-      result[`${suspectListKey}-${player}`] = null;
+      result[`${TABLE_KEYS.SUSPECT_LIST}-${player}`] = null;
     });
   }
   else {
-    result[selectCulpritKey] = maxSuspect.suspect;
+    result[TABLE_KEYS.SELECT_CULPRIT] = maxSuspect.suspect;
   }
 
   updateData(result);
@@ -400,9 +377,9 @@ function gameInit(){
 
   let result = {};
 
-  result[categoryKey] = category;
-  result[correctKey] = correct;
-  result[fakeCorrectKey] = fakeCorrect;
+  result[TABLE_KEYS.CATEGORY] = category;
+  result[TABLE_KEYS.CORRECT] = correct;
+  result[TABLE_KEYS.FAKE_CORRECT] = fakeCorrect;
 
   return result;
 }
@@ -412,7 +389,7 @@ startField.addEventListener("click",()=>{
     let list = [];
 
     Object.entries(data).forEach(([key, value]) => {
-      if(key === startKey){
+      if(key === TABLE_KEYS.START){
         return;
       }
 
@@ -425,8 +402,8 @@ startField.addEventListener("click",()=>{
 
     suspect = pickRandom(shuffleList);
 
-    result[sequenceKey] = shuffleList;
-    result[suspectKey] = suspect;
+    result[TABLE_KEYS.SEQUENCE] = shuffleList;
+    result[TABLE_KEYS.SUSPECT] = suspect;
 
     categoryField.innerText = category;
     
@@ -442,7 +419,7 @@ startField.addEventListener("click",()=>{
 
   clearDatabase();
   let result = {};
-  result[startKey] = `Start Game${new Date().getTime()}`
+  result[TABLE_KEYS.START] = `Start Game${new Date().getTime()}`
   updateData(result);
 });
 
@@ -458,10 +435,10 @@ function sendHint(){
     let result = {};
 
     if(playSequence.length !== 1){
-      result[sequenceKey] = playSequence.slice(1, playSequence.length);
+      result[TABLE_KEYS.SEQUENCE] = playSequence.slice(1, playSequence.length);
     }
     else {
-      result[sequenceKey] = "end";
+      result[TABLE_KEYS.SEQUENCE] = "end";
       showAlert("토론시간", "1분의 토론시간이 주어집니다.");
       startTimer(60,sendSusepct);
       hintFiled.className = "none";
@@ -479,8 +456,8 @@ answerBtnField.addEventListener("click",sendLastAnswer);
 function sendLastAnswer(){
   if(lastAnswer === nickname){
     let result = {};
-    result[lastAnswerKey] = answerInputField.value;
-    result[selectCulpritKey] = "";
+    result[TABLE_KEYS.LAST_ANSWER] = answerInputField.value;
+    result[TABLE_KEYS.SELECT_CULPRIT] = "";
     updateData(result);
   }
 }
@@ -520,7 +497,7 @@ function startGame() {
     startTimer(30);
   }
   
-  if(gameState === startKey){
+  if(gameState === TABLE_KEYS.START){
     showAlert("게임시작", `카테고리는 ${category}, 제시어는 ${correctTemp}입니다.`);
     gameState = "Playing";
   }
@@ -533,12 +510,12 @@ function myTurn() {
 sespectInputField.addEventListener("click",sendSusepct);
 
 function sendSusepct(){
-  const selectSuspectKey = `${suspectListKey}-${nickname}`;
+  const selectSuspectKey = `${TABLE_KEYS.SUSPECT_LIST}-${nickname}`;
   let result = {};
   result[selectSuspectKey] = playerSelectField.value;
 
   if(selectTimeout){
-    result[selectTimeoutKey] = true;
+    result[TABLE_KEYS.SELECT_TIMEOUT] = true;
   }
 
   updateData(result);
@@ -556,7 +533,7 @@ function removeReloadEvent(){
 function outGameEvent(e){
   if(gameState !== ""){
     let result = {};
-    result[outGameKey] = true;
+    result[TABLE_KEYS.OUT_GAME] = true;
     updateData(result);
   }
 }
@@ -574,7 +551,7 @@ function sendClick(msg){
       message : msg
     });
 
-    result[chatHistoryKey] = chatHistory;
+    result[TABLE_KEYS.CHAT_HISTORY] = chatHistory;
 
     updateData(result, KEY.CHAT_DATA_KEY);
   }
