@@ -307,9 +307,19 @@ function gameSetting(snapshot){
     votesEnd(data);
   }
 
+  votes(snapshot);
 
+  if(outGameKey in snapshot){
+    showAlert("알림","플레이어중 한명이 나갔습니다.\n게임을 초기화합니다.");
+    clearDatabase();
+    removeReloadEvent();
+    restart = true;
+  }
+}
+
+function votes(snapshot){
   Object.keys(snapshot).forEach((key)=>{
-    if(key.includes("SuspectList")){
+    if(key.includes(suspectListKey)){
       playerSelectCheck[key.split("-")[1]] = snapshot[key];
     }
   });
@@ -318,13 +328,6 @@ function gameSetting(snapshot){
     if(Object.keys(playerSelectCheck).length === playerList.length && admin){
       selectCulprit();
     }
-  }
-
-  if(outGameKey in snapshot){
-    showAlert("알림","플레이어중 한명이 나갔습니다.\n게임을 초기화합니다.");
-    clearDatabase();
-    removeReloadEvent();
-    restart = true;
   }
 }
 
