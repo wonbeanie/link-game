@@ -214,7 +214,7 @@ function tieOfVotes(data){
 }
 
 function votesInit(){
-  const VOTE_TIME = 5;
+  const VOTE_TIME = 60;
   startTimer(VOTE_TIME,()=>{
     selectTimeout = true;
     sendSusepct();
