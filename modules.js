@@ -77,13 +77,13 @@ export function Alert(closeClick = ()=>{}){
 
   function showAlert(title, message) {
     if(checkShowAlert()){
-      titleElement.innerText = title;
-      messageElement.innerText = message;
+      titleElement.textContent = title;
+      messageElement.textContent = message;
       return;
     }
 
-    titleElement.innerText = title;
-    messageElement.innerText = message;
+    titleElement.textContent = title;
+    messageElement.textContent = message;
     alertElement.style.display = 'flex';
   }
 
@@ -117,15 +117,15 @@ export function Log(){
     const playerNameElement = document.createElement("span");
     playerNameElement.style.fontWeight = "bold";
     playerNameElement.style.color = "var(--primary-color)";
-    playerNameElement.innerText = player;
+    playerNameElement.textContent = player;
 
     const separator = document.createElement("span");
-    separator.innerText = " : ";
+    separator.textContent = " : ";
     separator.style.color = "#a0aec0";
 
     const hintElement = document.createElement("span");
     hintElement.style.color = "var(--text-color)";
-    hintElement.innerText = text;
+    hintElement.textContent = text;
 
     playerElement.appendChild(playerNameElement);
     playerElement.appendChild(separator);
@@ -171,7 +171,7 @@ export function Timer(){
       const displayMinutes = String(minutes).padStart(2, '0');
       const displaySeconds = String(seconds).padStart(2, '0');
 
-      timerField.innerText = `${displayMinutes}:${displaySeconds}`;
+      timerField.textContent = `${displayMinutes}:${displaySeconds}`;
       
       time -= 1;
     }, 1000);
@@ -179,7 +179,7 @@ export function Timer(){
 
   function stopTimer() {
     clearInterval(inteval);
-    timerField.innerText = "";
+    timerField.textContent = "";
   }
 
   return {
