@@ -8,15 +8,15 @@ import '@testing-library/jest-dom';
 import fs from 'fs';
 import path from 'path';
 
-const html = fs.readFileSync(path.resolve(__dirname, "./index.html"), 'utf8');
+jest.mock('https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js');
+jest.mock("https://www.gstatic.com/firebasejs/12.7.0/firebase-database.js");
 
 describe('테스트', () => {
-  beforeEach(() => {
-    document.body.innerHTML = html.toString();
+  const html = fs.readFileSync(path.resolve(__dirname, "./index.html"), 'utf8');
+  document.body.innerHTML = html.toString();
 
-    // import('./game.js').then((module)=>{
-    //   module.init();
-    // });
+  beforeEach(() => {
+    import("./game.js");
   });
 
   test('닉네임 변경 확인', () => {
