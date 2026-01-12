@@ -57,7 +57,7 @@ confirmField.addEventListener("click", (e) => {
   updateData(result);
 
   nickname = nicknameInputField.value;
-  document.getElementById("nickname-info").innerText = nickname;
+  document.getElementById("nickname-info").textContent = nickname;
 
   localStorage.setItem('userNickname', nickname);
 });
@@ -405,13 +405,13 @@ startField.addEventListener("click",()=>{
     result[TABLE_KEYS.SEQUENCE] = shuffleList;
     result[TABLE_KEYS.SUSPECT] = suspect;
 
-    categoryField.innerText = category;
+    categoryField.textContent = category;
     
     if(nickname === suspect){
-      correctField.innerText = fakeCorrect;
+      correctField.textContent = fakeCorrect;
     }
     else {
-      correctField.innerText = correct;
+      correctField.textContent = correct;
     }
 
     updateData(result);
@@ -465,14 +465,14 @@ function sendLastAnswer(){
 function setPlayerList(data){
   playerList = data;
 
-  playerSelectField.innerText = "";
+  playerSelectField.textContent = "";
 
 
   
   JSON.parse(JSON.stringify(data)).sort().forEach((player)=>{
     const optionElement = document.createElement("option");
     optionElement.value = player;
-    optionElement.innerText = player;
+    optionElement.textContent = player;
 
     playerSelectField.appendChild(optionElement);
   });
@@ -481,10 +481,10 @@ function setPlayerList(data){
 function startGame() {
   let correctTemp = nickname === suspect ? fakeCorrect : correct;
 
-  categoryField.innerText = category;
-  correctField.innerText = correctTemp;
+  categoryField.textContent = category;
+  correctField.textContent = correctTemp;
 
-  stateInfoField.innerText = `${playSequence[0]}님이 입력하고 있습니다.`;
+  stateInfoField.textContent = `${playSequence[0]}님이 입력하고 있습니다.`;
 
   if(myTurn()){
     startTimer(30, sendHint);
