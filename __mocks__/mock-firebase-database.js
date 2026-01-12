@@ -1,49 +1,58 @@
+// 현재 realtime database = 데이터 저장 -> onValue
 
-// ref, set, onValue, get, child, update
-export function getDatabase(app){
-  return app;
-}
+// set -> onValue
+// update -> onValue
+// get -> ??
 
-export function ref(db, table){
+let onValueCallback = {};
+
+function getSnapshot(data){
   return {
-    db,
-    table
+    val(){
+      return data;
+    }
   }
 }
 
-export function set(ref, data){
+export const set = jest.fn((ref, data) => {
   return {
     ref,
     data
   }
-}
+});
 
-export function onValue(ref, callback){
-  return {
-    ref,
-    callback
-  }
-}
+export const update = jest.fn((ref, data) => {
+  const snapshot = getSnapshot(data);
+  onValueCallback[ref.table](snapshot);
+})
 
-export function get(db){
+export const onValue = jest.fn((ref, callback) =>{
+  onValueCallback[ref.table] = callback;
+})
+
+export const get = jest.fn((db) => {
   return {
     db,
     exists(){
       return true;
     }
   }
-}
+});
 
-export function child(db, table){
+export const getDatabase = jest.fn((app) => {
+  return app;
+});
+
+export const ref = jest.fn((db, table) => {
   return {
     db,
     table
   }
-}
+})
 
-export function update(ref, data){
+export const child = jest.fn((db, table) => {
   return {
-    ref,
-    data
+    db,
+    table
   }
-}
+})
