@@ -2,7 +2,7 @@
  * @jest-environment jsdom
  */
 
-import { screen } from '@testing-library/dom';
+import { fireEvent, screen } from '@testing-library/dom';
 import '@testing-library/jest-dom';
 
 import fs from 'fs';
@@ -24,4 +24,17 @@ describe('테스트', () => {
 
     expect(input).toBeInTheDocument();
   });
+
+  test("닉네임 설정 확인", async () => {
+    const nicknameInput = screen.getByPlaceholderText('닉네임을 입력하세요');
+    const nickname = "테스트";
+    fireEvent.change(nicknameInput, {target : {value : nickname}});
+
+    const confirmButton = screen.getByText("입력 완료");
+    confirmButton.click();
+
+    let items = await screen.findAllByText(nickname);
+
+    expect(items).toHaveLength(2);
+  })
 });
