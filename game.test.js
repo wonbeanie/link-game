@@ -2,7 +2,7 @@
  * @jest-environment jsdom
  */
 
-import { fireEvent, screen } from '@testing-library/dom';
+import { fireEvent, screen, waitFor } from '@testing-library/dom';
 import '@testing-library/jest-dom';
 
 import fs from 'fs';
@@ -57,5 +57,22 @@ describe('테스트', () => {
     const readyItems = await screen.findAllByText("Ready");
     expect(readyItems).toHaveLength(2);
   });
-  
+
+  test("게임 시작 팝업 확인", async () => {
+    initDatabase[gameDataTable][userNickname] = "Ready";
+    initDatabase[gameDataTable][nickname] = "Ready";
+    anotherUserUpdateDatabase(initDatabase);
+
+    const gameStartBtn = screen.getByText("게임 시작하기");
+    gameStartBtn.click();
+
+    await waitFor(()=>{
+      const gameStartAlert = screen.getByRole('heading', { 
+        level: 3, 
+        name: /게임시작|당신 순서입니다./ 
+      });
+
+      expect(gameStartAlert).toBeVisible();
+    }, {timeout: 1000});
+  });
 });
