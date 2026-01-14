@@ -161,20 +161,20 @@ function hintLog(playerHints){
 function gameStartInit(){
   chatStart();
   gameState = TABLE_KEYS.START;
-  let result = {};
-  result[TABLE_KEYS.START] = null;
-  updateData(result);
   reloadEvent();
+
+  const result = {};
+  result[TABLE_KEYS.START] = null;
+  return result;
 }
 
 function gameHintSequence(data){
   if(data === "end"){
     showAlert("토론시간", "1분의 토론시간이 주어집니다.");
-    votesInit();
-
     selectPlayerField.className = "show";
     hintFiled.className = "none";
-    return;
+
+    return votesInit();
   }
 
   const notSettingPlayList = playerList.length === 0;
@@ -192,7 +192,7 @@ function gameHintSequence(data){
 function tieOfVotes(data){
   showAlert("투표 동점", `${data.join(",")}중에 한명을 선택해주세요.`);
   setPlayerList(data);
-  votesInit();
+  return votesInit();
 }
 
 function votesInit(){
@@ -207,7 +207,7 @@ function votesInit(){
   result[TABLE_KEYS.SEQUENCE] = null;
   result[TABLE_KEYS.SELECT_TIMEOUT] = null;
   selectTimeout = false;
-  updateData(result);
+  return result;
 }
 
 function gameOver(data, findSusepct = false){
@@ -257,6 +257,7 @@ function votesEnd(data){
 }
 
 function gameSetting(snapshot){
+  let updateDatabase = {};
   playerSelectCheck = [];
 
   correct = snapshot[TABLE_KEYS.CORRECT];
@@ -264,18 +265,14 @@ function gameSetting(snapshot){
   category = snapshot[TABLE_KEYS.CATEGORY];
   suspect = snapshot[TABLE_KEYS.SUSPECT];
 
-  if(TABLE_KEYS.START in snapshot){
-    gameStartInit();
-  }
-
   if(TABLE_KEYS.SEQUENCE in snapshot){
     const data = snapshot[TABLE_KEYS.SEQUENCE];
-    gameHintSequence(data);
-  }
+    const newDatabase = gameHintSequence(data);
 
-  if(TABLE_KEYS.RE_SELECT_CULPRIT in snapshot){
-    const data = snapshot[TABLE_KEYS.RE_SELECT_CULPRIT];
-    tieOfVotes(data);
+    updateDatabase = {
+      ...updateDatabase,
+      ...newDatabase
+    };
   }
 
   if(TABLE_KEYS.LAST_ANSWER in snapshot){
@@ -289,10 +286,38 @@ function gameSetting(snapshot){
     votesEnd(data);
   }
 
-  votes(snapshot);
+  if(TABLE_KEYS.START in snapshot){
+    const newDatabase = gameStartInit();
+
+    updateDatabase = {
+      ...updateDatabase,
+      ...newDatabase
+    };
+  }
+
+  if(TABLE_KEYS.RE_SELECT_CULPRIT in snapshot){
+    const data = snapshot[TABLE_KEYS.RE_SELECT_CULPRIT];
+    const newDatabase = tieOfVotes(data);
+
+    updateDatabase = {
+      ...updateDatabase,
+      ...newDatabase
+    }
+  }
+
+  const newDatabase = votes(snapshot);
+
+  updateDatabase = {
+    ...updateDatabase,
+    ...newDatabase
+  }
 
   if(TABLE_KEYS.OUT_GAME in snapshot){
     outGame();
+  }
+
+  if(Object.keys(updateDatabase).length > 0){
+   updateData(updateDatabase); 
   }
 }
 
@@ -312,9 +337,11 @@ function votes(snapshot){
 
   if(TABLE_KEYS.SELECT_TIMEOUT in snapshot){
     if(Object.keys(playerSelectCheck).length === playerList.length && admin){
-      selectCulprit();
+      return selectCulprit();
     }
   }
+
+  return {};
 }
 
 function selectCulprit(){
@@ -361,7 +388,7 @@ function selectCulprit(){
     result[TABLE_KEYS.SELECT_CULPRIT] = maxSuspect.suspect;
   }
 
-  updateData(result);
+  return result;
 }
 
 function gameInit(){
@@ -392,6 +419,10 @@ function gameInit(){
 startField.addEventListener("click",()=>{
   getData(KEY.GAME_DATA_KEY).then((data) => {
     let list = [];
+
+    if(!data){
+      return;
+    }
 
     Object.entries(data).forEach(([key, value]) => {
       if(key === TABLE_KEYS.START){
