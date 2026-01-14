@@ -24,9 +24,6 @@ const categoryField = document.getElementById("category");
 const correctField = document.getElementById("correct");
 const stateInfoField = document.getElementById("state-info");
 
-const urlParams = new URLSearchParams(window.location.search);
-const admin = Boolean(urlParams.get('admin')) || false;
-
 let playerList = [];
 
 let suspect = "";
@@ -68,9 +65,17 @@ const answerInputField = document.getElementById('answer-input');
 let startPlaySequence = [];
 
 let restart = false;
+let admin = false;
 
-if(admin){
-  document.getElementById('admin-btn').className = "show";
+checkAdmin();
+
+function checkAdmin() {
+  const urlParams = new URLSearchParams(window.location.search);
+  admin = Boolean(urlParams.get('admin')) || false;
+  
+  if(admin){
+    document.getElementById('admin-btn').className = "show";
+  }
 }
 
 onValueListener(KEY.CHAT_DATA_KEY, (data) => {
