@@ -6,6 +6,7 @@
 
 let onValueCallback = {};
 let database = {};
+let config = {};
 
 function getSnapshot(data){
   return {
@@ -32,6 +33,11 @@ export const set = jest.fn((ref, data) => {
 });
 
 export const update = jest.fn((ref, data) => {
+  if(config.Sequence && data.hasOwnProperty("Sequence")){
+    data["Sequence"] = ["방장", "유저"];
+    config.Sequence = false;
+  }
+
   let noUpdate = true;
 
   if(database[ref.table]){
@@ -108,6 +114,30 @@ export const anotherUserUpdateDatabase = jest.fn((newData) => {
   database = newData;
 });
 
+export const setPlayers = jest.fn((addPlayers)=>{
+  onValueCallback["GameData/"]({
+    val : () => {
+      let result = {};
+
+      addPlayers.forEach((player)=>{
+        result[player] = "Ready";
+      });
+
+      return result;
+    }
+  });
+});
+
+export const testInit = jest.fn((newConfig, init = false)=>{
+  if(init){
+    config = newConfig;
+    return;
+  }
+  config = {
+    ...config,
+    ...newConfig
+  }
+});
 
 function isEqual(obj1, obj2) {
   // 1. 주소값이 같으면 바로 true

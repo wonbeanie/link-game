@@ -7,7 +7,7 @@ import '@testing-library/jest-dom';
 
 import fs from 'fs';
 import path from 'path';
-import { anotherUserUpdateDatabase } from './__mocks__/mock-firebase-database.js';
+import { anotherUserUpdateDatabase, setPlayers } from './__mocks__/mock-firebase-database.js';
 
 jest.mock('https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js');
 jest.mock("https://www.gstatic.com/firebasejs/12.7.0/firebase-database.js");
@@ -59,8 +59,7 @@ describe('테스트', () => {
   });
 
   test("게임 시작 팝업 확인", async () => {
-    initDatabase[gameDataTable][userNickname] = "Ready";
-    initDatabase[gameDataTable][nickname] = "Ready";
+    setPlayers([userNickname, nickname]);
     anotherUserUpdateDatabase(initDatabase);
 
     const gameStartBtn = screen.getByText("게임 시작하기");
