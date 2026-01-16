@@ -4,21 +4,15 @@
 
 import { fireEvent, screen, waitFor, within } from '@testing-library/dom';
 
-import fs from 'fs';
-import path from 'path';
 import { mockDatabaseUpdate, setPlayers, userNickname, nickname, gameDataTable } from './__mocks__/mock-firebase-database.js';
-import { hintWord, setupGameStart, setupSendHint } from './modules/game-helpers.js';
+import { hintWord, setupGameStart, setupHTMLInit, setupSendHint } from './modules/game-helpers.js';
 
 describe('테스트', () => {
-  const html = fs.readFileSync(path.resolve(__dirname, "../index.html"), 'utf8');;
   let initDatabase = {};
-  
-  beforeEach(()=> {
-    window.history.pushState({}, '', '?admin=true');
-    document.body.innerHTML = html.toString();
-    jest.resetModules();
-    import("../game.js");
 
+  beforeEach(()=> {
+    setupHTMLInit();
+    
     initDatabase = {};
     initDatabase[gameDataTable] = {};
     mockDatabaseUpdate(initDatabase);
