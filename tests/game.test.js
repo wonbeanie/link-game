@@ -7,7 +7,7 @@ import { fireEvent, screen, waitFor, within } from '@testing-library/dom';
 import fs from 'fs';
 import path from 'path';
 import { mockDatabaseUpdate, setPlayers, userNickname, nickname, gameDataTable } from './__mocks__/mock-firebase-database.js';
-import { setupGameStart } from './modules/game-helpers.js';
+import { hintWord, setupGameStart, setupSendHint } from './modules/game-helpers.js';
 
 describe('테스트', () => {
   const html = fs.readFileSync(path.resolve(__dirname, "../index.html"), 'utf8');;
@@ -70,12 +70,11 @@ describe('테스트', () => {
   });
 
   describe("게임 흐름 테스트",() => {
-    const hintWord = "힌트 단어";
 
     beforeEach(()=>{
       setupGameStart();
     });
-
+    
     test("힌트 입력", async () => {
       const hintInput = screen.getByPlaceholderText('힌트 단어를 입력하세요');
       fireEvent.change(hintInput, {target : {value : hintWord}});
@@ -109,6 +108,19 @@ describe('테스트', () => {
 
       expect(hintLog).toBeVisible();
       expect(nicknameLog).toBeVisible();
+    });
+
+    test("토론 및 투표", async () => {
+      setupSendHint();
+
+      await waitFor(()=>{
+        const votingAlert = screen.getByRole('heading', { 
+          level: 3, 
+          name: /토론시간/ 
+        });
+
+        expect(votingAlert).toBeVisible();
+      }, {timeout: 1000});
     });
   });
 });
