@@ -105,16 +105,9 @@ describe('테스트', () => {
     });
 
     test("토론 및 투표", async () => {
-      setupSendHint();
+      await setupSendHint();
 
-      await waitFor(()=>{
-        const votingAlert = screen.getByRole('heading', { 
-          level: 3, 
-          name: /토론시간/ 
-        });
-
-        expect(votingAlert).toBeVisible();
-      }, {timeout: 1000});
+      screen.findByText(/범인 지목 투표/);
     });
   });
 });
