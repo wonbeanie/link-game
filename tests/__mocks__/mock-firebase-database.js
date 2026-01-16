@@ -66,6 +66,13 @@ export const update = jest.fn((ref, data) => {
     ...database[ref.table],
     ...data
   };
+
+  Object.entries(database[ref.table]).forEach(([key, value])=>{
+    if(value === null){
+      delete database[ref.table][key];
+    }
+  });
+
   const snapshot = getSnapshot(database[ref.table]);
   onValueCallback[ref.table](snapshot);
 })
