@@ -3,14 +3,10 @@
  */
 
 import { fireEvent, screen, waitFor, within } from '@testing-library/dom';
-import '@testing-library/jest-dom';
 
 import fs from 'fs';
 import path from 'path';
 import { anotherUserUpdateDatabase, setPlayers, testInit } from './__mocks__/mock-firebase-database.js';
-
-jest.mock('https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js');
-jest.mock("https://www.gstatic.com/firebasejs/12.7.0/firebase-database.js");
 
 describe('테스트', () => {
   const html = fs.readFileSync(path.resolve(__dirname, "../index.html"), 'utf8');

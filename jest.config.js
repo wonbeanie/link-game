@@ -6,6 +6,7 @@ const config = {
     "^https://www\\.gstatic\\.com/firebasejs/12\\.7\\.0/firebase-database\\.js$": "<rootDir>/tests/__mocks__/mock-firebase-database.js"
   },
   testEnvironment: 'jsdom',
+  setupFilesAfterEnv : ['<rootDir>/tests/modules/test-setup.js']
 };
 
 module.exports = config;
