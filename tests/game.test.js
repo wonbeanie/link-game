@@ -6,7 +6,7 @@ import { fireEvent, screen, waitFor, within } from '@testing-library/dom';
 
 import fs from 'fs';
 import path from 'path';
-import { anotherUserUpdateDatabase, setPlayers, userNickname, nickname, gameDataTable } from './__mocks__/mock-firebase-database.js';
+import { mockDatabaseUpdate, setPlayers, userNickname, nickname, gameDataTable } from './__mocks__/mock-firebase-database.js';
 import { setupGameStart } from './modules/game-helpers.js';
 
 describe('테스트', () => {
@@ -21,7 +21,7 @@ describe('테스트', () => {
 
     initDatabase = {};
     initDatabase[gameDataTable] = {};
-    anotherUserUpdateDatabase(initDatabase);
+    mockDatabaseUpdate(initDatabase);
   });
 
   test("게임 시작과 초기화 버튼 확인", () => {
@@ -34,7 +34,7 @@ describe('테스트', () => {
 
   test("1명의 유저가 존재할때 닉네임 설정 확인", async () => {
     initDatabase[gameDataTable][userNickname] = "Ready";
-    anotherUserUpdateDatabase(initDatabase);
+    mockDatabaseUpdate(initDatabase);
 
     const nicknameInput = screen.getByPlaceholderText('닉네임을 입력하세요');
     fireEvent.change(nicknameInput, {target : {value : nickname}});
@@ -54,7 +54,7 @@ describe('테스트', () => {
 
   test("게임 시작 팝업 확인", async () => {
     setPlayers([userNickname, nickname]);
-    anotherUserUpdateDatabase(initDatabase);
+    mockDatabaseUpdate(initDatabase);
 
     const gameStartBtn = screen.getByText("게임 시작하기");
     gameStartBtn.click();

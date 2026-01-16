@@ -110,8 +110,27 @@ export const child = jest.fn((ref, table) => {
   };
 })
 
-export const anotherUserUpdateDatabase = jest.fn((newData) => {
-  database = newData;
+export const mockDatabaseUpdate = jest.fn((newData, init = true, update = false) => {
+  if(init){
+    database = newData;
+    return;
+  }
+
+  let databaseTemp = {
+    ...database
+  }
+
+  databaseTemp[gameDataTable] = {
+    ...newData
+  }
+
+  if(update){
+    onValueCallback[gameDataTable]({
+      val : () => {
+        return databaseTemp[gameDataTable];
+      }
+    });
+  }
 });
 
 export const setPlayers = jest.fn((addPlayers)=>{
