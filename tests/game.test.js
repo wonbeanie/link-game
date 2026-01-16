@@ -13,7 +13,7 @@ jest.mock('https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js');
 jest.mock("https://www.gstatic.com/firebasejs/12.7.0/firebase-database.js");
 
 describe('테스트', () => {
-  const html = fs.readFileSync(path.resolve(__dirname, "./index.html"), 'utf8');
+  const html = fs.readFileSync(path.resolve(__dirname, "../index.html"), 'utf8');
   const userNickname = "유저";
   const nickname = "방장";
   const gameDataTable = "GameData/";
@@ -23,7 +23,7 @@ describe('테스트', () => {
     window.history.pushState({}, '', '?admin=true');
     document.body.innerHTML = html.toString();
     jest.resetModules();
-    import("./game.js");
+    import("../game.js");
 
     initDatabase = {};
     initDatabase[gameDataTable] = {};
