@@ -44,12 +44,12 @@ export async function setupSendHint(){
   }, {timeout: 1000});
 }
 
-export function setupHTMLInit(){
+export async function setupHTMLInit(){
   const html = fs.readFileSync(path.resolve(__dirname, "../../index.html"), 'utf8');;
   window.history.pushState({}, '', '?admin=true');
   document.body.innerHTML = html.toString();
   jest.resetModules();
-  import("../../game.js");
+  await import("../../game.js");
 }
 
 export const hintWord = "힌트 단어";
