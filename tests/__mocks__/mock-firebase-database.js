@@ -34,7 +34,7 @@ export const set = jest.fn((ref, data) => {
 
 export const update = jest.fn((ref, data) => {
   if(config.Sequence && data.hasOwnProperty("Sequence")){
-    data["Sequence"] = ["방장", "유저"];
+    data["Sequence"] = [nickname, userNickname];
     config.Sequence = false;
   }
 
@@ -115,7 +115,7 @@ export const anotherUserUpdateDatabase = jest.fn((newData) => {
 });
 
 export const setPlayers = jest.fn((addPlayers)=>{
-  onValueCallback["GameData/"]({
+  onValueCallback[gameDataTable]({
     val : () => {
       let result = {};
 
@@ -162,3 +162,7 @@ function isEqual(obj1, obj2) {
 
   return true;
 }
+
+export const userNickname = "유저";
+export const nickname = "방장"
+export const gameDataTable = "GameData/";

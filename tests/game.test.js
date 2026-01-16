@@ -6,13 +6,11 @@ import { fireEvent, screen, waitFor, within } from '@testing-library/dom';
 
 import fs from 'fs';
 import path from 'path';
-import { anotherUserUpdateDatabase, setPlayers, testInit } from './__mocks__/mock-firebase-database.js';
+import { anotherUserUpdateDatabase, setPlayers, userNickname, nickname, gameDataTable } from './__mocks__/mock-firebase-database.js';
+import { setupGameStart } from './modules/game-helpers.js';
 
 describe('테스트', () => {
-  const html = fs.readFileSync(path.resolve(__dirname, "../index.html"), 'utf8');
-  const userNickname = "유저";
-  const nickname = "방장";
-  const gameDataTable = "GameData/";
+  const html = fs.readFileSync(path.resolve(__dirname, "../index.html"), 'utf8');;
   let initDatabase = {};
   
   beforeEach(()=> {
@@ -72,25 +70,13 @@ describe('테스트', () => {
   });
 
   describe("게임 흐름 테스트",() => {
-    beforeEach(async ()=>{
-      setPlayers([userNickname, nickname]);
-      testInit({Sequence : true});
+    const hintWord = "힌트 단어";
 
-      const gameStartBtn = screen.getByText("게임 시작하기");
-      gameStartBtn.click();
-
-      await waitFor(()=>{
-        const gameStartAlert = screen.getByRole('heading', { 
-          level: 3, 
-          name: /당신 순서입니다./ 
-        });
-
-        expect(gameStartAlert).toBeVisible();
-      }, {timeout: 1000});
+    beforeEach(()=>{
+      setupGameStart();
     });
 
     test("힌트 입력", async () => {
-      const hintWord = "힌트 단어";
       const hintInput = screen.getByPlaceholderText('힌트 단어를 입력하세요');
       fireEvent.change(hintInput, {target : {value : hintWord}});
 
