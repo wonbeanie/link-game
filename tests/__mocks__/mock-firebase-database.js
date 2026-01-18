@@ -128,6 +128,7 @@ export const mockDatabaseUpdate = jest.fn((newData, init = true, update = false)
   }
 
   databaseTemp[gameDataTable] = {
+    ...databaseTemp[gameDataTable],
     ...newData
   }
 
@@ -138,6 +139,8 @@ export const mockDatabaseUpdate = jest.fn((newData, init = true, update = false)
       }
     });
   }
+
+  database = databaseTemp;
 });
 
 export const setPlayers = jest.fn((addPlayers)=>{
