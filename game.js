@@ -67,6 +67,8 @@ let startPlaySequence = [];
 let restart = false;
 let admin = false;
 
+let sendSuspectCheck = false;
+
 checkAdmin();
 
 function checkAdmin() {
@@ -197,9 +199,11 @@ function tieOfVotes(data){
 
 function votesInit(){
   const VOTE_TIME = 60;
+  sendSuspectCheck = false;
+  
   startTimer(VOTE_TIME,()=>{
     selectTimeout = true;
-    sendSusepct();
+    sendSuspect();
   });
 
   let result = {};
@@ -541,12 +545,16 @@ function myTurn() {
   return playSequence[0] === nickname;
 }
 
-sespectInputField.addEventListener("click",sendSusepct);
+sespectInputField.addEventListener("click",sendSuspect);
 
-function sendSusepct(){
+function sendSuspect(){
   const selectSuspectKey = `${TABLE_KEYS.SUSPECT_LIST}-${nickname}`;
   let result = {};
-  result[selectSuspectKey] = playerSelectField.value;
+
+  if(!selectTimeout || (!sendSuspectCheck && !playerSelectCheck[nickname])){
+    result[selectSuspectKey] = playerSelectField.value;
+    sendSuspectCheck = true;
+  }
 
   if(selectTimeout){
     result[TABLE_KEYS.SELECT_TIMEOUT] = true;
