@@ -196,7 +196,7 @@ function tieOfVotes(data){
 }
 
 function votesInit(){
-  const VOTE_TIME = 5;
+  const VOTE_TIME = 60;
   startTimer(VOTE_TIME,()=>{
     selectTimeout = true;
     sendSusepct();
@@ -475,8 +475,6 @@ function sendHint(){
     }
     else {
       result[TABLE_KEYS.SEQUENCE] = "end";
-      showAlert("토론시간", "1분의 토론시간이 주어집니다.");
-      startTimer(60,sendSusepct);
       hintFiled.className = "none";
     }
 
