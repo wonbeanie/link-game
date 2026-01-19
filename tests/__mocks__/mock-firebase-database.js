@@ -132,6 +132,12 @@ export const mockDatabaseUpdate = jest.fn((newData, init = true, update = false)
     ...newData
   }
 
+  Object.entries(databaseTemp[gameDataTable]).forEach(([key, value])=>{
+    if(value === null){
+      delete databaseTemp[gameDataTable][key];
+    }
+  });
+
   if(update){
     onValueCallback[gameDataTable]({
       val : () => {
