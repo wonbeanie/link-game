@@ -1,6 +1,7 @@
-import { fireEvent, screen, within } from "@testing-library/dom";
+import { fireEvent, screen, waitFor, within } from "@testing-library/dom";
 import { setupGameStart, setupHTMLInit, setupSendHint } from "./modules/game-helpers";
 import { nickname, userNickname } from "./__mocks__/mock-firebase-database";
+import { setupVoting, setupVotingSetting } from "./modules/vote-helpers";
 
 describe("투표 테스트", () => {
   beforeEach(async ()=>{
@@ -52,4 +53,22 @@ describe("투표 테스트", () => {
     const votingLog = await findByText(`${userNickname}님을 투표하였습니다.`);
     expect(votingLog).toBeVisible();
   });
+
+  describe("투표 종료 테스트", () => {
+    test("범인을 찾은 경우", async () => {
+      await setupVoting(setupVotingSetting.FOUND_SUSPECT);
+    })
+
+    test("범인을 찾지 못한 경우", async () => {
+      await setupVoting(setupVotingSetting.NOTFOUND_SUSPECT);
+    })
+
+    test("범인인것을 들킨 경우", async () => {
+      await setupVoting(setupVotingSetting.SUSPECT_EXPOSED);
+    })
+
+    test("투표가 동점일 경우", async () => {
+      await setupVoting(setupVotingSetting.TIE_VOTES);
+    })
+  })
 })

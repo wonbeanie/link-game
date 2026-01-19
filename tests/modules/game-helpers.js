@@ -1,5 +1,5 @@
-import { fireEvent, screen, waitFor, within } from '@testing-library/dom';
-import { gameDataTable, mockDatabaseUpdate, nickname, setPlayers, testInit, userNickname } from "../__mocks__/mock-firebase-database";
+import { fireEvent, screen, waitFor } from '@testing-library/dom';
+import { mockDatabaseUpdate, nickname, setPlayers, testInit, userNickname } from "../__mocks__/mock-firebase-database";
 import fs from 'fs';
 import path from 'path';
 
@@ -50,34 +50,6 @@ export async function setupHTMLInit(){
   document.body.innerHTML = html.toString();
   jest.resetModules();
   await import("../../game.js");
-}
-
-
-export async function setupVoting() {
-  jest.advanceTimersByTime(1000);
-
-  await waitFor(()=>{
-    const timer = screen.getByText(/01:00/i);
-    expect(timer).toBeVisible();
-  }, {timeout : 5000});
-
-  let result = {};
-  result[`SuspectList-${userNickname}`] = nickname;
-  result[`SuspectList-${nickname}`] = nickname;
-
-  mockDatabaseUpdate(result, false, true);
-
-  const activityLog = screen.getByText(/활동 로그/);
-  const logDisplay = activityLog.nextElementSibling;
-
-  expect(logDisplay).toHaveAttribute('id', 'display');
-
-  const { findAllByText } = within(logDisplay);
-  const nicknameLog = await findAllByText(nickname);
-  expect(nicknameLog).toHaveLength(2);
-
-  const votingLog = await findAllByText(`${nickname}님을 투표하였습니다.`);
-  expect(votingLog).toHaveLength(2);
 }
 
 export const hintWord = "힌트 단어";
