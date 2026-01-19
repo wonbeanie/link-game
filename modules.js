@@ -152,13 +152,7 @@ export function Timer(){
   
   
   function startTimer(timeLimit = 30, timeoutCallback = () => {}) {
-    let time = timeLimit;
-
-    if (inteval) {
-      stopTimer();
-    }
-
-    inteval = setInterval(() => {
+    function action(){
       if (time < 0) {
         stopTimer();
         timeoutCallback();
@@ -174,7 +168,17 @@ export function Timer(){
       timerField.textContent = `${displayMinutes}:${displaySeconds}`;
       
       time -= 1;
-    }, 1000);
+    }
+
+    let time = timeLimit;
+
+    if (inteval) {
+      stopTimer();
+    }
+
+    action();
+
+    inteval = setInterval(action, 1000);
   }
 
   function stopTimer() {
