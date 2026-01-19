@@ -54,9 +54,16 @@ export async function setupHTMLInit(){
 
 
 export async function setupVoting() {
+  jest.advanceTimersByTime(1000);
+
+  await waitFor(()=>{
+    const timer = screen.getByText(/01:00/i);
+    expect(timer).toBeVisible();
+  }, {timeout : 5000});
+
   let result = {};
-  result[`SuspectList-${userNickname}`] = userNickname;
-  result[`SuspectList-${nickname}`] = userNickname;
+  result[`SuspectList-${userNickname}`] = nickname;
+  result[`SuspectList-${nickname}`] = nickname;
 
   mockDatabaseUpdate(result, false, true);
 
@@ -69,7 +76,7 @@ export async function setupVoting() {
   const nicknameLog = await findAllByText(nickname);
   expect(nicknameLog).toHaveLength(2);
 
-  const votingLog = await findAllByText(`${userNickname}님을 투표하였습니다.`);
+  const votingLog = await findAllByText(`${nickname}님을 투표하였습니다.`);
   expect(votingLog).toHaveLength(2);
 }
 

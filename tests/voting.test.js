@@ -4,10 +4,15 @@ import { nickname, userNickname } from "./__mocks__/mock-firebase-database";
 
 describe("투표 테스트", () => {
   beforeEach(async ()=>{
+    jest.useFakeTimers();
     await setupHTMLInit();
     await setupGameStart();
     await setupSendHint();
   });
+
+  afterEach(() => {
+    jest.useRealTimers();
+  })
 
   test("정상적인 플레이어 투표", async () => {
     screen.getByText(/범인 지목 투표/);
