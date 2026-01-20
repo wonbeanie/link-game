@@ -42,60 +42,85 @@ export async function setupVoting(stateSetting) {
 }
 
 async function notfoundsuspect(){
-  const userVoting = nickname;
-  const chiefVoting = nickname;
-  const suspect = userNickname;
-
-  doneVoteInit({userVoting, chiefVoting, suspect});
-
-  const {nicknameLog, votingLog} = await checkVoting(nickname);
-
-  expect(nicknameLog).toHaveLength(2);
-  expect(votingLog).toHaveLength(2);
+  await voteTestFlow({
+    voteSetting : {
+      userVoting : nickname,
+      chiefVoting : nickname,
+      suspect : userNickname
+    },
+    checkVotingSetting : {
+      nickname : nickname,
+      nicknameLogCount : 2,
+      votingLogCount : 2
+    }
+  })
 }
 
 async function foundSuspect(){
-  const userVoting = userNickname;
-  const chiefVoting = userNickname;
-  const suspect = userNickname;
-
-  doneVoteInit({userVoting, chiefVoting, suspect});
-
-  const {nicknameLog, votingLog} = await checkVoting(userNickname);
-
-  expect(nicknameLog).toHaveLength(2);
-  expect(votingLog).toHaveLength(2);
+  await voteTestFlow({
+    voteSetting : {
+      userVoting : userNickname,
+      chiefVoting : userNickname,
+      suspect : userNickname
+    },
+    checkVotingSetting : {
+      nickname : userNickname,
+      nicknameLogCount : 2,
+      votingLogCount : 2
+    }
+  })
 }
 
 async function tieVotes(){
-  const userVoting = nickname;
-  const chiefVoting = userNickname;
-  const suspect = nickname;
-
-  doneVoteInit({userVoting, chiefVoting, suspect});
-
-  const {nicknameLog, votingLog} = await checkVoting(nickname);
-
-  expect(nicknameLog).toHaveLength(2);
-  expect(votingLog).toHaveLength(1);
-
-  const {nicknameLog : userLog, votingLog : userVotingLog} = await checkVoting(userNickname);
-
-  expect(userLog).toHaveLength(2);
-  expect(userVotingLog).toHaveLength(1);
+  await voteTestFlow({
+    voteSetting : {
+      userVoting : nickname,
+      chiefVoting : userNickname,
+      suspect : nickname
+    },
+    checkVotingSetting : [
+      {
+        nickname : nickname,
+        nicknameLogCount : 2,
+        votingLogCount : 1
+      },
+      {
+        nickname : userNickname,
+        nicknameLogCount : 2,
+        votingLogCount : 1
+      }
+    ]
+  });
 }
 
 async function suspectExposed(){
-  const userVoting = nickname;
-  const chiefVoting = nickname;
-  const suspect = nickname;
+  await voteTestFlow({
+    voteSetting : {
+      userVoting : nickname,
+      chiefVoting : nickname,
+      suspect : nickname
+    },
+    checkVotingSetting : {
+      nickname : nickname,
+      nicknameLogCount : 2,
+      votingLogCount : 2
+    }
+  })
+}
 
-  doneVoteInit({userVoting, chiefVoting, suspect});
+async function voteTestFlow({voteSetting, checkVotingSetting}){
+  doneVoteInit(voteSetting);
 
-  const {nicknameLog, votingLog} = await checkVoting(nickname);
+  if(!Array.isArray(checkVotingSetting)){
+    checkVotingSetting = [checkVotingSetting];
+  }
 
-  expect(nicknameLog).toHaveLength(2);
-  expect(votingLog).toHaveLength(2);
+  for(const {nickname, nicknameLogCount, votingLogCount} of checkVotingSetting){
+    const {nicknameLog, votingLog} = await checkVoting(nickname);
+
+    expect(nicknameLog).toHaveLength(nicknameLogCount);
+    expect(votingLog).toHaveLength(votingLogCount);
+  }
 }
 
 function doneVoteInit({userVoting, chiefVoting, suspect}){
