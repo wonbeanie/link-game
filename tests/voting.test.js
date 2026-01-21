@@ -55,20 +55,47 @@ describe("투표 테스트", () => {
   });
 
   describe("투표 종료 테스트", () => {
+    describe("범인인것을 들킨 경우", () => {
+      test.each([
+        { 
+          desc: "시민의 키워드을 틀렸을때", 
+          suspectAnswerSetting: "가짜 정답",
+          expectedAlertText: "시민 승리"
+        },
+        { 
+          desc: "시민의 키워드을 맞췄을때", 
+          suspectAnswerSetting: "정답",
+          expectedAlertText: "범인 승리"
+        },
+      ])("$desc", async ({ suspectAnswerSetting, expectedAlertText }) => {
+        await setupVoting(setupVotingSetting.SUSPECT_EXPOSED);
+        const suspectAnswer = screen.getByPlaceholderText("시민의 정답은?");
+        expect(suspectAnswer).toBeVisible();
+        fireEvent.change(suspectAnswer, {
+          target : { value: suspectAnswerSetting }
+        });
+        const suspectAnswerBtn = screen.getByText("정답 맞추기");
+        suspectAnswerBtn.click();
+        await waitFor(()=>{
+          const alert = screen.getByRole('heading', { 
+            level: 3, 
+            name: expectedAlertText
+          });
+          expect(alert).toBeVisible();
+        }, {timeout : 5000});
+      });
+    });
+
+    test("투표가 동점일 경우", async () => {
+      await setupVoting(setupVotingSetting.TIE_VOTES);
+    })
+
     test("범인을 찾은 경우", async () => {
       await setupVoting(setupVotingSetting.FOUND_SUSPECT);
     })
 
     test("범인을 찾지 못한 경우", async () => {
       await setupVoting(setupVotingSetting.NOTFOUND_SUSPECT);
-    })
-
-    test("범인인것을 들킨 경우", async () => {
-      await setupVoting(setupVotingSetting.SUSPECT_EXPOSED);
-    })
-
-    test("투표가 동점일 경우", async () => {
-      await setupVoting(setupVotingSetting.TIE_VOTES);
     })
   })
 })

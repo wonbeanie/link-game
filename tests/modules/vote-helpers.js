@@ -129,6 +129,8 @@ function doneVoteInit({userVoting, chiefVoting, suspect}){
   result[`SuspectList-${userNickname}`] = userVoting;
   result[`SuspectList-${nickname}`] = chiefVoting;
   result['Suspect'] = suspect;
+  result['Correct'] = "정답";
+  result['FakeCorrect'] = "가짜정답";
 
   mockDatabaseUpdate(result, false, true);
 }
