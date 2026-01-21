@@ -1,5 +1,7 @@
 // 현재 realtime database = 데이터 저장 -> onValue
 
+import { TABLE_KEYS } from "../../database";
+
 // set -> onValue
 // update -> onValue
 // get -> ??
@@ -33,8 +35,8 @@ export const set = jest.fn((ref, data) => {
 });
 
 export const update = jest.fn((ref, data) => {
-  if(config.Sequence && data.hasOwnProperty("Sequence")){
-    data["Sequence"] = [nickname, userNickname];
+  if(config.Sequence && data.hasOwnProperty(TABLE_KEYS.SEQUENCE)){
+    data[TABLE_KEYS.SEQUENCE] = [nickname, userNickname];
     config.Sequence = false;
   }
 

@@ -2,6 +2,7 @@ import { fireEvent, screen, waitFor } from '@testing-library/dom';
 import { mockDatabaseUpdate, nickname, setPlayers, testInit, userNickname } from "../__mocks__/mock-firebase-database";
 import fs from 'fs';
 import path from 'path';
+import { TABLE_KEYS } from '../../database.js';
 
 export async function setupGameStart(){
   setPlayers([userNickname]);
@@ -30,7 +31,7 @@ export async function setupSendHint(){
   let result = {};
 
   result[userNickname] = hintWord;
-  result["Sequence"] = "end";
+  result[TABLE_KEYS.SEQUENCE] = "end";
 
   mockDatabaseUpdate(result, false, true);
 

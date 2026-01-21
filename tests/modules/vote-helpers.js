@@ -1,6 +1,7 @@
 import { screen, waitFor, within } from "@testing-library/dom";
 import { mockDatabaseUpdate, nickname, userNickname } from "../__mocks__/mock-firebase-database";
 import { checkAlert } from "./game-helpers";
+import { TABLE_KEYS } from "../../database";
 
 export async function setupVoting(stateSetting) {
   await waitFor(()=>{
@@ -113,12 +114,12 @@ async function voteTestFlow({voteSetting, checkVotingSetting}){
 
 function doneVoteInit({userVoting, chiefVoting, suspect}){
   let result = {};
-  result[`Sequence`] = null;
-  result[`SuspectList-${userNickname}`] = userVoting;
-  result[`SuspectList-${nickname}`] = chiefVoting;
-  result['Suspect'] = suspect;
-  result['Correct'] = "정답";
-  result['FakeCorrect'] = "가짜정답";
+  result[TABLE_KEYS.SEQUENCE] = null;
+  result[`${TABLE_KEYS.SUSPECT_LIST}-${userNickname}`] = userVoting;
+  result[`${TABLE_KEYS.SUSPECT_LIST}-${nickname}`] = chiefVoting;
+  result[TABLE_KEYS.SUSPECT] = suspect;
+  result[TABLE_KEYS.CORRECT] = "정답";
+  result[TABLE_KEYS.FAKE_CORRECT] = "가짜정답";
 
   mockDatabaseUpdate(result, false, true);
 }
