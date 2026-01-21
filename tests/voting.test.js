@@ -1,5 +1,5 @@
-import { fireEvent, screen, waitFor, within } from "@testing-library/dom";
-import { setupGameStart, setupHTMLInit, setupSendHint } from "./modules/game-helpers";
+import { fireEvent, screen, within } from "@testing-library/dom";
+import { checkAlert, setupGameStart, setupHTMLInit, setupSendHint } from "./modules/game-helpers";
 import { nickname, userNickname } from "./__mocks__/mock-firebase-database";
 import { setupVoting, setupVotingSetting } from "./modules/vote-helpers";
 
@@ -76,13 +76,7 @@ describe("투표 테스트", () => {
         });
         const suspectAnswerBtn = screen.getByText("정답 맞추기");
         suspectAnswerBtn.click();
-        await waitFor(()=>{
-          const alert = screen.getByRole('heading', { 
-            level: 3, 
-            name: expectedAlertText
-          });
-          expect(alert).toBeVisible();
-        }, {timeout : 5000});
+        await checkAlert(expectedAlertText);
       });
     });
 

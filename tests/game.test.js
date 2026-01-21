@@ -5,7 +5,7 @@
 import { fireEvent, screen, waitFor } from '@testing-library/dom';
 
 import { mockDatabaseUpdate, setPlayers, userNickname, nickname, gameDataTable } from './__mocks__/mock-firebase-database.js';
-import { setupHTMLInit } from './modules/game-helpers.js';
+import { checkAlert, setupHTMLInit } from './modules/game-helpers.js';
 
 describe('테스트', () => {
   let initDatabase = {};
@@ -53,13 +53,6 @@ describe('테스트', () => {
     const gameStartBtn = screen.getByText("게임 시작하기");
     gameStartBtn.click();
 
-    await waitFor(()=>{
-      const gameStartAlert = screen.getByRole('heading', { 
-        level: 3, 
-        name: /게임시작|당신 순서입니다./ 
-      });
-
-      expect(gameStartAlert).toBeVisible();
-    }, {timeout: 1000});
+    await checkAlert("게임시작|당신 순서입니다.");
   });
 });

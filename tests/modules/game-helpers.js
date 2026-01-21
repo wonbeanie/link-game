@@ -34,14 +34,7 @@ export async function setupSendHint(){
 
   mockDatabaseUpdate(result, false, true);
 
-  await waitFor(()=>{
-    const votingAlert = screen.getByRole('heading', { 
-      level: 3, 
-      name: /토론시간/ 
-    });
-
-    expect(votingAlert).toBeVisible();
-  }, {timeout: 1000});
+  await checkAlert("토론시간");
 }
 
 export async function setupHTMLInit(){
@@ -50,6 +43,19 @@ export async function setupHTMLInit(){
   document.body.innerHTML = html.toString();
   jest.resetModules();
   await import("../../game.js");
+}
+
+export async function checkAlert(alertTitle = "", level = 3){
+  const regx = new RegExp(alertTitle);
+
+  await waitFor(()=>{
+    const alert = screen.getByRole('heading', { 
+      level: level, 
+      name: regx
+    });
+
+    expect(alert).toBeVisible();
+  }, {timeout : 5000});
 }
 
 export const hintWord = "힌트 단어";

@@ -1,21 +1,8 @@
 import { screen, waitFor, within } from "@testing-library/dom";
 import { mockDatabaseUpdate, nickname, userNickname } from "../__mocks__/mock-firebase-database";
+import { checkAlert } from "./game-helpers";
 
 export async function setupVoting(stateSetting) {
-  async function checkAlert(alertTitle = setupVotingSetting.SUSPECT_EXPOSED){
-    jest.advanceTimersByTime(60000);
-    const regx = new RegExp(alertTitle);
-
-    await waitFor(()=>{
-      const alert = screen.getByRole('heading', { 
-        level: 3, 
-        name: regx
-      });
-
-      expect(alert).toBeVisible();
-    }, {timeout : 5000});
-  }
-
   await waitFor(()=>{
     const timer = screen.getByText(/01:00/i);
     expect(timer).toBeVisible();
@@ -38,6 +25,7 @@ export async function setupVoting(stateSetting) {
       fail("올바르지 않는 상황입니다.");
   }
 
+  jest.advanceTimersByTime(60000);
   await checkAlert(stateSetting);
 }
 
