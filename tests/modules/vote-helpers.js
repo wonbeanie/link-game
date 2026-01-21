@@ -1,5 +1,5 @@
 import { screen, waitFor, within } from "@testing-library/dom";
-import { mockDatabaseUpdate, nickname, userNickname } from "../__mocks__/mock-firebase-database";
+import { mockDatabaseUpdate, nickname, secondNickname, thirdNickname, userNickname } from "../__mocks__/mock-firebase-database";
 import { checkAlert } from "./game-helpers";
 import { TABLE_KEYS } from "../../database";
 
@@ -27,113 +27,99 @@ export async function setupVoting(stateSetting) {
   }
 
   jest.advanceTimersByTime(60000);
+
   await checkAlert(stateSetting);
 }
 
 async function notfoundsuspect(){
   await voteTestFlow({
-    voteSetting : {
-      userVoting : nickname,
-      chiefVoting : nickname,
-      suspect : userNickname
-    },
-    checkVotingSetting : {
-      nickname : nickname,
-      nicknameLogCount : 2,
-      votingLogCount : 2
-    }
+    votingList : [
+      [userNickname, nickname],
+      [nickname, nickname]
+    ],
+    suspect : userNickname
   })
 }
 
 async function foundSuspect(){
   await voteTestFlow({
-    voteSetting : {
-      userVoting : userNickname,
-      chiefVoting : userNickname,
-      suspect : userNickname
-    },
-    checkVotingSetting : {
-      nickname : userNickname,
-      nicknameLogCount : 2,
-      votingLogCount : 2
-    }
+    votingList : [
+      [userNickname, userNickname],
+      [nickname, userNickname]
+    ],
+    suspect : userNickname
   })
 }
 
 async function tieVotes(){
   await voteTestFlow({
-    voteSetting : {
-      userVoting : nickname,
-      chiefVoting : userNickname,
-      suspect : nickname
-    },
-    checkVotingSetting : [
-      {
-        nickname : nickname,
-        nicknameLogCount : 2,
-        votingLogCount : 1
-      },
-      {
-        nickname : userNickname,
-        nicknameLogCount : 2,
-        votingLogCount : 1
-      }
-    ]
+    votingList : [
+      [userNickname, nickname],
+      [nickname, userNickname],
+      [secondNickname, nickname],
+      [thirdNickname, userNickname],
+    ],
+    suspect : nickname
   });
 }
 
 async function suspectExposed(){
   await voteTestFlow({
-    voteSetting : {
-      userVoting : nickname,
-      chiefVoting : nickname,
-      suspect : nickname
-    },
-    checkVotingSetting : {
-      nickname : nickname,
-      nicknameLogCount : 2,
-      votingLogCount : 2
-    }
+    votingList : [
+      [userNickname, nickname],
+      [nickname, nickname]
+    ],
+    suspect : nickname
   })
 }
 
-async function voteTestFlow({voteSetting, checkVotingSetting}){
+async function voteTestFlow(voteSetting){
   doneVoteInit(voteSetting);
 
-  if(!Array.isArray(checkVotingSetting)){
-    checkVotingSetting = [checkVotingSetting];
-  }
-
-  for(const {nickname, nicknameLogCount, votingLogCount} of checkVotingSetting){
-    const {nicknameLog, votingLog} = await checkVoting(nickname);
-
-    expect(nicknameLog).toHaveLength(nicknameLogCount);
-    expect(votingLog).toHaveLength(votingLogCount);
-  }
+  await checkVoting(voteSetting.votingList);
 }
 
-function doneVoteInit({userVoting, chiefVoting, suspect}){
+function doneVoteInit({votingList, suspect}){
   let result = {};
   result[TABLE_KEYS.SEQUENCE] = null;
-  result[`${TABLE_KEYS.SUSPECT_LIST}-${userNickname}`] = userVoting;
-  result[`${TABLE_KEYS.SUSPECT_LIST}-${nickname}`] = chiefVoting;
+
+  votingList.forEach(([player, voting])=> {
+    result[`${TABLE_KEYS.SUSPECT_LIST}-${player}`] = voting;
+  })
   result[TABLE_KEYS.SUSPECT] = suspect;
-  result[TABLE_KEYS.CORRECT] = "정답";
-  result[TABLE_KEYS.FAKE_CORRECT] = "가짜정답";
+  result[TABLE_KEYS.CORRECT] = MOCK_CORRECT;
+  result[TABLE_KEYS.FAKE_CORRECT] = MOCK_FAKE_CORRECT;
 
   mockDatabaseUpdate(result, false, true);
 }
 
-async function checkVoting(targetNickname = nickname){
+async function checkVoting(votingList){
+  let voteCount = {};
+  let voting = Object.fromEntries(votingList);
+
+  votingList.forEach((user)=>{
+    const voteNickname = user[1];
+
+    voteCount[voteNickname] = voteCount[voteNickname] + 1 || 1;
+  });
+
   const activityLog = screen.getByText(/활동 로그/);
   const logDisplay = activityLog.nextElementSibling;
-  const { findAllByText } = within(logDisplay);
-  const nicknameLog = await findAllByText(targetNickname);
-  const votingLog = await findAllByText(`${targetNickname}님을 투표하였습니다.`);
 
-  return {
-    nicknameLog,
-    votingLog
+  const { findAllByText } = within(logDisplay);
+  
+  for( const voteNickname of Object.keys(voteCount)){
+    const votingLog = await findAllByText(`${voteNickname}님을 투표하였습니다.`);
+
+    expect(votingLog.length).toBe(voteCount[voteNickname]);
+
+    votingLog.forEach((votingElement)=>{
+      const userElement = votingElement.closest('.player-hint-item').querySelector(':first-child');
+
+      const userNickname = userElement.textContent;
+
+      expect(voting[userNickname]).toBe(voteNickname);
+    })
   }
 }
 
@@ -143,3 +129,7 @@ export const setupVotingSetting = {
   TIE_VOTES : "투표 동점",
   SUSPECT_EXPOSED : "범인인것을 걸렸습니다.",
 };
+
+
+export const MOCK_FAKE_CORRECT = "가짜 정답";
+export const MOCK_CORRECT = "정답";

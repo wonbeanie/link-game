@@ -1,7 +1,7 @@
 import { fireEvent, screen, within } from "@testing-library/dom";
 import { checkAlert, setupGameStart, setupHTMLInit, setupSendHint } from "./modules/game-helpers";
 import { nickname, secondNickname, thirdNickname, userNickname } from "./__mocks__/mock-firebase-database";
-import { setupVoting, setupVotingSetting } from "./modules/vote-helpers";
+import { MOCK_CORRECT, MOCK_FAKE_CORRECT, setupVoting, setupVotingSetting } from "./modules/vote-helpers";
 
 describe("투표 테스트", () => {
   beforeEach(async ()=>{
@@ -63,12 +63,12 @@ describe("투표 테스트", () => {
         test.each([
           { 
             desc: "시민의 키워드을 틀렸을때", 
-            suspectAnswerSetting: "가짜 정답",
+            suspectAnswerSetting: MOCK_FAKE_CORRECT,
             expectedAlertText: "시민 승리"
           },
           { 
             desc: "시민의 키워드을 맞췄을때", 
-            suspectAnswerSetting: "정답",
+            suspectAnswerSetting: MOCK_CORRECT,
             expectedAlertText: "범인 승리"
           },
         ])("$desc", async ({ suspectAnswerSetting, expectedAlertText }) => {
@@ -94,15 +94,14 @@ describe("투표 테스트", () => {
     })
   })
 
-  // todo
-  // describe("플레이어가 4인인 경우", () => {
-  //   beforeEach(async ()=>{
-  //     await setupGameStart([userNickname, secondNickname, thirdNickname]);
-  //     await setupSendHint();
-  //   });
+  describe("플레이어가 4인인 경우", () => {
+    beforeEach(async ()=>{
+      await setupGameStart([userNickname, secondNickname, thirdNickname]);
+      await setupSendHint();
+    });
 
-  //   test("투표가 동점일 경우", async () => {
-  //     await setupVoting(setupVotingSetting.TIE_VOTES);
-  //   })
-  // })
+    test("투표가 동점일 경우", async () => {
+      await setupVoting(setupVotingSetting.TIE_VOTES);
+    })
+  })
 })
