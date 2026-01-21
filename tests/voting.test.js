@@ -97,7 +97,7 @@ describe("투표 테스트", () => {
   // todo
   // describe("플레이어가 4인인 경우", () => {
   //   beforeEach(async ()=>{
-  //     await setupGameStart();
+  //     await setupGameStart([userNickname, secondNickname, thirdNickname]);
   //     await setupSendHint();
   //   });
 

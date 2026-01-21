@@ -1,14 +1,9 @@
-// 현재 realtime database = 데이터 저장 -> onValue
-
 import { TABLE_KEYS } from "../../database";
-
-// set -> onValue
-// update -> onValue
-// get -> ??
 
 let onValueCallback = {};
 let database = {};
 let config = {};
+let playerList = [];
 
 function getSnapshot(data){
   return {
@@ -36,7 +31,7 @@ export const set = jest.fn((ref, data) => {
 
 export const update = jest.fn((ref, data) => {
   if(config.Sequence && data.hasOwnProperty(TABLE_KEYS.SEQUENCE)){
-    data[TABLE_KEYS.SEQUENCE] = [nickname, userNickname];
+    data[TABLE_KEYS.SEQUENCE] = [nickname, ...playerList];
     config.Sequence = false;
   }
 
@@ -152,12 +147,14 @@ export const mockDatabaseUpdate = jest.fn((newData, init = true, update = false)
 });
 
 export const setPlayers = jest.fn((addPlayers)=>{
+  playerList = [];
   onValueCallback[gameDataTable]({
     val : () => {
       let result = {};
 
       addPlayers.forEach((player)=>{
         result[player] = "Ready";
+        playerList.push(player);
       });
 
       return result;
@@ -203,3 +200,5 @@ function isEqual(obj1, obj2) {
 export const userNickname = "유저";
 export const nickname = "방장"
 export const gameDataTable = "GameData/";
+export const secondNickname = "유저2";
+export const thirdNickname = "유저3";

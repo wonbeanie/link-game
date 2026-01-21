@@ -4,8 +4,8 @@ import fs from 'fs';
 import path from 'path';
 import { TABLE_KEYS } from '../../database.js';
 
-export async function setupGameStart(){
-  setPlayers([userNickname]);
+export async function setupGameStart(initUsers = [userNickname]){
+  setPlayers(initUsers);
 
   const nicknameInput = screen.getByPlaceholderText('닉네임을 입력하세요');
   fireEvent.change(nicknameInput, {target : {value : nickname}});
