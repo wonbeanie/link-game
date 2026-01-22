@@ -3,7 +3,9 @@ import { mockDatabaseUpdate, nickname, secondNickname, thirdNickname, userNickna
 import { checkAlert } from "./game-helpers";
 import { TABLE_KEYS } from "../../database";
 
-export async function setupVoting(stateSetting) {
+export async function setupVoting(stateSetting, addPlayerList = []) {
+  const playerList = [nickname, ...addPlayerList];
+
   await waitFor(()=>{
     const timer = screen.getByText(/01:00/i);
     expect(timer).toBeVisible();
@@ -11,64 +13,68 @@ export async function setupVoting(stateSetting) {
 
   switch(stateSetting){
     case setupVotingSetting.SUSPECT_EXPOSED:
-      suspectExposed();
+      await suspectExposed(playerList);
       break;
     case setupVotingSetting.FOUND_SUSPECT:
-      foundSuspect();
+      await foundSuspect(playerList);
       break;
     case setupVotingSetting.TIE_VOTES:
-      tieVotes();
+      await tieVotes(playerList);
       break;
     case setupVotingSetting.NOTFOUND_SUSPECT:
-      notfoundsuspect();
+      await notfoundsuspect(playerList);
       break;
     default:
       fail("올바르지 않는 상황입니다.");
   }
 
   jest.advanceTimersByTime(60000);
-
   await checkAlert(stateSetting);
 }
 
-async function notfoundsuspect(){
+async function notfoundsuspect(playerList){
+  const votingList = playerList.map((player)=>{
+    return [player, nickname]
+  });
+
   await voteTestFlow({
-    votingList : [
-      [userNickname, nickname],
-      [nickname, nickname]
-    ],
+    votingList : votingList,
     suspect : userNickname
   })
 }
 
-async function foundSuspect(){
+async function foundSuspect(playerList){
+  const votingList = playerList.map((player)=>{
+    return [player, userNickname]
+  });
+
   await voteTestFlow({
-    votingList : [
-      [userNickname, userNickname],
-      [nickname, userNickname]
-    ],
+    votingList,
     suspect : userNickname
   })
 }
 
-async function tieVotes(){
+async function tieVotes(playerList){
+  let count = 0;
+  const votingList = playerList.map((player)=>{
+    count += 1;
+    const halfCount = Math.floor(playerList.length / 2);
+    return [player, count > halfCount ? nickname : userNickname]
+  });
+
   await voteTestFlow({
-    votingList : [
-      [userNickname, nickname],
-      [nickname, userNickname],
-      [secondNickname, nickname],
-      [thirdNickname, userNickname],
-    ],
+    votingList,
     suspect : nickname
   });
 }
 
-async function suspectExposed(){
+async function suspectExposed(playerList){
+  const votingList = playerList.map((player)=>{
+    return [player, nickname]
+  });
+
   await voteTestFlow({
-    votingList : [
-      [userNickname, nickname],
-      [nickname, nickname]
-    ],
+    votingList,
     suspect : nickname
   })
 }
@@ -121,6 +127,13 @@ async function checkVoting(votingList){
       expect(voting[userNickname]).toBe(voteNickname);
     })
   }
+}
+
+export function checkSelectPlayerList(playerCount = 2){
+  const suspectSelectLabel = screen.getByText(/범인 지목 투표/);
+  const votingSelect = suspectSelectLabel.nextElementSibling;
+  expect(votingSelect).toHaveAttribute("id", "player-select");
+  expect(votingSelect.childElementCount).toBe(playerCount);
 }
 
 export const setupVotingSetting = {
