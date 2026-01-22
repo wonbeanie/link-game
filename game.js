@@ -26,6 +26,8 @@ const stateInfoField = document.getElementById("state-info");
 
 let playerList = [];
 
+let voteSuspectList = [];
+
 let suspect = "";
 
 let playSequence = [];
@@ -181,7 +183,8 @@ function gameHintSequence(data){
 
   const notSettingPlayList = playerList.length === 0;
   if(notSettingPlayList) {
-    setPlayerList(data);
+    playerList = data;
+    setSuspectVoteList(data);
     nicknameField.className = "none";
     startPlaySequence = data;
   }
@@ -193,7 +196,7 @@ function gameHintSequence(data){
 
 function tieOfVotes(data){
   showAlert("투표 동점", `${data.join(",")}중에 한명을 선택해주세요.`);
-  setPlayerList(data);
+  setSuspectVoteList(data);
   return votesInit();
 }
 
@@ -321,7 +324,7 @@ function gameSetting(snapshot){
   }
 
   if(Object.keys(updateDatabase).length > 0){
-   updateData(updateDatabase); 
+    updateData(updateDatabase); 
   }
 }
 
@@ -500,12 +503,10 @@ function sendLastAnswer(){
   }
 }
 
-function setPlayerList(data){
-  playerList = data;
+function setSuspectVoteList(data){
+  voteSuspectList = data;
 
   playerSelectField.textContent = "";
-
-
   
   JSON.parse(JSON.stringify(data)).sort().forEach((player)=>{
     const optionElement = document.createElement("option");
