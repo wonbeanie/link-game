@@ -27,8 +27,6 @@ const stateInfoField = document.getElementById("state-info");
 
 let voteSuspectList = [];
 
-let suspect = "";
-
 let playerSelectCheck = [];
 
 let nickname = localStorage.getItem('userNickname') || "";
@@ -222,8 +220,8 @@ function gameOver(data, findSusepct = false){
     }
   }
   else {
-    if(suspect !== data){
-      showAlert("범인이 아닙니다.", `범인은 ${suspect}였습니다.`);
+    if(gameData.suspect !== data){
+      showAlert("범인이 아닙니다.", `범인은 ${gameData.suspect}였습니다.`);
     }
   }
 
@@ -233,7 +231,7 @@ function gameOver(data, findSusepct = false){
 }
 
 function votesEnd(data){
-  const failFindSuspect = suspect !== data;
+  const failFindSuspect = gameData.suspect !== data;
   if(failFindSuspect){
     gameOver(data);
     return;
@@ -242,7 +240,7 @@ function votesEnd(data){
   selectPlayerField.className = "none";
   stopTimer();
 
-  const suspectPlayer = suspect === nickname;
+  const suspectPlayer = gameData.suspect === nickname;
   const SUSEPCT_ANSWER_TIME = 60;
 
   if(suspectPlayer){
@@ -265,7 +263,7 @@ function gameSetting(snapshot){
   correct = snapshot[TABLE_KEYS.CORRECT];
   fakeCorrect = snapshot[TABLE_KEYS.FAKE_CORRECT];
   category = snapshot[TABLE_KEYS.CATEGORY];
-  suspect = snapshot[TABLE_KEYS.SUSPECT];
+  gameData.suspect = snapshot[TABLE_KEYS.SUSPECT];
 
   if(TABLE_KEYS.SEQUENCE in snapshot){
     const data = snapshot[TABLE_KEYS.SEQUENCE];
@@ -438,14 +436,14 @@ startField.addEventListener("click",()=>{
 
     const shuffleList = shuffleStrings(list);
 
-    suspect = pickRandom(shuffleList);
+    gameData.suspect = pickRandom(shuffleList);
 
     result[TABLE_KEYS.SEQUENCE] = shuffleList;
-    result[TABLE_KEYS.SUSPECT] = suspect;
+    result[TABLE_KEYS.SUSPECT] = gameData.suspect;
 
     categoryField.textContent = category;
     
-    if(nickname === suspect){
+    if(nickname === gameData.suspect){
       correctField.textContent = fakeCorrect;
     }
     else {
@@ -513,7 +511,7 @@ function setSuspectVoteList(data){
 }
 
 function startGame() {
-  let correctTemp = nickname === suspect ? fakeCorrect : correct;
+  let correctTemp = nickname === gameData.suspect ? fakeCorrect : correct;
 
   categoryField.textContent = category;
   correctField.textContent = correctTemp;
