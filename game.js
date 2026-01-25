@@ -31,8 +31,6 @@ let voteSuspectList = [];
 
 let suspect = "";
 
-let playSequence = [];
-
 let playerSelectCheck = [];
 
 let nickname = localStorage.getItem('userNickname') || "";
@@ -188,7 +186,7 @@ function gameHintSequence(data){
     gameData.startPlaySequence = data;
   }
 
-  playSequence = data;
+  gameData.playSequence = data;
 
   startGame();
 }
@@ -476,8 +474,8 @@ function sendHint(){
     stopTimer();
     let result = {};
 
-    if(playSequence.length !== 1){
-      result[TABLE_KEYS.SEQUENCE] = playSequence.slice(1, playSequence.length);
+    if(gameData.playSequence.length !== 1){
+      result[TABLE_KEYS.SEQUENCE] = gameData.playSequence.slice(1, gameData.playSequence.length);
     }
     else {
       result[TABLE_KEYS.SEQUENCE] = "end";
@@ -522,7 +520,7 @@ function startGame() {
   categoryField.textContent = category;
   correctField.textContent = correctTemp;
 
-  stateInfoField.textContent = `${playSequence[0]}님이 입력하고 있습니다.`;
+  stateInfoField.textContent = `${gameData.playSequence[0]}님이 입력하고 있습니다.`;
 
   if(myTurn()){
     startTimer(30, sendHint);
@@ -542,7 +540,7 @@ function startGame() {
 }
 
 function myTurn() {
-  return playSequence[0] === nickname;
+  return gameData.playSequence[0] === nickname;
 }
 
 sespectInputField.addEventListener("click",sendSuspect);
