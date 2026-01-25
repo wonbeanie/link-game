@@ -1,6 +1,7 @@
 import { correctList } from "./keywords.js";
 import { Chat, pickRandom, shuffleStrings, Alert, Log, Timer } from "./modules.js";
 import GameDatabase, { TABLE_KEYS } from "./database.js";
+import gameData from "./game-data.js";
 
 const { chatStart, chatClear, addChatMessage, chatClose } = Chat(sendClick);
 const { showAlert } = Alert(closeClick);
@@ -64,8 +65,6 @@ confirmField.addEventListener("click", (e) => {
 const hintInputField = document.getElementById('hint-input');
 const answerInputField = document.getElementById('answer-input');
 
-let startPlaySequence = [];
-
 let restart = false;
 let admin = false;
 
@@ -103,13 +102,13 @@ function logSetting(data){
 
   let votingList = {};
 
-  const startPlaySequenceString = startPlaySequence.join(",");
+  const startPlaySequenceString = gameData.startPlaySequence.join(",");
 
   Object.entries(data).forEach(([key, value]) => {
     if(startPlaySequenceString.includes(key) || gameState === ""){
       playerHints[key] = value;
 
-      if(startPlaySequence.length === 0){
+      if(gameData.startPlaySequence.length === 0){
         setLog(key, value);
       }
       return;
@@ -153,7 +152,7 @@ function hintLog(playerHints){
     setLog(`힌트`, '---------------');
   }
 
-  startPlaySequence.forEach((player)=>{
+  gameData.startPlaySequence.forEach((player)=>{
     if(!playerHints[player]){
       return;
     }
@@ -186,7 +185,7 @@ function gameHintSequence(data){
     playerList = data;
     setSuspectVoteList(data);
     nicknameField.className = "none";
-    startPlaySequence = data;
+    gameData.startPlaySequence = data;
   }
 
   playSequence = data;
