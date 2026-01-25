@@ -25,8 +25,6 @@ const categoryField = document.getElementById("category");
 const correctField = document.getElementById("correct");
 const stateInfoField = document.getElementById("state-info");
 
-let playerList = [];
-
 let voteSuspectList = [];
 
 let suspect = "";
@@ -178,9 +176,9 @@ function gameHintSequence(data){
     return votesInit();
   }
 
-  const notSettingPlayList = playerList.length === 0;
+  const notSettingPlayList = gameData.playerList.length === 0;
   if(notSettingPlayList) {
-    playerList = data;
+    gameData.playerList = data;
     setSuspectVoteList(data);
     nicknameField.className = "none";
     gameData.startPlaySequence = data;
@@ -340,7 +338,7 @@ function votes(snapshot){
   });
 
   if(TABLE_KEYS.SELECT_TIMEOUT in snapshot){
-    if(Object.keys(playerSelectCheck).length === playerList.length && admin){
+    if(Object.keys(playerSelectCheck).length === gameData.playerList.length && admin){
       return selectCulprit();
     }
   }
@@ -384,7 +382,7 @@ function selectCulprit(){
   if(sameList.length > 1){
     result[TABLE_KEYS.RE_SELECT_CULPRIT] = sameList;
 
-    playerList.forEach((player)=>{
+    gameData.playerList.forEach((player)=>{
       result[`${TABLE_KEYS.SUSPECT_LIST}-${player}`] = null;
     });
   }

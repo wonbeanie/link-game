@@ -1,4 +1,5 @@
 class GameData {
+  playerList = [];
   playSequence = [];
   startPlaySequence = [];
 
