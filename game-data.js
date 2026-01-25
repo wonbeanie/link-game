@@ -4,6 +4,7 @@ class GameData {
   startPlaySequence = [];
   suspect = "";
   nickname = "";
+  category = "";
 
   constructor(){
     this.nickname = localStorage.getItem('userNickname') || "";

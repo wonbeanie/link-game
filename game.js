@@ -36,7 +36,6 @@ let sameList = [];
 let lastAnswer = "";
 let selectTimeout = false;
 
-let category = "";
 let correct = "";
 let fakeCorrect = "";
 
@@ -261,7 +260,7 @@ function gameSetting(snapshot){
 
   correct = snapshot[TABLE_KEYS.CORRECT];
   fakeCorrect = snapshot[TABLE_KEYS.FAKE_CORRECT];
-  category = snapshot[TABLE_KEYS.CATEGORY];
+  gameData.category = snapshot[TABLE_KEYS.CATEGORY];
   gameData.suspect = snapshot[TABLE_KEYS.SUSPECT];
 
   if(TABLE_KEYS.SEQUENCE in snapshot){
@@ -391,13 +390,13 @@ function selectCulprit(){
 }
 
 function gameInit(){
-  category = pickRandom(Object.keys(correctList));
+  gameData.category = pickRandom(Object.keys(correctList));
 
-  correct = pickRandom(correctList[category]);
+  correct = pickRandom(correctList[gameData.category]);
 
   let noCorrectList = [];
 
-  correctList[category].forEach((data)=>{
+  correctList[gameData.category].forEach((data)=>{
     if(correct === data){
       return;
     }
@@ -408,7 +407,7 @@ function gameInit(){
 
   let result = {};
 
-  result[TABLE_KEYS.CATEGORY] = category;
+  result[TABLE_KEYS.CATEGORY] = gameData.category;
   result[TABLE_KEYS.CORRECT] = correct;
   result[TABLE_KEYS.FAKE_CORRECT] = fakeCorrect;
 
@@ -440,7 +439,7 @@ startField.addEventListener("click",()=>{
     result[TABLE_KEYS.SEQUENCE] = shuffleList;
     result[TABLE_KEYS.SUSPECT] = gameData.suspect;
 
-    categoryField.textContent = category;
+    categoryField.textContent = gameData.category;
     
     if(gameData.nickname === gameData.suspect){
       correctField.textContent = fakeCorrect;
@@ -512,14 +511,14 @@ function setSuspectVoteList(data){
 function startGame() {
   let correctTemp = gameData.nickname === gameData.suspect ? fakeCorrect : correct;
 
-  categoryField.textContent = category;
+  categoryField.textContent = gameData.category;
   correctField.textContent = correctTemp;
 
   stateInfoField.textContent = `${gameData.playSequence[0]}님이 입력하고 있습니다.`;
 
   if(gameData.myTurn()){
     startTimer(30, sendHint);
-    showAlert("당신 순서입니다.",`카테고리는 ${category}, 제시어는 ${correctTemp}입니다.`);
+    showAlert("당신 순서입니다.",`카테고리는 ${gameData.category}, 제시어는 ${correctTemp}입니다.`);
     gameState = "Playing";
     hintFiled.className = "show";
     return;
@@ -529,7 +528,7 @@ function startGame() {
   }
   
   if(gameState === TABLE_KEYS.START){
-    showAlert("게임시작", `카테고리는 ${category}, 제시어는 ${correctTemp}입니다.`);
+    showAlert("게임시작", `카테고리는 ${gameData.category}, 제시어는 ${correctTemp}입니다.`);
     gameState = "Playing";
   }
 }
