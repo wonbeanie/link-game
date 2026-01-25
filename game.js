@@ -470,7 +470,7 @@ clearField.addEventListener("click",()=>{
 hintBtnField.addEventListener("click", sendHint);
 
 function sendHint(){
-  if(myTurn()){
+  if(gameData.myTurn(nickname)){
     stopTimer();
     let result = {};
 
@@ -522,7 +522,7 @@ function startGame() {
 
   stateInfoField.textContent = `${gameData.playSequence[0]}님이 입력하고 있습니다.`;
 
-  if(myTurn()){
+  if(gameData.myTurn(nickname)){
     startTimer(30, sendHint);
     showAlert("당신 순서입니다.",`카테고리는 ${category}, 제시어는 ${correctTemp}입니다.`);
     gameState = "Playing";
@@ -537,10 +537,6 @@ function startGame() {
     showAlert("게임시작", `카테고리는 ${category}, 제시어는 ${correctTemp}입니다.`);
     gameState = "Playing";
   }
-}
-
-function myTurn() {
-  return gameData.playSequence[0] === nickname;
 }
 
 sespectInputField.addEventListener("click",sendSuspect);

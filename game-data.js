@@ -3,9 +3,8 @@ class GameData {
   startPlaySequence = [];
 
   myTurn(nickname) {
-    return playSequence[0] === nickname;
+    return this.playSequence[0] === nickname;
   }
-
 
 }
 
