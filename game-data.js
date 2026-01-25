@@ -3,9 +3,14 @@ class GameData {
   playSequence = [];
   startPlaySequence = [];
   suspect = "";
+  nickname = "";
 
-  myTurn(nickname) {
-    return this.playSequence[0] === nickname;
+  constructor(){
+    this.nickname = localStorage.getItem('userNickname') || "";
+  }
+
+  myTurn() {
+    return this.playSequence[0] === this.nickname;
   }
 
 }

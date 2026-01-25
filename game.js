@@ -29,8 +29,7 @@ let voteSuspectList = [];
 
 let playerSelectCheck = [];
 
-let nickname = localStorage.getItem('userNickname') || "";
-nicknameInputField.value = nickname
+nicknameInputField.value = gameData.nickname;
 
 let sameList = [];
 
@@ -50,10 +49,10 @@ confirmField.addEventListener("click", (e) => {
   result[nicknameInputField.value] = "Ready";
   updateData(result);
 
-  nickname = nicknameInputField.value;
-  document.getElementById("nickname-info").textContent = nickname;
+  gameData.nickname = nicknameInputField.value;
+  document.getElementById("nickname-info").textContent = gameData.nickname;
 
-  localStorage.setItem('userNickname', nickname);
+  localStorage.setItem('userNickname', gameData.nickname);
 });
 
 const hintInputField = document.getElementById('hint-input');
@@ -240,7 +239,7 @@ function votesEnd(data){
   selectPlayerField.className = "none";
   stopTimer();
 
-  const suspectPlayer = gameData.suspect === nickname;
+  const suspectPlayer = gameData.suspect === gameData.nickname;
   const SUSEPCT_ANSWER_TIME = 60;
 
   if(suspectPlayer){
@@ -443,7 +442,7 @@ startField.addEventListener("click",()=>{
 
     categoryField.textContent = category;
     
-    if(nickname === gameData.suspect){
+    if(gameData.nickname === gameData.suspect){
       correctField.textContent = fakeCorrect;
     }
     else {
@@ -466,7 +465,7 @@ clearField.addEventListener("click",()=>{
 hintBtnField.addEventListener("click", sendHint);
 
 function sendHint(){
-  if(gameData.myTurn(nickname)){
+  if(gameData.myTurn()){
     stopTimer();
     let result = {};
 
@@ -478,7 +477,7 @@ function sendHint(){
       hintFiled.className = "none";
     }
 
-    result[nickname] = hintInputField.value;
+    result[gameData.nickname] = hintInputField.value;
 
     hintFiled.className = "none";
     updateData(result);
@@ -488,7 +487,7 @@ function sendHint(){
 answerBtnField.addEventListener("click",sendLastAnswer);
 
 function sendLastAnswer(){
-  if(lastAnswer === nickname){
+  if(lastAnswer === gameData.nickname){
     let result = {};
     result[TABLE_KEYS.LAST_ANSWER] = answerInputField.value;
     result[TABLE_KEYS.SELECT_CULPRIT] = "";
@@ -511,14 +510,14 @@ function setSuspectVoteList(data){
 }
 
 function startGame() {
-  let correctTemp = nickname === gameData.suspect ? fakeCorrect : correct;
+  let correctTemp = gameData.nickname === gameData.suspect ? fakeCorrect : correct;
 
   categoryField.textContent = category;
   correctField.textContent = correctTemp;
 
   stateInfoField.textContent = `${gameData.playSequence[0]}님이 입력하고 있습니다.`;
 
-  if(gameData.myTurn(nickname)){
+  if(gameData.myTurn()){
     startTimer(30, sendHint);
     showAlert("당신 순서입니다.",`카테고리는 ${category}, 제시어는 ${correctTemp}입니다.`);
     gameState = "Playing";
@@ -538,10 +537,10 @@ function startGame() {
 sespectInputField.addEventListener("click",sendSuspect);
 
 function sendSuspect(){
-  const selectSuspectKey = `${TABLE_KEYS.SUSPECT_LIST}-${nickname}`;
+  const selectSuspectKey = `${TABLE_KEYS.SUSPECT_LIST}-${gameData.nickname}`;
   let result = {};
 
-  if(!selectTimeout || (!sendSuspectCheck && !playerSelectCheck[nickname])){
+  if(!selectTimeout || (!sendSuspectCheck && !playerSelectCheck[gameData.nickname])){
     result[selectSuspectKey] = playerSelectField.value;
     sendSuspectCheck = true;
   }
@@ -579,7 +578,7 @@ function sendClick(msg){
     }
 
     chatHistory.push({
-      nickname : nickname,
+      nickname : gameData.nickname,
       message : msg
     });
 
