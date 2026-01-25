@@ -5,6 +5,7 @@ class GameData {
   suspect = "";
   nickname = "";
   category = "";
+  correct = "";
 
   constructor(){
     this.nickname = localStorage.getItem('userNickname') || "";

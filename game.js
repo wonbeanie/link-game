@@ -36,7 +36,6 @@ let sameList = [];
 let lastAnswer = "";
 let selectTimeout = false;
 
-let correct = "";
 let fakeCorrect = "";
 
 let gameState = "";
@@ -210,11 +209,11 @@ function votesInit(){
 
 function gameOver(data, findSusepct = false){
   if(findSusepct){
-    if(correct === data){
-      showAlert("범인 승리", `범인이 정답(${data})을 맞췄습니다.\n 범인의 제시어 ${fakeCorrect}\n 시민의 제시어 ${correct}`);
+    if(gameData.correct === data){
+      showAlert("범인 승리", `범인이 정답(${data})을 맞췄습니다.\n 범인의 제시어 ${fakeCorrect}\n 시민의 제시어 ${gameData.correct}`);
     }
     else {
-      showAlert("시민 승리",`범인의 최종 답은 ${data}으로 답하였습니다.\n 범인의 제시어 ${fakeCorrect}\n 시민의 제시어 ${correct}`);
+      showAlert("시민 승리",`범인의 최종 답은 ${data}으로 답하였습니다.\n 범인의 제시어 ${fakeCorrect}\n 시민의 제시어 ${gameData.correct}`);
     }
   }
   else {
@@ -258,7 +257,7 @@ function gameSetting(snapshot){
   let updateDatabase = {};
   playerSelectCheck = [];
 
-  correct = snapshot[TABLE_KEYS.CORRECT];
+  gameData.correct = snapshot[TABLE_KEYS.CORRECT];
   fakeCorrect = snapshot[TABLE_KEYS.FAKE_CORRECT];
   gameData.category = snapshot[TABLE_KEYS.CATEGORY];
   gameData.suspect = snapshot[TABLE_KEYS.SUSPECT];
@@ -392,12 +391,12 @@ function selectCulprit(){
 function gameInit(){
   gameData.category = pickRandom(Object.keys(correctList));
 
-  correct = pickRandom(correctList[gameData.category]);
+  gameData.correct = pickRandom(correctList[gameData.category]);
 
   let noCorrectList = [];
 
   correctList[gameData.category].forEach((data)=>{
-    if(correct === data){
+    if(gameData.correct === data){
       return;
     }
     noCorrectList.push(data);
@@ -408,7 +407,7 @@ function gameInit(){
   let result = {};
 
   result[TABLE_KEYS.CATEGORY] = gameData.category;
-  result[TABLE_KEYS.CORRECT] = correct;
+  result[TABLE_KEYS.CORRECT] = gameData.correct;
   result[TABLE_KEYS.FAKE_CORRECT] = fakeCorrect;
 
   return result;
@@ -445,7 +444,7 @@ startField.addEventListener("click",()=>{
       correctField.textContent = fakeCorrect;
     }
     else {
-      correctField.textContent = correct;
+      correctField.textContent = gameData.correct;
     }
 
     updateData(result);
@@ -509,7 +508,7 @@ function setSuspectVoteList(data){
 }
 
 function startGame() {
-  let correctTemp = gameData.nickname === gameData.suspect ? fakeCorrect : correct;
+  let correctTemp = gameData.nickname === gameData.suspect ? fakeCorrect : gameData.correct;
 
   categoryField.textContent = gameData.category;
   correctField.textContent = correctTemp;
