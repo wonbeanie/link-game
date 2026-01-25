@@ -36,8 +36,6 @@ let sameList = [];
 let lastAnswer = "";
 let selectTimeout = false;
 
-let fakeCorrect = "";
-
 let gameState = "";
 
 let chatHistory = [];
@@ -210,10 +208,10 @@ function votesInit(){
 function gameOver(data, findSusepct = false){
   if(findSusepct){
     if(gameData.correct === data){
-      showAlert("범인 승리", `범인이 정답(${data})을 맞췄습니다.\n 범인의 제시어 ${fakeCorrect}\n 시민의 제시어 ${gameData.correct}`);
+      showAlert("범인 승리", `범인이 정답(${data})을 맞췄습니다.\n 범인의 제시어 ${gameData.fakeCorrect}\n 시민의 제시어 ${gameData.correct}`);
     }
     else {
-      showAlert("시민 승리",`범인의 최종 답은 ${data}으로 답하였습니다.\n 범인의 제시어 ${fakeCorrect}\n 시민의 제시어 ${gameData.correct}`);
+      showAlert("시민 승리",`범인의 최종 답은 ${data}으로 답하였습니다.\n 범인의 제시어 ${gameData.fakeCorrect}\n 시민의 제시어 ${gameData.correct}`);
     }
   }
   else {
@@ -258,7 +256,7 @@ function gameSetting(snapshot){
   playerSelectCheck = [];
 
   gameData.correct = snapshot[TABLE_KEYS.CORRECT];
-  fakeCorrect = snapshot[TABLE_KEYS.FAKE_CORRECT];
+  gameData.fakeCorrect = snapshot[TABLE_KEYS.FAKE_CORRECT];
   gameData.category = snapshot[TABLE_KEYS.CATEGORY];
   gameData.suspect = snapshot[TABLE_KEYS.SUSPECT];
 
@@ -402,13 +400,13 @@ function gameInit(){
     noCorrectList.push(data);
   });
 
-  fakeCorrect = pickRandom(noCorrectList);
+  gameData.fakeCorrect = pickRandom(noCorrectList);
 
   let result = {};
 
   result[TABLE_KEYS.CATEGORY] = gameData.category;
   result[TABLE_KEYS.CORRECT] = gameData.correct;
-  result[TABLE_KEYS.FAKE_CORRECT] = fakeCorrect;
+  result[TABLE_KEYS.FAKE_CORRECT] = gameData.fakeCorrect;
 
   return result;
 }
@@ -441,7 +439,7 @@ startField.addEventListener("click",()=>{
     categoryField.textContent = gameData.category;
     
     if(gameData.nickname === gameData.suspect){
-      correctField.textContent = fakeCorrect;
+      correctField.textContent = gameData.fakeCorrect;
     }
     else {
       correctField.textContent = gameData.correct;
@@ -508,7 +506,7 @@ function setSuspectVoteList(data){
 }
 
 function startGame() {
-  let correctTemp = gameData.nickname === gameData.suspect ? fakeCorrect : gameData.correct;
+  let correctTemp = gameData.nickname === gameData.suspect ? gameData.fakeCorrect : gameData.correct;
 
   categoryField.textContent = gameData.category;
   correctField.textContent = correctTemp;
