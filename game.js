@@ -25,8 +25,6 @@ const categoryField = document.getElementById("category");
 const correctField = document.getElementById("correct");
 const stateInfoField = document.getElementById("state-info");
 
-let voteSuspectList = [];
-
 let playerSelectCheck = [];
 
 nicknameInputField.value = gameData.nickname;
@@ -47,8 +45,6 @@ confirmField.addEventListener("click", (e) => {
 
   gameData.nickname = nicknameInputField.value;
   document.getElementById("nickname-info").textContent = gameData.nickname;
-
-  localStorage.setItem('userNickname', gameData.nickname);
 });
 
 const hintInputField = document.getElementById('hint-input');
@@ -235,10 +231,9 @@ function votesEnd(data){
   selectPlayerField.className = "none";
   stopTimer();
 
-  const suspectPlayer = gameData.suspect === gameData.nickname;
   const SUSEPCT_ANSWER_TIME = 60;
 
-  if(suspectPlayer){
+  if(gameData.isSuspect){
     showAlert("범인인것을 걸렸습니다.", "정답을 맞춰주세요.");
     lastAnswer = data;
     hintBtnField.className = "none";
@@ -438,7 +433,7 @@ startField.addEventListener("click",()=>{
 
     categoryField.textContent = gameData.category;
     
-    if(gameData.nickname === gameData.suspect){
+    if(gameData.isSuspect){
       correctField.textContent = gameData.fakeCorrect;
     }
     else {
@@ -492,8 +487,6 @@ function sendLastAnswer(){
 }
 
 function setSuspectVoteList(data){
-  voteSuspectList = data;
-
   playerSelectField.textContent = "";
   
   JSON.parse(JSON.stringify(data)).sort().forEach((player)=>{
@@ -506,16 +499,14 @@ function setSuspectVoteList(data){
 }
 
 function startGame() {
-  let correctTemp = gameData.nickname === gameData.suspect ? gameData.fakeCorrect : gameData.correct;
-
   categoryField.textContent = gameData.category;
-  correctField.textContent = correctTemp;
+  correctField.textContent = gameData.myCorrect;
 
   stateInfoField.textContent = `${gameData.playSequence[0]}님이 입력하고 있습니다.`;
 
   if(gameData.myTurn()){
     startTimer(30, sendHint);
-    showAlert("당신 순서입니다.",`카테고리는 ${gameData.category}, 제시어는 ${correctTemp}입니다.`);
+    showAlert("당신 순서입니다.",`카테고리는 ${gameData.category}, 제시어는 ${gameData.myCorrect}입니다.`);
     gameState = "Playing";
     hintFiled.className = "show";
     return;
@@ -525,7 +516,7 @@ function startGame() {
   }
   
   if(gameState === TABLE_KEYS.START){
-    showAlert("게임시작", `카테고리는 ${gameData.category}, 제시어는 ${correctTemp}입니다.`);
+    showAlert("게임시작", `카테고리는 ${gameData.category}, 제시어는 ${gameData.myCorrect}입니다.`);
     gameState = "Playing";
   }
 }
@@ -533,11 +524,10 @@ function startGame() {
 sespectInputField.addEventListener("click",sendSuspect);
 
 function sendSuspect(){
-  const selectSuspectKey = `${TABLE_KEYS.SUSPECT_LIST}-${gameData.nickname}`;
   let result = {};
 
   if(!selectTimeout || (!sendSuspectCheck && !playerSelectCheck[gameData.nickname])){
-    result[selectSuspectKey] = playerSelectField.value;
+    result[gameData.myVotingKey] = playerSelectField.value;
     sendSuspectCheck = true;
   }
 
