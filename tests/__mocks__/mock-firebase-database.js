@@ -1,4 +1,4 @@
-import { TABLE_KEYS } from "../../database";
+import { TABLE_KEYS } from "../../modules.js";
 
 let onValueCallback = {};
 let database = {};

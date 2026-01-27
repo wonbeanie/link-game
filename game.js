@@ -1,13 +1,13 @@
 import { correctList } from "./keywords.js";
-import { Chat, pickRandom, shuffleStrings, Alert, Logger, Timer } from "./modules.js";
-import GameDatabase, { TABLE_KEYS } from "./database.js";
+import { Chat, pickRandom, shuffleStrings, Alert, Logger, Timer, TABLE_KEYS, DATABASE_KEYS } from "./modules.js";
+import GameDatabase from "./database.js";
 import gameData from "./game-data.js";
 
 const { chatStart, chatClear, addChatMessage, chatClose } = Chat(sendClick);
 const { showAlert } = Alert(closeClick);
 
 const { startTimer, stopTimer} = Timer();
-const { clearDatabase, KEY, onValueListener, updateData, getData } = GameDatabase();
+// const { clearDatabase, KEY, onValueListener, updateData, getData } = GameDatabase();
 
 const nicknameField = document.getElementById('nickname');
 const nicknameInputField = document.getElementById('nickname-input');
@@ -41,7 +41,7 @@ let chatHistory = [];
 confirmField.addEventListener("click", (e) => {
   let result = {};
   result[nicknameInputField.value] = "Ready";
-  updateData(result);
+  GameDatabase.updateData(result);
 
   gameData.nickname = nicknameInputField.value;
   document.getElementById("nickname-info").textContent = gameData.nickname;
@@ -66,7 +66,7 @@ function checkAdmin() {
   }
 }
 
-onValueListener(KEY.CHAT_DATA_KEY, (data) => {
+GameDatabase.onValueListener(DATABASE_KEYS.CHAT_DATA_KEY, (data) => {
   chatHistory = data[TABLE_KEYS.CHAT_HISTORY];
   chatClear();
   chatHistory.forEach((chat)=>{
@@ -74,7 +74,7 @@ onValueListener(KEY.CHAT_DATA_KEY, (data) => {
   });
 })
 
-onValueListener(KEY.GAME_DATA_KEY, (data) => {
+GameDatabase.onValueListener(DATABASE_KEYS.GAME_DATA_KEY, (data) => {
   gameSetting(data);
 
   Logger.clearLog();
@@ -308,13 +308,13 @@ function gameSetting(snapshot){
   }
 
   if(Object.keys(updateDatabase).length > 0){
-    updateData(updateDatabase); 
+    GameDatabase.updateData(updateDatabase); 
   }
 }
 
 function outGame(){
   showAlert("알림","플레이어중 한명이 나갔습니다.\n게임을 초기화합니다.");
-  clearDatabase();
+  GameDatabase.clearDatabase();
   removeReloadEvent();
   restart = true;
 }
@@ -411,7 +411,7 @@ function gameInit(){
 }
 
 startField.addEventListener("click",()=>{
-  getData(KEY.GAME_DATA_KEY).then((data) => {
+  GameDatabase.getData(DATABASE_KEYS.GAME_DATA_KEY).then((data) => {
     let list = [];
 
     if(!data){
@@ -445,17 +445,17 @@ startField.addEventListener("click",()=>{
       correctField.textContent = correct;
     }
 
-    updateData(result);
+    GameDatabase.updateData(result);
   });
 
-  clearDatabase();
+  GameDatabase.clearDatabase();
   let result = {};
   result[TABLE_KEYS.START] = `Start Game${new Date().getTime()}`
-  updateData(result);
+  GameDatabase.updateData(result);
 });
 
 clearField.addEventListener("click",()=>{
-  clearDatabase();
+  GameDatabase.clearDatabase();
 });
 
 hintBtnField.addEventListener("click", sendHint);
@@ -477,7 +477,7 @@ function sendHint(){
     result[nickname] = hintInputField.value;
 
     hintFiled.className = "none";
-    updateData(result);
+    GameDatabase.updateData(result);
   }
 }
 
@@ -488,7 +488,7 @@ function sendLastAnswer(){
     let result = {};
     result[TABLE_KEYS.LAST_ANSWER] = answerInputField.value;
     result[TABLE_KEYS.SELECT_CULPRIT] = "";
-    updateData(result);
+    GameDatabase.updateData(result);
   }
 }
 
@@ -543,7 +543,7 @@ function sendSuspect(){
     result[TABLE_KEYS.SELECT_TIMEOUT] = true;
   }
 
-  updateData(result);
+  GameDatabase.updateData(result);
 }
 
 function reloadEvent(){
@@ -559,7 +559,7 @@ function outGameEvent(e){
   if(gameState !== ""){
     let result = {};
     result[TABLE_KEYS.OUT_GAME] = true;
-    updateData(result);
+    GameDatabase.updateData(result);
   }
 }
 
@@ -578,7 +578,7 @@ function sendClick(msg){
 
     result[TABLE_KEYS.CHAT_HISTORY] = chatHistory;
 
-    updateData(result, KEY.CHAT_DATA_KEY);
+    GameDatabase.updateData(result, DATABASE_KEYS.CHAT_DATA_KEY);
   }
 }
 

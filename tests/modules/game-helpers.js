@@ -2,7 +2,7 @@ import { fireEvent, screen, waitFor } from '@testing-library/dom';
 import { mockDatabaseUpdate, nickname, setPlayers, testInit, userNickname } from "../__mocks__/mock-firebase-database";
 import fs from 'fs';
 import path from 'path';
-import { TABLE_KEYS } from '../../database.js';
+import { TABLE_KEYS } from '../../modules.js';
 
 export async function setupGameStart(initUsers = [userNickname]){
   setPlayers(initUsers);

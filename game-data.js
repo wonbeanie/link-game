@@ -1,4 +1,4 @@
-import { TABLE_KEYS } from "./database.js";
+import { TABLE_KEYS } from "./modules.js";
 
 class GameData {
   playerList = [];

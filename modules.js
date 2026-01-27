@@ -201,3 +201,25 @@ export function Timer(){
     stopTimer
   }
 }
+
+export const TABLE_KEYS = Object.freeze({
+  CATEGORY : "Category",
+  CORRECT : "Correct",
+  FAKE_CORRECT : "FakeCorrect",
+  LAST_ANSWER : "LastAnswer",
+  OUT_GAME : "OutGame",
+  CHAT_HISTORY : "ChatHistory",
+  START : "Start",
+  SEQUENCE : "Sequence",
+  SUSPECT : "Suspect",
+  SUSPECT_LIST : "SuspectList",
+  SELECT_CULPRIT : "SelectCulprit",
+  RE_SELECT_CULPRIT : "ReSelectCulprit",
+  SELECT_TIMEOUT : "SelectTimeout"
+});
+
+export const DATABASE_KEYS = Object.freeze({
+  GAME_DATA_KEY : "GameData/",
+  CHAT_DATA_KEY : "Chat/",
+  ROOT_KEY : "/"
+})
