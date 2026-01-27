@@ -107,10 +107,19 @@ export function Alert(closeClick = ()=>{}){
   }
 }
 
-export function Log(){
-  const display = document.getElementById('display');
+export const Logger = (function Logger(){
+  let display = null;
+
+  const getDisplay = () => {
+    if(!display){
+      display = document.getElementById("display");
+    }
+
+    return display;
+  }
 
   function setLog(player, text){
+    const display = getDisplay();
     const playerElement = document.createElement("div");
     playerElement.className = "player-hint-item"; 
 
@@ -137,6 +146,7 @@ export function Log(){
   }
 
   function clearLog(){
+    const display = getDisplay();
     display.innerHTML = "";
   }
 
@@ -144,7 +154,7 @@ export function Log(){
     setLog,
     clearLog
   }
-}
+})();
 
 export function Timer(){
   const timerField = document.getElementById("timer");

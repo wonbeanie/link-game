@@ -1,11 +1,11 @@
 import { correctList } from "./keywords.js";
-import { Chat, pickRandom, shuffleStrings, Alert, Log, Timer } from "./modules.js";
+import { Chat, pickRandom, shuffleStrings, Alert, Logger, Timer } from "./modules.js";
 import GameDatabase, { TABLE_KEYS } from "./database.js";
 import gameData from "./game-data.js";
 
 const { chatStart, chatClear, addChatMessage, chatClose } = Chat(sendClick);
 const { showAlert } = Alert(closeClick);
-const { setLog, clearLog } = Log();
+
 const { startTimer, stopTimer} = Timer();
 const { clearDatabase, KEY, onValueListener, updateData, getData } = GameDatabase();
 
@@ -77,7 +77,7 @@ onValueListener(KEY.CHAT_DATA_KEY, (data) => {
 onValueListener(KEY.GAME_DATA_KEY, (data) => {
   gameSetting(data);
 
-  clearLog();
+  Logger.clearLog();
 
   logSetting(data);
 });
@@ -95,7 +95,7 @@ function logSetting(data){
       playerHints[key] = value;
 
       if(startPlaySequence.length === 0){
-        setLog(key, value);
+        Logger.setLog(key, value);
       }
       return;
     }
@@ -125,17 +125,17 @@ function activityLog({playerHints,votingList}){
 
 function votingLog(votingList){
   if(gameState !== ""){
-    setLog(`투표`, '---------------');
+    Logger.setLog(`투표`, '---------------');
   }
 
   Object.keys(votingList).forEach((player)=>{
-    setLog(`${player}`, `${votingList[player]}님을 투표하였습니다.`);
+    Logger.setLog(`${player}`, `${votingList[player]}님을 투표하였습니다.`);
   });
 }
 
 function hintLog(playerHints){
   if(gameState !== ""){
-    setLog(`힌트`, '---------------');
+    Logger.setLog(`힌트`, '---------------');
   }
 
   gameData.startPlaySequence.forEach((player)=>{
@@ -143,7 +143,7 @@ function hintLog(playerHints){
       return;
     }
     
-    setLog(player, playerHints[player]);
+    Logger.setLog(player, playerHints[player]);
   });
 }
 
