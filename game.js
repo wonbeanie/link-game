@@ -83,17 +83,18 @@ onValueListener(KEY.GAME_DATA_KEY, (data) => {
 });
 
 function logSetting(data){
+  const { startPlaySequence } = gameData;
   let playerHints = {};
 
   let votingList = {};
 
-  const startPlaySequenceString = gameData.startPlaySequence.join(",");
+  const startPlaySequenceString = startPlaySequence.join(",");
 
   Object.entries(data).forEach(([key, value]) => {
     if(startPlaySequenceString.includes(key) || gameState === ""){
       playerHints[key] = value;
 
-      if(gameData.startPlaySequence.length === 0){
+      if(startPlaySequence.length === 0){
         setLog(key, value);
       }
       return;
@@ -165,7 +166,8 @@ function gameHintSequence(data){
     return votesInit();
   }
 
-  const notSettingPlayList = gameData.playerList.length === 0;
+  const { playerList } = gameData;
+  const notSettingPlayList = playerList.length === 0;
   if(notSettingPlayList) {
     gameData.playerList = data;
     setSuspectVoteList(data);
@@ -202,17 +204,18 @@ function votesInit(){
 }
 
 function gameOver(data, findSusepct = false){
+  const {correct, fakeCorrect, suspect} = gameData;
   if(findSusepct){
-    if(gameData.correct === data){
-      showAlert("범인 승리", `범인이 정답(${data})을 맞췄습니다.\n 범인의 제시어 ${gameData.fakeCorrect}\n 시민의 제시어 ${gameData.correct}`);
+    if(correct === data){
+      showAlert("범인 승리", `범인이 정답(${data})을 맞췄습니다.\n 범인의 제시어 ${fakeCorrect}\n 시민의 제시어 ${correct}`);
     }
     else {
-      showAlert("시민 승리",`범인의 최종 답은 ${data}으로 답하였습니다.\n 범인의 제시어 ${gameData.fakeCorrect}\n 시민의 제시어 ${gameData.correct}`);
+      showAlert("시민 승리",`범인의 최종 답은 ${data}으로 답하였습니다.\n 범인의 제시어 ${fakeCorrect}\n 시민의 제시어 ${correct}`);
     }
   }
   else {
-    if(gameData.suspect !== data){
-      showAlert("범인이 아닙니다.", `범인은 ${gameData.suspect}였습니다.`);
+    if(suspect !== data){
+      showAlert("범인이 아닙니다.", `범인은 ${suspect}였습니다.`);
     }
   }
 
@@ -222,7 +225,8 @@ function gameOver(data, findSusepct = false){
 }
 
 function votesEnd(data){
-  const failFindSuspect = gameData.suspect !== data;
+  const {suspect, isSuspect} = gameData;
+  const failFindSuspect = suspect !== data;
   if(failFindSuspect){
     gameOver(data);
     return;
@@ -233,7 +237,7 @@ function votesEnd(data){
 
   const SUSEPCT_ANSWER_TIME = 60;
 
-  if(gameData.isSuspect){
+  if(isSuspect){
     showAlert("범인인것을 걸렸습니다.", "정답을 맞춰주세요.");
     lastAnswer = data;
     hintBtnField.className = "none";
@@ -382,26 +386,29 @@ function selectCulprit(){
 }
 
 function gameInit(){
-  gameData.category = pickRandom(Object.keys(correctList));
-
-  gameData.correct = pickRandom(correctList[gameData.category]);
+  const category = pickRandom(Object.keys(correctList));
+  const correct = pickRandom(correctList[category]);
 
   let noCorrectList = [];
 
-  correctList[gameData.category].forEach((data)=>{
-    if(gameData.correct === data){
+  correctList[category].forEach((data)=>{
+    if(correct === data){
       return;
     }
     noCorrectList.push(data);
   });
 
-  gameData.fakeCorrect = pickRandom(noCorrectList);
+  const fakeCorrect = pickRandom(noCorrectList);
 
   let result = {};
 
-  result[TABLE_KEYS.CATEGORY] = gameData.category;
-  result[TABLE_KEYS.CORRECT] = gameData.correct;
-  result[TABLE_KEYS.FAKE_CORRECT] = gameData.fakeCorrect;
+  result[TABLE_KEYS.CATEGORY] = category;
+  result[TABLE_KEYS.CORRECT] = correct;
+  result[TABLE_KEYS.FAKE_CORRECT] = fakeCorrect;
+
+  gameData.category = category;
+  gameData.correct = correct;
+  gameData.fakeCorrect = fakeCorrect;
 
   return result;
 }
@@ -428,16 +435,17 @@ startField.addEventListener("click",()=>{
 
     gameData.suspect = pickRandom(shuffleList);
 
+    const {suspect, category, fakeCorrect, isSuspect, correct} = gameData;
     result[TABLE_KEYS.SEQUENCE] = shuffleList;
-    result[TABLE_KEYS.SUSPECT] = gameData.suspect;
+    result[TABLE_KEYS.SUSPECT] = suspect;
 
-    categoryField.textContent = gameData.category;
+    categoryField.textContent = category;
     
-    if(gameData.isSuspect){
-      correctField.textContent = gameData.fakeCorrect;
+    if(isSuspect){
+      correctField.textContent = fakeCorrect;
     }
     else {
-      correctField.textContent = gameData.correct;
+      correctField.textContent = correct;
     }
 
     updateData(result);
@@ -456,19 +464,20 @@ clearField.addEventListener("click",()=>{
 hintBtnField.addEventListener("click", sendHint);
 
 function sendHint(){
-  if(gameData.myTurn()){
+  const {myTurn, playSequence, nickname} = gameData;
+  if(myTurn){
     stopTimer();
     let result = {};
 
-    if(gameData.playSequence.length !== 1){
-      result[TABLE_KEYS.SEQUENCE] = gameData.playSequence.slice(1, gameData.playSequence.length);
+    if(playSequence.length !== 1){
+      result[TABLE_KEYS.SEQUENCE] = playSequence.slice(1, playSequence.length);
     }
     else {
       result[TABLE_KEYS.SEQUENCE] = "end";
       hintFiled.className = "none";
     }
 
-    result[gameData.nickname] = hintInputField.value;
+    result[nickname] = hintInputField.value;
 
     hintFiled.className = "none";
     updateData(result);
@@ -499,14 +508,15 @@ function setSuspectVoteList(data){
 }
 
 function startGame() {
-  categoryField.textContent = gameData.category;
-  correctField.textContent = gameData.myCorrect;
+  const {category, myCorrect, playSequence} = gameData;
+  categoryField.textContent = category;
+  correctField.textContent = myCorrect;
 
-  stateInfoField.textContent = `${gameData.playSequence[0]}님이 입력하고 있습니다.`;
+  stateInfoField.textContent = `${playSequence[0]}님이 입력하고 있습니다.`;
 
-  if(gameData.myTurn()){
+  if(gameData.myTurn){
     startTimer(30, sendHint);
-    showAlert("당신 순서입니다.",`카테고리는 ${gameData.category}, 제시어는 ${gameData.myCorrect}입니다.`);
+    showAlert("당신 순서입니다.",`카테고리는 ${category}, 제시어는 ${myCorrect}입니다.`);
     gameState = "Playing";
     hintFiled.className = "show";
     return;
@@ -516,7 +526,7 @@ function startGame() {
   }
   
   if(gameState === TABLE_KEYS.START){
-    showAlert("게임시작", `카테고리는 ${gameData.category}, 제시어는 ${gameData.myCorrect}입니다.`);
+    showAlert("게임시작", `카테고리는 ${category}, 제시어는 ${myCorrect}입니다.`);
     gameState = "Playing";
   }
 }
@@ -525,9 +535,10 @@ sespectInputField.addEventListener("click",sendSuspect);
 
 function sendSuspect(){
   let result = {};
+  const {nickname, myVotingKey} = gameData;
 
-  if(!selectTimeout || (!sendSuspectCheck && !playerSelectCheck[gameData.nickname])){
-    result[gameData.myVotingKey] = playerSelectField.value;
+  if(!selectTimeout || (!sendSuspectCheck && !playerSelectCheck[nickname])){
+    result[myVotingKey] = playerSelectField.value;
     sendSuspectCheck = true;
   }
 

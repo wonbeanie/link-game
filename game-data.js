@@ -13,7 +13,7 @@ class GameData {
     this.nickname = localStorage.getItem('userNickname') || "";
   }
 
-  myTurn() {
+  get myTurn() {
     return this.playSequence[0] === this.nickname;
   }
 
