@@ -254,10 +254,7 @@ function gameSetting(snapshot){
   let updateDatabase = {};
   playerSelectCheck = [];
 
-  gameData.correct = snapshot[TABLE_KEYS.CORRECT];
-  gameData.fakeCorrect = snapshot[TABLE_KEYS.FAKE_CORRECT];
-  gameData.category = snapshot[TABLE_KEYS.CATEGORY];
-  gameData.suspect = snapshot[TABLE_KEYS.SUSPECT];
+  gameData.setDefaultGameInfos(snapshot);
 
   if(TABLE_KEYS.SEQUENCE in snapshot){
     const data = snapshot[TABLE_KEYS.SEQUENCE];

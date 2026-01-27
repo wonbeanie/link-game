@@ -13,6 +13,13 @@ class GameData {
     this.nickname = localStorage.getItem('userNickname') || "";
   }
 
+  setDefaultGameInfos(newDatabase){
+    this.correct = newDatabase[TABLE_KEYS.CORRECT];
+    this.fakeCorrect = newDatabase[TABLE_KEYS.FAKE_CORRECT];
+    this.category = newDatabase[TABLE_KEYS.CATEGORY];
+    this.suspect = newDatabase[TABLE_KEYS.SUSPECT];
+  }
+
   get myTurn() {
     return this.playSequence[0] === this.nickname;
   }
