@@ -1,5 +1,5 @@
 import { correctList } from "./keywords.js";
-import { Chat, pickRandom, shuffleStrings, alert, Logger, Timer, TABLE_KEYS, DATABASE_KEYS } from "./modules.js";
+import { Chat, pickRandom, shuffleStrings, alert, logger, Timer, TABLE_KEYS, DATABASE_KEYS } from "./modules.js";
 import gameDatabase from "./database.js";
 import gameData from "./game-data.js";
 
@@ -72,7 +72,7 @@ gameDatabase.onValueListener(DATABASE_KEYS.CHAT_DATA_KEY, (data) => {
 gameDatabase.onValueListener(DATABASE_KEYS.GAME_DATA_KEY, (data) => {
   gameSetting(data);
 
-  Logger.clearLog();
+  logger.clearLog();
 
   logSetting(data);
 });
@@ -90,7 +90,7 @@ function logSetting(data){
       playerHints[key] = value;
 
       if(startPlaySequence.length === 0){
-        Logger.setLog(key, value);
+        logger.setLog(key, value);
       }
       return;
     }
@@ -120,17 +120,17 @@ function activityLog({playerHints,votingList}){
 
 function votingLog(votingList){
   if(gameState !== ""){
-    Logger.setLog(`투표`, '---------------');
+    logger.setLog(`투표`, '---------------');
   }
 
   Object.keys(votingList).forEach((player)=>{
-    Logger.setLog(`${player}`, `${votingList[player]}님을 투표하였습니다.`);
+    logger.setLog(`${player}`, `${votingList[player]}님을 투표하였습니다.`);
   });
 }
 
 function hintLog(playerHints){
   if(gameState !== ""){
-    Logger.setLog(`힌트`, '---------------');
+    logger.setLog(`힌트`, '---------------');
   }
 
   gameData.startPlaySequence.forEach((player)=>{
@@ -138,7 +138,7 @@ function hintLog(playerHints){
       return;
     }
     
-    Logger.setLog(player, playerHints[player]);
+    logger.setLog(player, playerHints[player]);
   });
 }
 

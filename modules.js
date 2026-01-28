@@ -150,7 +150,7 @@ class Alerter {
 }
 export const alert = new Alerter();
 
-export const Logger = (function Logger(){
+export const logger = (function Logger(){
   let display = null;
 
   const getDisplay = () => {
