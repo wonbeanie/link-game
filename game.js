@@ -1,5 +1,5 @@
 import { correctList } from "./keywords.js";
-import { Chat, pickRandom, shuffleStrings, alert, logger, Timer, TABLE_KEYS, DATABASE_KEYS } from "./modules.js";
+import { Chat, pickRandom, shuffleStrings, alert, logger, timer, TABLE_KEYS, DATABASE_KEYS } from "./modules.js";
 import gameDatabase from "./database.js";
 import gameData from "./game-data.js";
 
@@ -185,7 +185,7 @@ function votesInit(){
   const VOTE_TIME = 60;
   sendSuspectCheck = false;
   
-  Timer.startTimer(VOTE_TIME,()=>{
+  timer.startTimer(VOTE_TIME,()=>{
     selectTimeout = true;
     sendSuspect();
   });
@@ -214,7 +214,7 @@ function gameOver(data, findSusepct = false){
     }
   }
 
-  Timer.stopTimer();
+  timer.stopTimer();
   reloadEvent();
   chatClose();
 }
@@ -228,7 +228,7 @@ function votesEnd(data){
   }
 
   selectPlayerField.className = "none";
-  Timer.stopTimer();
+  timer.stopTimer();
 
   const SUSEPCT_ANSWER_TIME = 60;
 
@@ -237,11 +237,11 @@ function votesEnd(data){
     lastAnswer = data;
     hintBtnField.className = "none";
     answerField.className = "show";
-    Timer.startTimer(SUSEPCT_ANSWER_TIME, sendLastAnswer);
+    timer.startTimer(SUSEPCT_ANSWER_TIME, sendLastAnswer);
   }
   else {
     alert.show("범인을 찾았습니다.", "범인이 답을 입력하고 있습니다.");
-    Timer.startTimer(SUSEPCT_ANSWER_TIME);
+    timer.startTimer(SUSEPCT_ANSWER_TIME);
   }
 }
 
@@ -458,7 +458,7 @@ hintBtnField.addEventListener("click", sendHint);
 function sendHint(){
   const {myTurn, playSequence, nickname} = gameData;
   if(myTurn){
-    Timer.stopTimer();
+    timer.stopTimer();
     let result = {};
 
     if(playSequence.length !== 1){
@@ -507,14 +507,14 @@ function startGame() {
   stateInfoField.textContent = `${playSequence[0]}님이 입력하고 있습니다.`;
 
   if(gameData.myTurn){
-    Timer.startTimer(30, sendHint);
+    timer.startTimer(30, sendHint);
     alert.show("당신 순서입니다.",`카테고리는 ${category}, 제시어는 ${myCorrect}입니다.`);
     gameState = "Playing";
     hintFiled.className = "show";
     return;
   }
   else {
-    Timer.startTimer(30);
+    timer.startTimer(30);
   }
   
   if(gameState === TABLE_KEYS.START){

@@ -199,7 +199,7 @@ export const logger = (function Logger(){
   }
 })();
 
-export const Timer = (function Timer(){
+export const timer = (function Timer(){
   const timerField = document.getElementById("timer");
   let inteval = null;
   
