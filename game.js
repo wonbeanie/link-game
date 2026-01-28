@@ -1,9 +1,8 @@
 import { correctList } from "./keywords.js";
-import { Chat, pickRandom, shuffleStrings, alert, logger, timer, TABLE_KEYS, DATABASE_KEYS } from "./modules.js";
+import { pickRandom, shuffleStrings, alert, logger, timer, TABLE_KEYS, DATABASE_KEYS } from "./modules.js";
 import gameDatabase from "./database.js";
 import gameData from "./game-data.js";
-
-const { chatStart, chatClear, addChatMessage, chatClose } = Chat(sendClick);
+import chatHandler from "./chat-handler.js";
 
 const nicknameField = document.getElementById('nickname');
 const nicknameInputField = document.getElementById('nickname-input');
@@ -31,8 +30,6 @@ let lastAnswer = "";
 let selectTimeout = false;
 
 let gameState = "";
-
-let chatHistory = [];
 
 confirmField.addEventListener("click", (e) => {
   let result = {};
@@ -62,11 +59,7 @@ function checkAdmin() {
 }
 
 gameDatabase.onValueListener(DATABASE_KEYS.CHAT_DATA_KEY, (data) => {
-  chatHistory = data[TABLE_KEYS.CHAT_HISTORY];
-  chatClear();
-  chatHistory.forEach((chat)=>{
-    addChatMessage(chat.nickname, chat.message);
-  });
+  chatHandler.settingChatHistory(data);
 })
 
 gameDatabase.onValueListener(DATABASE_KEYS.GAME_DATA_KEY, (data) => {
@@ -101,7 +94,7 @@ function logSetting(data){
     }
 
     if(key.includes(TABLE_KEYS.CHAT_HISTORY)){
-      chatHistory = value;
+      chatHandler.chatHistory = value;
       return;
     }
   });
@@ -143,7 +136,7 @@ function hintLog(playerHints){
 }
 
 function gameStartInit(){
-  chatStart();
+  chatHandler.chatStart();
   gameState = TABLE_KEYS.START;
   reloadEvent();
 
@@ -216,7 +209,7 @@ function gameOver(data, findSusepct = false){
 
   timer.stopTimer();
   reloadEvent();
-  chatClose();
+  chatHandler.chatClose();
 }
 
 function votesEnd(data){
@@ -555,24 +548,5 @@ function outGameEvent(e){
     let result = {};
     result[TABLE_KEYS.OUT_GAME] = true;
     gameDatabase.updateData(result);
-  }
-}
-
-function sendClick(msg){
-  if (msg) {
-    let result = {};
-
-    if(chatHistory.length >= 30){
-      chatHistory.shift();
-    }
-
-    chatHistory.push({
-      nickname : gameData.nickname,
-      message : msg
-    });
-
-    result[TABLE_KEYS.CHAT_HISTORY] = chatHistory;
-
-    gameDatabase.updateData(result, DATABASE_KEYS.CHAT_DATA_KEY);
   }
 }
