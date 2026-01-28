@@ -1,10 +1,9 @@
 import { correctList } from "./keywords.js";
-import { Chat, pickRandom, shuffleStrings, Alert, Logger, Timer, TABLE_KEYS, DATABASE_KEYS } from "./modules.js";
+import { Chat, pickRandom, shuffleStrings, alert, Logger, Timer, TABLE_KEYS, DATABASE_KEYS } from "./modules.js";
 import GameDatabase from "./database.js";
 import gameData from "./game-data.js";
 
 const { chatStart, chatClear, addChatMessage, chatClose } = Chat(sendClick);
-const { showAlert } = Alert(closeClick);
 
 const nicknameField = document.getElementById('nickname');
 const nicknameInputField = document.getElementById('nickname-input');
@@ -47,7 +46,6 @@ confirmField.addEventListener("click", (e) => {
 const hintInputField = document.getElementById('hint-input');
 const answerInputField = document.getElementById('answer-input');
 
-let restart = false;
 let admin = false;
 
 let sendSuspectCheck = false;
@@ -156,7 +154,7 @@ function gameStartInit(){
 
 function gameHintSequence(data){
   if(data === "end"){
-    showAlert("토론시간", "1분의 토론시간이 주어집니다.");
+    alert.show("토론시간", "1분의 토론시간이 주어집니다.");
     selectPlayerField.className = "show";
     hintFiled.className = "none";
 
@@ -178,7 +176,7 @@ function gameHintSequence(data){
 }
 
 function tieOfVotes(data){
-  showAlert("투표 동점", `${data.join(",")}중에 한명을 선택해주세요.`);
+  alert.show("투표 동점", `${data.join(",")}중에 한명을 선택해주세요.`);
   setSuspectVoteList(data);
   return votesInit();
 }
@@ -204,15 +202,15 @@ function gameOver(data, findSusepct = false){
   const {correct, fakeCorrect, suspect} = gameData;
   if(findSusepct){
     if(correct === data){
-      showAlert("범인 승리", `범인이 정답(${data})을 맞췄습니다.\n 범인의 제시어 ${fakeCorrect}\n 시민의 제시어 ${correct}`);
+      alert.show("범인 승리", `범인이 정답(${data})을 맞췄습니다.\n 범인의 제시어 ${fakeCorrect}\n 시민의 제시어 ${correct}`);
     }
     else {
-      showAlert("시민 승리",`범인의 최종 답은 ${data}으로 답하였습니다.\n 범인의 제시어 ${fakeCorrect}\n 시민의 제시어 ${correct}`);
+      alert.show("시민 승리",`범인의 최종 답은 ${data}으로 답하였습니다.\n 범인의 제시어 ${fakeCorrect}\n 시민의 제시어 ${correct}`);
     }
   }
   else {
     if(suspect !== data){
-      showAlert("범인이 아닙니다.", `범인은 ${suspect}였습니다.`);
+      alert.show("범인이 아닙니다.", `범인은 ${suspect}였습니다.`);
     }
   }
 
@@ -235,14 +233,14 @@ function votesEnd(data){
   const SUSEPCT_ANSWER_TIME = 60;
 
   if(isSuspect){
-    showAlert("범인인것을 걸렸습니다.", "정답을 맞춰주세요.");
+    alert.show("범인인것을 걸렸습니다.", "정답을 맞춰주세요.");
     lastAnswer = data;
     hintBtnField.className = "none";
     answerField.className = "show";
     Timer.startTimer(SUSEPCT_ANSWER_TIME, sendLastAnswer);
   }
   else {
-    showAlert("범인을 찾았습니다.", "범인이 답을 입력하고 있습니다.");
+    alert.show("범인을 찾았습니다.", "범인이 답을 입력하고 있습니다.");
     Timer.startTimer(SUSEPCT_ANSWER_TIME);
   }
 }
@@ -310,10 +308,10 @@ function gameSetting(snapshot){
 }
 
 function outGame(){
-  showAlert("알림","플레이어중 한명이 나갔습니다.\n게임을 초기화합니다.");
+  alert.show("알림","플레이어중 한명이 나갔습니다.\n게임을 초기화합니다.");
   GameDatabase.clearDatabase();
   removeReloadEvent();
-  restart = true;
+  alert.restart = true;
 }
 
 function votes(snapshot){
@@ -510,7 +508,7 @@ function startGame() {
 
   if(gameData.myTurn){
     Timer.startTimer(30, sendHint);
-    showAlert("당신 순서입니다.",`카테고리는 ${category}, 제시어는 ${myCorrect}입니다.`);
+    alert.show("당신 순서입니다.",`카테고리는 ${category}, 제시어는 ${myCorrect}입니다.`);
     gameState = "Playing";
     hintFiled.className = "show";
     return;
@@ -520,7 +518,7 @@ function startGame() {
   }
   
   if(gameState === TABLE_KEYS.START){
-    showAlert("게임시작", `카테고리는 ${category}, 제시어는 ${myCorrect}입니다.`);
+    alert.show("게임시작", `카테고리는 ${category}, 제시어는 ${myCorrect}입니다.`);
     gameState = "Playing";
   }
 }
@@ -576,11 +574,5 @@ function sendClick(msg){
     result[TABLE_KEYS.CHAT_HISTORY] = chatHistory;
 
     GameDatabase.updateData(result, DATABASE_KEYS.CHAT_DATA_KEY);
-  }
-}
-
-function closeClick(){
-  if(restart){
-    location.reload();
   }
 }

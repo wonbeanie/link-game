@@ -68,15 +68,55 @@ export function pickRandom(array) {
   return array[Math.floor(Math.random() * array.length)];
 }
 
+class Alerter {
+  restart = false;
+  alertElement = null;
+  closeAlertElement = null;
+  titleElement = null;
+  messageElement = null;
 
-export function Alert(closeClick = ()=>{}){
-  const titleElement = document.getElementById('alertTitle');
-  const messageElement = document.getElementById('alertMessage');
-  const alertElement = document.getElementById('alert');
-  const closeAlertElement = document.getElementById("close-alert");
+  getTitleElement(){
+    if(!this.titleElement){
+      this.titleElement = document.getElementById('alertTitle');
+    }
+    
+    return this.titleElement;
+  }
 
-  function showAlert(title, message) {
-    if(checkShowAlert()){
+  getMessageElement(){
+    if(!this.messageElement){
+      this.messageElement = document.getElementById('alertMessage');
+    }
+
+    return this.messageElement;
+  }
+
+  getAlertElement(){
+    if(!this.alertElement){
+      this.alertElement = document.getElementById('alert');
+      this.getCloseAlertElement();
+    }
+
+    return this.alertElement;
+  }
+
+  getCloseAlertElement(){
+    if(!this.closeAlertElement){
+      this.closeAlertElement = document.getElementById("close-alert");
+      this.closeAlertElement.addEventListener("click",()=>{
+        this.onCloseClick();
+      });
+    }
+
+    return this.closeAlertElement;
+  }
+
+  show(title, message) {
+    const alertElement = this.getAlertElement();
+    const titleElement = this.getTitleElement();
+    const messageElement = this.getMessageElement();
+
+    if(this.checkShow()){
       titleElement.textContent = title;
       messageElement.textContent = message;
       return;
@@ -87,25 +127,28 @@ export function Alert(closeClick = ()=>{}){
     alertElement.style.display = 'flex';
   }
 
-  function checkShowAlert(){
+  checkShow(){
+    const alertElement = this.getAlertElement();
     return alertElement.style.display === 'flex';
   }
 
-  function closeAlert() {
+  reload(){
+    if(this.restart){
+      location.reload();
+    }
+  }
+
+  closeAlert() {
+    const alertElement = this.getAlertElement();
     alertElement.style.display = 'none';
   }
 
-  closeAlertElement.addEventListener("click",onCloseClick);
-
-  function onCloseClick(){
-    closeClick();
-    closeAlert();
-  }
-
-  return {
-    showAlert
+  onCloseClick(){
+    this.reload();
+    this.closeAlert();
   }
 }
+export const alert = new Alerter();
 
 export const Logger = (function Logger(){
   let display = null;
