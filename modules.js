@@ -156,7 +156,7 @@ export const Logger = (function Logger(){
   }
 })();
 
-export function Timer(){
+export const Timer = (function Timer(){
   const timerField = document.getElementById("timer");
   let inteval = null;
   
@@ -200,7 +200,7 @@ export function Timer(){
     startTimer,
     stopTimer
   }
-}
+})();
 
 export const TABLE_KEYS = Object.freeze({
   CATEGORY : "Category",

@@ -6,9 +6,6 @@ import gameData from "./game-data.js";
 const { chatStart, chatClear, addChatMessage, chatClose } = Chat(sendClick);
 const { showAlert } = Alert(closeClick);
 
-const { startTimer, stopTimer} = Timer();
-// const { clearDatabase, KEY, onValueListener, updateData, getData } = GameDatabase();
-
 const nicknameField = document.getElementById('nickname');
 const nicknameInputField = document.getElementById('nickname-input');
 const confirmField = document.getElementById("confirm");
@@ -190,7 +187,7 @@ function votesInit(){
   const VOTE_TIME = 60;
   sendSuspectCheck = false;
   
-  startTimer(VOTE_TIME,()=>{
+  Timer.startTimer(VOTE_TIME,()=>{
     selectTimeout = true;
     sendSuspect();
   });
@@ -219,7 +216,7 @@ function gameOver(data, findSusepct = false){
     }
   }
 
-  stopTimer();
+  Timer.stopTimer();
   reloadEvent();
   chatClose();
 }
@@ -233,7 +230,7 @@ function votesEnd(data){
   }
 
   selectPlayerField.className = "none";
-  stopTimer();
+  Timer.stopTimer();
 
   const SUSEPCT_ANSWER_TIME = 60;
 
@@ -242,11 +239,11 @@ function votesEnd(data){
     lastAnswer = data;
     hintBtnField.className = "none";
     answerField.className = "show";
-    startTimer(SUSEPCT_ANSWER_TIME, sendLastAnswer);
+    Timer.startTimer(SUSEPCT_ANSWER_TIME, sendLastAnswer);
   }
   else {
     showAlert("범인을 찾았습니다.", "범인이 답을 입력하고 있습니다.");
-    startTimer(SUSEPCT_ANSWER_TIME);
+    Timer.startTimer(SUSEPCT_ANSWER_TIME);
   }
 }
 
@@ -463,7 +460,7 @@ hintBtnField.addEventListener("click", sendHint);
 function sendHint(){
   const {myTurn, playSequence, nickname} = gameData;
   if(myTurn){
-    stopTimer();
+    Timer.stopTimer();
     let result = {};
 
     if(playSequence.length !== 1){
@@ -512,14 +509,14 @@ function startGame() {
   stateInfoField.textContent = `${playSequence[0]}님이 입력하고 있습니다.`;
 
   if(gameData.myTurn){
-    startTimer(30, sendHint);
+    Timer.startTimer(30, sendHint);
     showAlert("당신 순서입니다.",`카테고리는 ${category}, 제시어는 ${myCorrect}입니다.`);
     gameState = "Playing";
     hintFiled.className = "show";
     return;
   }
   else {
-    startTimer(30);
+    Timer.startTimer(30);
   }
   
   if(gameState === TABLE_KEYS.START){
