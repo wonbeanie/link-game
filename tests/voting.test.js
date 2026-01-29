@@ -23,7 +23,7 @@ describe("투표 테스트", () => {
 
     const votingSelect = suspectSelectLabel.nextElementSibling;
 
-    expect(votingSelect).toHaveAttribute("id", "player-select");
+    expect(votingSelect).toHaveAttribute("id", "vote-input");
     expect(votingSelect.selectedOptions[0].textContent).toBe(nickname);
     expect(votingSelect.selectedOptions[0].selected).toBe(true);
     expect(votingSelect.selectedOptions[0]).toBeVisible();

@@ -132,7 +132,7 @@ async function checkVoting(votingList){
 export function checkSelectPlayerList(playerCount = 2){
   const suspectSelectLabel = screen.getByText(/범인 지목 투표/);
   const votingSelect = suspectSelectLabel.nextElementSibling;
-  expect(votingSelect).toHaveAttribute("id", "player-select");
+  expect(votingSelect).toHaveAttribute("id", "vote-input");
   expect(votingSelect.childElementCount).toBe(playerCount);
 }
 
