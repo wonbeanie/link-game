@@ -29,8 +29,6 @@ let sameList = [];
 let lastAnswer = "";
 let selectTimeout = false;
 
-let gameState = "";
-
 confirmField.addEventListener("click", (e) => {
   let result = {};
   result[nicknameInputField.value] = "Ready";
@@ -79,7 +77,7 @@ function logSetting(data){
   const startPlaySequenceString = startPlaySequence.join(",");
 
   Object.entries(data).forEach(([key, value]) => {
-    if(startPlaySequenceString.includes(key) || gameState === ""){
+    if(startPlaySequenceString.includes(key) || gameData.state === ""){
       playerHints[key] = value;
 
       if(startPlaySequence.length === 0){
@@ -112,7 +110,7 @@ function activityLog({playerHints,votingList}){
 }
 
 function votingLog(votingList){
-  if(gameState !== ""){
+  if(gameData.state !== ""){
     logger.setLog(`투표`, '---------------');
   }
 
@@ -122,7 +120,7 @@ function votingLog(votingList){
 }
 
 function hintLog(playerHints){
-  if(gameState !== ""){
+  if(gameData.state !== ""){
     logger.setLog(`힌트`, '---------------');
   }
 
@@ -137,7 +135,7 @@ function hintLog(playerHints){
 
 function gameStartInit(){
   chatHandler.chatStart();
-  gameState = TABLE_KEYS.START;
+  gameData.state = TABLE_KEYS.START;
   reloadEvent();
 
   const result = {};
@@ -502,7 +500,7 @@ function startGame() {
   if(gameData.myTurn){
     timer.startTimer(30, sendHint);
     alert.show("당신 순서입니다.",`카테고리는 ${category}, 제시어는 ${myCorrect}입니다.`);
-    gameState = "Playing";
+    gameData.state = "Playing";
     hintFiled.className = "show";
     return;
   }
@@ -510,9 +508,9 @@ function startGame() {
     timer.startTimer(30);
   }
   
-  if(gameState === TABLE_KEYS.START){
+  if(gameData.state === TABLE_KEYS.START){
     alert.show("게임시작", `카테고리는 ${category}, 제시어는 ${myCorrect}입니다.`);
-    gameState = "Playing";
+    gameData.state = "Playing";
   }
 }
 
@@ -544,7 +542,7 @@ function removeReloadEvent(){
 }
 
 function outGameEvent(e){
-  if(gameState !== ""){
+  if(gameData.state !== ""){
     let result = {};
     result[TABLE_KEYS.OUT_GAME] = true;
     gameDatabase.updateData(result);

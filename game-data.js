@@ -8,6 +8,7 @@ class GameData {
   nickname = "";
   category = "";
   correct = "";
+  state = "";
 
   constructor(){
     this.nickname = localStorage.getItem('userNickname') || "";
