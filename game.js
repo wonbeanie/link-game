@@ -3,43 +3,23 @@ import { pickRandom, shuffleStrings, alert, logger, timer, TABLE_KEYS, DATABASE_
 import gameDatabase from "./database.js";
 import gameData from "./game-data.js";
 import chatHandler from "./chat-handler.js";
-
-const nicknameField = document.getElementById('nickname');
-const nicknameInputField = document.getElementById('nickname-input');
-const confirmField = document.getElementById("nickname-btn");
-const startField = document.getElementById("start");
-const clearField = document.getElementById("clear");
-const hintFiled = document.getElementById("hint");
-const hintBtnField = document.getElementById("hint-btn");
-const playerSelectField = document.getElementById("vote-input");
-const sespectInputField = document.getElementById("vote-btn");
-const answerBtnField = document.getElementById("answer-btn");
-const answerField = document.getElementById("answer");
-const selectPlayerField = document.getElementById("vote");
-const categoryField = document.getElementById("category");
-const correctField = document.getElementById("correct");
-const stateInfoField = document.getElementById("state-info");
+import gameElements from "./Game-Elements.js";
 
 let playerSelectCheck = [];
-
-nicknameInputField.value = gameData.nickname;
 
 let sameList = [];
 
 let lastAnswer = "";
 let selectTimeout = false;
 
-confirmField.addEventListener("click", (e) => {
+gameElements.nickname.btn.addEventListener("click", (e) => {
   let result = {};
-  result[nicknameInputField.value] = "Ready";
+  result[gameElements.nickname.value] = "Ready";
   gameDatabase.updateData(result);
 
-  gameData.nickname = nicknameInputField.value;
-  document.getElementById("nickname-info").textContent = gameData.nickname;
+  gameData.nickname = gameElements.nickname.value;
+  gameElements.info.nickname.textContent = gameData.nickname;
 });
-
-const hintInputField = document.getElementById('hint-input');
-const answerInputField = document.getElementById('answer-input');
 
 let admin = false;
 
@@ -52,7 +32,7 @@ function checkAdmin() {
   admin = Boolean(urlParams.get('admin')) || false;
   
   if(admin){
-    document.getElementById('admin-btn').className = "show";
+    gameElements.admin.display.show();
   }
 }
 
@@ -146,8 +126,8 @@ function gameStartInit(){
 function gameHintSequence(data){
   if(data === "end"){
     alert.show("토론시간", "1분의 토론시간이 주어집니다.");
-    selectPlayerField.className = "show";
-    hintFiled.className = "none";
+    gameElements.vote.show();
+    gameElements.hint.hide();
 
     return votesInit();
   }
@@ -157,7 +137,7 @@ function gameHintSequence(data){
   if(notSettingPlayList) {
     gameData.playerList = data;
     setSuspectVoteList(data);
-    nicknameField.className = "none";
+    gameElements.nickname.hide();
     gameData.startPlaySequence = data;
   }
 
@@ -218,7 +198,8 @@ function votesEnd(data){
     return;
   }
 
-  selectPlayerField.className = "none";
+  gameElements.vote.hide();
+
   timer.stopTimer();
 
   const SUSEPCT_ANSWER_TIME = 60;
@@ -226,8 +207,8 @@ function votesEnd(data){
   if(isSuspect){
     alert.show("범인인것을 걸렸습니다.", "정답을 맞춰주세요.");
     lastAnswer = data;
-    hintBtnField.className = "none";
-    answerField.className = "show";
+    gameElements.hint.hide();
+    gameElements.answer.show();
     timer.startTimer(SUSEPCT_ANSWER_TIME, sendLastAnswer);
   }
   else {
@@ -396,7 +377,7 @@ function gameInit(){
   return result;
 }
 
-startField.addEventListener("click",()=>{
+gameElements.admin.start.addEventListener("click",()=>{
   gameDatabase.getData(DATABASE_KEYS.GAME_DATA_KEY).then((data) => {
     let list = [];
 
@@ -422,13 +403,13 @@ startField.addEventListener("click",()=>{
     result[TABLE_KEYS.SEQUENCE] = shuffleList;
     result[TABLE_KEYS.SUSPECT] = suspect;
 
-    categoryField.textContent = category;
+    gameElements.info.category.textContent = category;
     
     if(isSuspect){
-      correctField.textContent = fakeCorrect;
+      gameElements.info.correct.textContent = fakeCorrect;
     }
     else {
-      correctField.textContent = correct;
+      gameElements.info.correct.textContent = correct;
     }
 
     gameDatabase.updateData(result);
@@ -440,11 +421,13 @@ startField.addEventListener("click",()=>{
   gameDatabase.updateData(result);
 });
 
-clearField.addEventListener("click",()=>{
+
+gameElements.admin.clear.addEventListener("click",()=>{
   gameDatabase.clearDatabase();
 });
 
-hintBtnField.addEventListener("click", sendHint);
+
+gameElements.hint.btn.addEventListener("click", sendHint);
 
 function sendHint(){
   const {myTurn, playSequence, nickname} = gameData;
@@ -457,51 +440,51 @@ function sendHint(){
     }
     else {
       result[TABLE_KEYS.SEQUENCE] = "end";
-      hintFiled.className = "none";
+      gameElements.hint.hide();
     }
 
-    result[nickname] = hintInputField.value;
+    result[nickname] = gameElements.hint.value;
 
-    hintFiled.className = "none";
+    gameElements.hint.hide();
     gameDatabase.updateData(result);
   }
 }
 
-answerBtnField.addEventListener("click",sendLastAnswer);
+gameElements.answer.btn.addEventListener("click",sendLastAnswer);
 
 function sendLastAnswer(){
   if(lastAnswer === gameData.nickname){
     let result = {};
-    result[TABLE_KEYS.LAST_ANSWER] = answerInputField.value;
+    result[TABLE_KEYS.LAST_ANSWER] = gameElements.answer.value;
     result[TABLE_KEYS.SELECT_CULPRIT] = "";
     gameDatabase.updateData(result);
   }
 }
 
 function setSuspectVoteList(data){
-  playerSelectField.textContent = "";
+  gameElements.vote.allClearChildren();
   
   JSON.parse(JSON.stringify(data)).sort().forEach((player)=>{
     const optionElement = document.createElement("option");
     optionElement.value = player;
     optionElement.textContent = player;
 
-    playerSelectField.appendChild(optionElement);
+    gameElements.vote.appendChild(optionElement);
   });
 }
 
 function startGame() {
   const {category, myCorrect, playSequence} = gameData;
-  categoryField.textContent = category;
-  correctField.textContent = myCorrect;
+  gameElements.info.category.textContent = category;
+  gameElements.info.correct.textContent = myCorrect;
 
-  stateInfoField.textContent = `${playSequence[0]}님이 입력하고 있습니다.`;
+  gameElements.info.state.textContent = `${playSequence[0]}님이 입력하고 있습니다.`;
 
   if(gameData.myTurn){
     timer.startTimer(30, sendHint);
     alert.show("당신 순서입니다.",`카테고리는 ${category}, 제시어는 ${myCorrect}입니다.`);
     gameData.state = "Playing";
-    hintFiled.className = "show";
+    gameElements.hint.show();
     return;
   }
   else {
@@ -514,14 +497,14 @@ function startGame() {
   }
 }
 
-sespectInputField.addEventListener("click",sendSuspect);
+gameElements.vote.btn.addEventListener("click",sendSuspect);
 
 function sendSuspect(){
   let result = {};
   const {nickname, myVotingKey} = gameData;
 
   if(!selectTimeout || (!sendSuspectCheck && !playerSelectCheck[nickname])){
-    result[myVotingKey] = playerSelectField.value;
+    result[myVotingKey] = gameElements.vote.value;
     sendSuspectCheck = true;
   }
 

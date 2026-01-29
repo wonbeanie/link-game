@@ -1,3 +1,4 @@
+import gameElements from "./Game-Elements.js";
 import { TABLE_KEYS } from "./modules.js";
 
 class GameData {
@@ -12,6 +13,7 @@ class GameData {
 
   constructor(){
     this.nickname = localStorage.getItem('userNickname') || "";
+    gameElements.nickname.value = this.nickname;
   }
 
   setDefaultGameInfos(newDatabase){
@@ -26,8 +28,9 @@ class GameData {
   }
 
   set nickname(nickname){
-    this.nickname = nickname
+    this.nickname = nickname;
     localStorage.setItem('userNickname', nickname);
+    gameElements.nickname.value = this.nickname;
   }
 
   get isSuspect(){
