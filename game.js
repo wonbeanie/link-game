@@ -121,9 +121,10 @@ function gameHintSequence(data){
     gameData.startPlaySequence = data;
   }
 
-  gameData.playSequence = data;
-
-  gameHandler.startGame();
+  hintHandler.turnProcessor(data);
+  if(gameData.state === TABLE_KEYS.START){
+    gameHandler.startGame();
+  }
 }
 
 function tieOfVotes(data){
