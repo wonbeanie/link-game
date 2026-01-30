@@ -4,9 +4,15 @@ import gameElements from "./Game-Elements.js";
 import { alert, TABLE_KEYS, timer } from "./modules.js";
 
 class HintHandler {
+  initHintTurn(data){
+    gameElements.nickname.hide();
+    gameData.startPlaySequence = data;
+  }
+
   send(){
-    const {myTurn, playSequence, nickname} = gameData;
-    if(myTurn){
+    const {playSequence, nickname} = gameData;
+
+    if(gameData.myTurn){
       timer.stopTimer();
       let result = {};
 
@@ -26,8 +32,13 @@ class HintHandler {
   }
 
   turnProcessor(data){
-    const {category, myCorrect} = gameData;
-    
+    const { category, myCorrect, startPlaySequence } = gameData;
+    const notInitHintTurn = startPlaySequence.length === 0;
+
+    if(notInitHintTurn){
+      this.initHintTurn(data);
+    }
+
     gameData.playSequence = data;
     gameElements.info.category.textContent = category;
     gameElements.info.correct.textContent = myCorrect;

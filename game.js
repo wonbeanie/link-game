@@ -105,20 +105,13 @@ function gameStartInit(){
 
 function gameHintSequence(data){
   if(data === "end"){
+    gameData.playerList = gameData.startPlaySequence;
+    setSuspectVoteList(gameData.startPlaySequence);
     alert.show("토론시간", "1분의 토론시간이 주어집니다.");
     gameElements.vote.show();
     gameElements.hint.hide();
 
     return votesInit();
-  }
-
-  const { playerList } = gameData;
-  const notSettingPlayList = playerList.length === 0;
-  if(notSettingPlayList) {
-    gameData.playerList = data;
-    setSuspectVoteList(data);
-    gameElements.nickname.hide();
-    gameData.startPlaySequence = data;
   }
 
   hintHandler.turnProcessor(data);
