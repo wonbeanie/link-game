@@ -5,12 +5,7 @@ import gameData from "./game-data.js";
 import chatHandler from "./chat-handler.js";
 import gameElements from "./Game-Elements.js";
 
-let playerSelectCheck = [];
-
-let sameList = [];
-
 let lastAnswer = "";
-let selectTimeout = false;
 
 gameElements.nickname.btn.addEventListener("click", (e) => {
   let result = {};
@@ -20,8 +15,6 @@ gameElements.nickname.btn.addEventListener("click", (e) => {
   gameData.nickname = gameElements.nickname.value;
   gameElements.info.nickname.textContent = gameData.nickname;
 });
-
-let sendSuspectCheck = false;
 
 gameDatabase.onValueListener(DATABASE_KEYS.CHAT_DATA_KEY, (data) => {
   chatHandler.settingChatHistory(data);
@@ -141,10 +134,10 @@ function tieOfVotes(data){
 
 function votesInit(){
   const VOTE_TIME = 60;
-  sendSuspectCheck = false;
+  gameData.sendSuspectCheck = false;
   
   timer.startTimer(VOTE_TIME,()=>{
-    selectTimeout = true;
+    gameData.selectTimeout = true;
     sendSuspect();
   });
 
@@ -152,7 +145,7 @@ function votesInit(){
   result[TABLE_KEYS.RE_SELECT_CULPRIT] = null;
   result[TABLE_KEYS.SEQUENCE] = null;
   result[TABLE_KEYS.SELECT_TIMEOUT] = null;
-  selectTimeout = false;
+  gameData.selectTimeout = false;
   return result;
 }
 
@@ -206,7 +199,7 @@ function votesEnd(data){
 
 function gameSetting(snapshot){
   let updateDatabase = {};
-  playerSelectCheck = [];
+  gameData.playerSelectCheck = [];
 
   gameData.setDefaultGameInfos(snapshot);
 
@@ -276,12 +269,12 @@ function outGame(){
 function votes(snapshot){
   Object.keys(snapshot).forEach((key)=>{
     if(key.includes(TABLE_KEYS.SUSPECT_LIST)){
-      playerSelectCheck[key.split("-")[1]] = snapshot[key];
+      gameData.playerSelectCheck[key.split("-")[1]] = snapshot[key];
     }
   });
 
   if(TABLE_KEYS.SELECT_TIMEOUT in snapshot){
-    if(Object.keys(playerSelectCheck).length === gameData.playerList.length && gameData.admin){
+    if(Object.keys(gameData.playerSelectCheck).length === gameData.playerList.length && gameData.admin){
       return selectCulprit();
     }
   }
@@ -294,8 +287,8 @@ function selectCulprit(){
 
   };
 
-  Object.keys(playerSelectCheck).forEach((key)=>{
-    const selectSuspect = playerSelectCheck[key];
+  Object.keys(gameData.playerSelectCheck).forEach((key)=>{
+    const selectSuspect = gameData.playerSelectCheck[key];
     if(!selectList[selectSuspect]){
       selectList[selectSuspect] = 0;
     }
@@ -307,7 +300,7 @@ function selectCulprit(){
     count: 0
   };
 
-  sameList = [];
+  let sameList = [];
 
   Object.keys(selectList).forEach((suspect)=>{
     if(selectList[suspect] > maxSuspect.count){
@@ -490,12 +483,12 @@ function sendSuspect(){
   let result = {};
   const {nickname, myVotingKey} = gameData;
 
-  if(!selectTimeout || (!sendSuspectCheck && !playerSelectCheck[nickname])){
+  if(!gameData.selectTimeout || (!gameData.sendSuspectCheck && !gameData.playerSelectCheck[nickname])){
     result[myVotingKey] = gameElements.vote.value;
-    sendSuspectCheck = true;
+    gameData.sendSuspectCheck = true;
   }
 
-  if(selectTimeout){
+  if(gameData.selectTimeout){
     result[TABLE_KEYS.SELECT_TIMEOUT] = true;
   }
 
