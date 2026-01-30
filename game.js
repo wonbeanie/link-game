@@ -4,6 +4,7 @@ import gameDatabase from "./database.js";
 import gameData from "./game-data.js";
 import chatHandler from "./chat-handler.js";
 import gameElements from "./Game-Elements.js";
+import hintHandler from "./hint-handler.js";
 
 gameElements.nickname.btn.addEventListener("click", (e) => {
   let result = {};
@@ -405,28 +406,7 @@ gameElements.admin.clear.addEventListener("click",()=>{
 });
 
 
-gameElements.hint.btn.addEventListener("click", sendHint);
-
-function sendHint(){
-  const {myTurn, playSequence, nickname} = gameData;
-  if(myTurn){
-    timer.stopTimer();
-    let result = {};
-
-    if(playSequence.length !== 1){
-      result[TABLE_KEYS.SEQUENCE] = playSequence.slice(1, playSequence.length);
-    }
-    else {
-      result[TABLE_KEYS.SEQUENCE] = "end";
-      gameElements.hint.hide();
-    }
-
-    result[nickname] = gameElements.hint.value;
-
-    gameElements.hint.hide();
-    gameDatabase.updateData(result);
-  }
-}
+gameElements.hint.btn.addEventListener("click", hintHandler.send);
 
 gameElements.answer.btn.addEventListener("click",sendLastAnswer);
 
@@ -459,7 +439,7 @@ function startGame() {
   gameElements.info.state.textContent = `${playSequence[0]}님이 입력하고 있습니다.`;
 
   if(gameData.myTurn){
-    timer.startTimer(30, sendHint);
+    timer.startTimer(30, hintHandler.send);
     alert.show("당신 순서입니다.",`카테고리는 ${category}, 제시어는 ${myCorrect}입니다.`);
     gameData.state = "Playing";
     gameElements.hint.show();
