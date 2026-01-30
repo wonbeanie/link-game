@@ -14,6 +14,7 @@ class GameData {
   playerSelectCheck = [];
   selectTimeout = false;
   sendSuspectCheck = false;
+  lastAnswer = "";
 
   constructor(){
     this.nickname = localStorage.getItem('userNickname') || "";

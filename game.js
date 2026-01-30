@@ -5,8 +5,6 @@ import gameData from "./game-data.js";
 import chatHandler from "./chat-handler.js";
 import gameElements from "./Game-Elements.js";
 
-let lastAnswer = "";
-
 gameElements.nickname.btn.addEventListener("click", (e) => {
   let result = {};
   result[gameElements.nickname.value] = "Ready";
@@ -186,7 +184,7 @@ function votesEnd(data){
 
   if(isSuspect){
     alert.show("범인인것을 걸렸습니다.", "정답을 맞춰주세요.");
-    lastAnswer = data;
+    gameData.lastAnswer = data;
     gameElements.hint.hide();
     gameElements.answer.show();
     timer.startTimer(SUSEPCT_ANSWER_TIME, sendLastAnswer);
@@ -433,7 +431,7 @@ function sendHint(){
 gameElements.answer.btn.addEventListener("click",sendLastAnswer);
 
 function sendLastAnswer(){
-  if(lastAnswer === gameData.nickname){
+  if(gameData.lastAnswer === gameData.nickname){
     let result = {};
     result[TABLE_KEYS.LAST_ANSWER] = gameElements.answer.value;
     result[TABLE_KEYS.SELECT_CULPRIT] = "";
