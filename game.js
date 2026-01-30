@@ -21,20 +21,7 @@ gameElements.nickname.btn.addEventListener("click", (e) => {
   gameElements.info.nickname.textContent = gameData.nickname;
 });
 
-let admin = false;
-
 let sendSuspectCheck = false;
-
-checkAdmin();
-
-function checkAdmin() {
-  const urlParams = new URLSearchParams(window.location.search);
-  admin = Boolean(urlParams.get('admin')) || false;
-  
-  if(admin){
-    gameElements.admin.display.show();
-  }
-}
 
 gameDatabase.onValueListener(DATABASE_KEYS.CHAT_DATA_KEY, (data) => {
   chatHandler.settingChatHistory(data);
@@ -294,7 +281,7 @@ function votes(snapshot){
   });
 
   if(TABLE_KEYS.SELECT_TIMEOUT in snapshot){
-    if(Object.keys(playerSelectCheck).length === gameData.playerList.length && admin){
+    if(Object.keys(playerSelectCheck).length === gameData.playerList.length && gameData.admin){
       return selectCulprit();
     }
   }

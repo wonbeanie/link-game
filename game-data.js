@@ -10,10 +10,22 @@ class GameData {
   category = "";
   correct = "";
   state = "";
+  admin = false;
 
   constructor(){
     this.nickname = localStorage.getItem('userNickname') || "";
     gameElements.nickname.value = this.nickname;
+
+    this.checkAdmin();
+  }
+
+  checkAdmin() {
+    const urlParams = new URLSearchParams(window.location.search);
+    this.admin = Boolean(urlParams.get('admin')) || false;
+    
+    if(this.admin){
+      gameElements.admin.display.show();
+    }
   }
 
   setDefaultGameInfos(newDatabase){
