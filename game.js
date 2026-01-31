@@ -104,12 +104,13 @@ function gameStartInit(){
   return result;
 }
 
-function gameHintSequence(data){
+function routeGameFlow(data){
   if(data === SEQUENCE_END){
     return voteHandler.voteStart();
   }
 
   hintHandler.turnProcessor(data);
+
   if(gameData.state === TABLE_KEYS.START){
     gameHandler.startGame();
   }
@@ -177,7 +178,7 @@ function gameSetting(snapshot){
 
   if(TABLE_KEYS.SEQUENCE in snapshot){
     const data = snapshot[TABLE_KEYS.SEQUENCE];
-    const newDatabase = gameHintSequence(data);
+    const newDatabase = routeGameFlow(data);
 
     updateDatabase = {
       ...updateDatabase,
