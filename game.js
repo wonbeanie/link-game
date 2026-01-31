@@ -1,5 +1,5 @@
 import { correctList } from "./keywords.js";
-import { pickRandom, shuffleStrings, alert, logger, timer, TABLE_KEYS, DATABASE_KEYS } from "./modules.js";
+import { pickRandom, shuffleStrings, alert, logger, timer, TABLE_KEYS, DATABASE_KEYS, SEQUENCE_END } from "./modules.js";
 import gameDatabase from "./database.js";
 import gameData from "./game-data.js";
 import chatHandler from "./chat-handler.js";
@@ -105,7 +105,7 @@ function gameStartInit(){
 }
 
 function gameHintSequence(data){
-  if(data === "end"){
+  if(data === SEQUENCE_END){
     return voteHandler.voteStart();
   }
 

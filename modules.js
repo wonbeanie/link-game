@@ -209,3 +209,5 @@ export const DATABASE_KEYS = Object.freeze({
   CHAT_DATA_KEY : "Chat/",
   ROOT_KEY : "/"
 })
+
+export const SEQUENCE_END = "END";

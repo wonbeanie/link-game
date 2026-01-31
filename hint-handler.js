@@ -1,7 +1,7 @@
 import gameDatabase from "./database.js";
 import gameData from "./game-data.js";
 import gameElements from "./Game-Elements.js";
-import { alert, TABLE_KEYS, timer } from "./modules.js";
+import { alert, SEQUENCE_END, TABLE_KEYS, timer } from "./modules.js";
 
 class HintHandler {
   initHintTurn(data){
@@ -20,7 +20,7 @@ class HintHandler {
         result[TABLE_KEYS.SEQUENCE] = playSequence.slice(1, playSequence.length);
       }
       else {
-        result[TABLE_KEYS.SEQUENCE] = "end";
+        result[TABLE_KEYS.SEQUENCE] = SEQUENCE_END;
         gameElements.hint.hide();
       }
 
