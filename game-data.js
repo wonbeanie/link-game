@@ -11,9 +11,6 @@ class GameData {
   correct = "";
   state = "";
   admin = false;
-  playerSelectCheck = [];
-  selectTimeout = false;
-  sendSuspectCheck = false;
   lastAnswer = "";
 
   constructor(){

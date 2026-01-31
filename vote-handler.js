@@ -1,6 +1,10 @@
 import gameElements from "./Game-Elements.js";
 
 class VoteHandler {
+  playerSelectCheck = [];
+  selectTimeout = false;
+  sendSuspectCheck = false;
+
   setSuspectVoteList(voteList){
     gameElements.vote.allClearChildren();
     

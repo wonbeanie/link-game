@@ -129,10 +129,10 @@ function tieOfVotes(data){
 
 function votesInit(){
   const VOTE_TIME = 60;
-  gameData.sendSuspectCheck = false;
+  voteHandler.sendSuspectCheck = false;
   
   timer.startTimer(VOTE_TIME,()=>{
-    gameData.selectTimeout = true;
+    voteHandler.selectTimeout = true;
     sendSuspect();
   });
 
@@ -140,7 +140,7 @@ function votesInit(){
   result[TABLE_KEYS.RE_SELECT_CULPRIT] = null;
   result[TABLE_KEYS.SEQUENCE] = null;
   result[TABLE_KEYS.SELECT_TIMEOUT] = null;
-  gameData.selectTimeout = false;
+  voteHandler.selectTimeout = false;
   return result;
 }
 
@@ -194,7 +194,7 @@ function votesEnd(data){
 
 function gameSetting(snapshot){
   let updateDatabase = {};
-  gameData.playerSelectCheck = [];
+  voteHandler.playerSelectCheck = [];
 
   gameData.setDefaultGameInfos(snapshot);
 
@@ -264,12 +264,12 @@ function outGame(){
 function votes(snapshot){
   Object.keys(snapshot).forEach((key)=>{
     if(key.includes(TABLE_KEYS.SUSPECT_LIST)){
-      gameData.playerSelectCheck[key.split("-")[1]] = snapshot[key];
+      voteHandler.playerSelectCheck[key.split("-")[1]] = snapshot[key];
     }
   });
 
   if(TABLE_KEYS.SELECT_TIMEOUT in snapshot){
-    if(Object.keys(gameData.playerSelectCheck).length === gameData.playerList.length && gameData.admin){
+    if(Object.keys(voteHandler.playerSelectCheck).length === gameData.playerList.length && gameData.admin){
       return selectCulprit();
     }
   }
@@ -282,8 +282,8 @@ function selectCulprit(){
 
   };
 
-  Object.keys(gameData.playerSelectCheck).forEach((key)=>{
-    const selectSuspect = gameData.playerSelectCheck[key];
+  Object.keys(voteHandler.playerSelectCheck).forEach((key)=>{
+    const selectSuspect = voteHandler.playerSelectCheck[key];
     if(!selectList[selectSuspect]){
       selectList[selectSuspect] = 0;
     }
@@ -421,12 +421,12 @@ function sendSuspect(){
   let result = {};
   const {nickname, myVotingKey} = gameData;
 
-  if(!gameData.selectTimeout || (!gameData.sendSuspectCheck && !gameData.playerSelectCheck[nickname])){
+  if(!voteHandler.selectTimeout || (!voteHandler.sendSuspectCheck && !voteHandler.playerSelectCheck[nickname])){
     result[myVotingKey] = gameElements.vote.value;
-    gameData.sendSuspectCheck = true;
+    voteHandler.sendSuspectCheck = true;
   }
 
-  if(gameData.selectTimeout){
+  if(voteHandler.selectTimeout){
     result[TABLE_KEYS.SELECT_TIMEOUT] = true;
   }
 
