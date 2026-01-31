@@ -2,10 +2,40 @@ import gameData from "../modules/game-data.js";
 import { alert, TABLE_KEYS } from "../modules/modules.js";
 
 class GameHandler {
+  newDatabase = {};
+
   startGame() {
     const {category, myCorrect} = gameData;
     alert.show("게임시작", `카테고리는 ${category}, 제시어는 ${myCorrect}입니다.`);
     gameData.state = "Playing";
+  }
+
+  set newDatabase(newDatabase){
+    this.newDatabase = newDatabase;
+  }
+
+  get isHintTurn() {
+    return TABLE_KEYS.SEQUENCE in this.newDatabase;
+  }
+
+  get isLastAnswerTurn(){
+    return TABLE_KEYS.LAST_ANSWER in this.newDatabase;
+  }
+
+  get isVoteEnd(){
+    return TABLE_KEYS.SELECT_CULPRIT in this.newDatabase;
+  }
+
+  get isInitSetting(){
+    return TABLE_KEYS.START in this.newDatabase;
+  }
+
+  get isTieOfVotes(){
+    return TABLE_KEYS.RE_SELECT_CULPRIT in this.newDatabase;
+  }
+
+  get isPlayerOut(){
+    return TABLE_KEYS.OUT_GAME in this.newDatabase;
   }
 }
 

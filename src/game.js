@@ -172,8 +172,9 @@ function gameSetting(snapshot){
   voteHandler.playerSelectCheck = [];
 
   gameData.setDefaultGameInfos(snapshot);
+  gameHandler.newDatabase = snapshot;
 
-  if(TABLE_KEYS.SEQUENCE in snapshot){
+  if(gameHandler.isHintTurn){
     const data = snapshot[TABLE_KEYS.SEQUENCE];
     const newDatabase = routeGameFlow(data);
 
@@ -183,18 +184,18 @@ function gameSetting(snapshot){
     };
   }
 
-  if(TABLE_KEYS.LAST_ANSWER in snapshot){
+  if(gameHandler.isLastAnswerTurn){
     const data = snapshot[TABLE_KEYS.LAST_ANSWER];
     gameOver(data, true);
     return;
   }
 
-  if(TABLE_KEYS.SELECT_CULPRIT in snapshot){
+  if(gameHandler.isVoteEnd){
     const data = snapshot[TABLE_KEYS.SELECT_CULPRIT];
     votesEnd(data);
   }
 
-  if(TABLE_KEYS.START in snapshot){
+  if(gameHandler.isInitSetting){
     const newDatabase = gameStartInit();
 
     updateDatabase = {
@@ -203,7 +204,7 @@ function gameSetting(snapshot){
     };
   }
 
-  if(TABLE_KEYS.RE_SELECT_CULPRIT in snapshot){
+  if(gameHandler.isTieOfVotes){
     const data = snapshot[TABLE_KEYS.RE_SELECT_CULPRIT];
     const newDatabase = tieOfVotes(data);
 
@@ -220,7 +221,7 @@ function gameSetting(snapshot){
     ...newDatabase
   }
 
-  if(TABLE_KEYS.OUT_GAME in snapshot){
+  if(gameHandler.isPlayerOut){
     outGame();
   }
 
