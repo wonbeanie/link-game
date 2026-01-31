@@ -1,7 +1,7 @@
 import gameDatabase from "./database.js";
 import gameData from "./game-data.js";
 import gameElements from "./Game-Elements.js";
-import { TABLE_KEYS, timer } from "./modules.js";
+import { alert, TABLE_KEYS, timer } from "./modules.js";
 
 class VoteHandler {
   playerSelectCheck = [];
@@ -19,6 +19,16 @@ class VoteHandler {
   
     this.selectTimeout = false;
     return this.getVoteTransitionData();
+  }
+
+  voteStart(){
+    gameData.playerList = gameData.startPlaySequence;
+    this.setSuspectVoteList(gameData.startPlaySequence);
+    alert.show("토론시간", "1분의 토론시간이 주어집니다.");
+    gameElements.vote.show();
+    gameElements.hint.hide();
+
+    return this.init();
   }
 
   getVoteTransitionData(){
@@ -57,7 +67,6 @@ class VoteHandler {
       gameElements.vote.appendChild(optionElement);
     });
   }
-
 }
 
 const voteHandler = new VoteHandler();

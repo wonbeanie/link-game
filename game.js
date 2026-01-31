@@ -106,13 +106,7 @@ function gameStartInit(){
 
 function gameHintSequence(data){
   if(data === "end"){
-    gameData.playerList = gameData.startPlaySequence;
-    voteHandler.setSuspectVoteList(gameData.startPlaySequence);
-    alert.show("토론시간", "1분의 토론시간이 주어집니다.");
-    gameElements.vote.show();
-    gameElements.hint.hide();
-
-    return voteHandler.init();
+    return voteHandler.voteStart();
   }
 
   hintHandler.turnProcessor(data);
