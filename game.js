@@ -6,6 +6,7 @@ import chatHandler from "./chat-handler.js";
 import gameElements from "./Game-Elements.js";
 import hintHandler from "./hint-handler.js";
 import gameHandler from "./game-handler.js";
+import voteHandler from "./vote-handler.js";
 
 gameElements.nickname.btn.addEventListener("click", (e) => {
   let result = {};
@@ -106,7 +107,7 @@ function gameStartInit(){
 function gameHintSequence(data){
   if(data === "end"){
     gameData.playerList = gameData.startPlaySequence;
-    setSuspectVoteList(gameData.startPlaySequence);
+    voteHandler.setSuspectVoteList(gameData.startPlaySequence);
     alert.show("토론시간", "1분의 토론시간이 주어집니다.");
     gameElements.vote.show();
     gameElements.hint.hide();
@@ -122,7 +123,7 @@ function gameHintSequence(data){
 
 function tieOfVotes(data){
   alert.show("투표 동점", `${data.join(",")}중에 한명을 선택해주세요.`);
-  setSuspectVoteList(data);
+  voteHandler.setSuspectVoteList(data);
   return votesInit();
 }
 
@@ -412,18 +413,6 @@ function sendLastAnswer(){
     result[TABLE_KEYS.SELECT_CULPRIT] = "";
     gameDatabase.updateData(result);
   }
-}
-
-function setSuspectVoteList(data){
-  gameElements.vote.allClearChildren();
-  
-  JSON.parse(JSON.stringify(data)).sort().forEach((player)=>{
-    const optionElement = document.createElement("option");
-    optionElement.value = player;
-    optionElement.textContent = player;
-
-    gameElements.vote.appendChild(optionElement);
-  });
 }
 
 gameElements.vote.btn.addEventListener("click",sendSuspect);
