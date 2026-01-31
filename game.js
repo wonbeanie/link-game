@@ -112,7 +112,7 @@ function gameHintSequence(data){
     gameElements.vote.show();
     gameElements.hint.hide();
 
-    return votesInit();
+    return voteHandler.init();
   }
 
   hintHandler.turnProcessor(data);
@@ -124,24 +124,7 @@ function gameHintSequence(data){
 function tieOfVotes(data){
   alert.show("투표 동점", `${data.join(",")}중에 한명을 선택해주세요.`);
   voteHandler.setSuspectVoteList(data);
-  return votesInit();
-}
-
-function votesInit(){
-  const VOTE_TIME = 60;
-  voteHandler.sendSuspectCheck = false;
-  
-  timer.startTimer(VOTE_TIME,()=>{
-    voteHandler.selectTimeout = true;
-    voteHandler.send();
-  });
-
-  let result = {};
-  result[TABLE_KEYS.RE_SELECT_CULPRIT] = null;
-  result[TABLE_KEYS.SEQUENCE] = null;
-  result[TABLE_KEYS.SELECT_TIMEOUT] = null;
-  voteHandler.selectTimeout = false;
-  return result;
+  return voteHandler.init();
 }
 
 function gameOver(data, findSusepct = false){
