@@ -133,7 +133,7 @@ function votesInit(){
   
   timer.startTimer(VOTE_TIME,()=>{
     voteHandler.selectTimeout = true;
-    sendSuspect();
+    voteHandler.send();
   });
 
   let result = {};
@@ -415,23 +415,7 @@ function sendLastAnswer(){
   }
 }
 
-gameElements.vote.btn.addEventListener("click",sendSuspect);
-
-function sendSuspect(){
-  let result = {};
-  const {nickname, myVotingKey} = gameData;
-
-  if(!voteHandler.selectTimeout || (!voteHandler.sendSuspectCheck && !voteHandler.playerSelectCheck[nickname])){
-    result[myVotingKey] = gameElements.vote.value;
-    voteHandler.sendSuspectCheck = true;
-  }
-
-  if(voteHandler.selectTimeout){
-    result[TABLE_KEYS.SELECT_TIMEOUT] = true;
-  }
-
-  gameDatabase.updateData(result);
-}
+gameElements.vote.btn.addEventListener("click",voteHandler.send);
 
 function reloadEvent(){
   removeReloadEvent();
