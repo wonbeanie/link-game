@@ -1,4 +1,4 @@
-import gameElements from "./Game-Elements.js";
+import gameElements from "./game-elements.js";
 import { TABLE_KEYS } from "./modules.js";
 
 class GameData {

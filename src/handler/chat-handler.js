@@ -1,6 +1,6 @@
-import gameData from "./game-data.js";
-import gameDatabase from "./database.js";
-import { DATABASE_KEYS, TABLE_KEYS } from "./modules.js";
+import gameData from "../modules/game-data.js";
+import gameDatabase from "../database/database.js";
+import { DATABASE_KEYS, TABLE_KEYS } from "../modules/modules.js";
 
 class ChatHandler {
   chatInput = null;

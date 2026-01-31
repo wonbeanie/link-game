@@ -1,5 +1,5 @@
-import gameData from "./game-data.js";
-import { alert, TABLE_KEYS } from "./modules.js";
+import gameData from "../modules/game-data.js";
+import { alert, TABLE_KEYS } from "../modules/modules.js";
 
 class GameHandler {
   startGame() {

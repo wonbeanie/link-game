@@ -1,7 +1,7 @@
-import gameDatabase from "./database.js";
-import gameData from "./game-data.js";
-import gameElements from "./Game-Elements.js";
-import { alert, TABLE_KEYS, timer } from "./modules.js";
+import gameDatabase from "../database/database.js";
+import gameData from "../modules/game-data.js";
+import gameElements from "../modules/game-elements.js";
+import { alert, TABLE_KEYS, timer } from "../modules/modules.js";
 
 class VoteHandler {
   playerSelectCheck = [];

@@ -1,7 +1,7 @@
 import { screen, waitFor, within } from "@testing-library/dom";
 import { mockDatabaseUpdate, nickname, secondNickname, thirdNickname, userNickname } from "../__mocks__/mock-firebase-database";
 import { checkAlert } from "./game-helpers";
-import { TABLE_KEYS } from "../../modules";
+import { TABLE_KEYS } from "../../src/modules/modules.js";
 
 export async function setupVoting(stateSetting, addPlayerList = []) {
   const playerList = [nickname, ...addPlayerList];

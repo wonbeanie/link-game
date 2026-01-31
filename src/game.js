@@ -1,12 +1,9 @@
-import { correctList } from "./keywords.js";
-import { pickRandom, shuffleStrings, alert, logger, timer, TABLE_KEYS, DATABASE_KEYS, SEQUENCE_END } from "./modules.js";
-import gameDatabase from "./database.js";
-import gameData from "./game-data.js";
-import chatHandler from "./chat-handler.js";
-import gameElements from "./Game-Elements.js";
-import hintHandler from "./hint-handler.js";
-import gameHandler from "./game-handler.js";
-import voteHandler from "./vote-handler.js";
+import { correctList } from "./modules/keywords.js";
+import { pickRandom, shuffleStrings, alert, logger, timer, TABLE_KEYS, DATABASE_KEYS, SEQUENCE_END } from "./modules/modules.js";
+import gameDatabase from "./database/database.js";
+import gameData from "./modules/game-data.js";
+import gameElements from "./modules/game-elements.js";
+import {chatHandler, gameHandler, hintHandler, voteHandler} from "./handler/index.js";
 
 gameElements.nickname.btn.addEventListener("click", (e) => {
   let result = {};

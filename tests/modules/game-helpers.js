@@ -2,7 +2,7 @@ import { fireEvent, screen, waitFor } from '@testing-library/dom';
 import { mockDatabaseUpdate, nickname, setPlayers, testInit, userNickname } from "../__mocks__/mock-firebase-database";
 import fs from 'fs';
 import path from 'path';
-import { SEQUENCE_END, TABLE_KEYS } from '../../modules.js';
+import { SEQUENCE_END, TABLE_KEYS } from '../../src/modules/modules.js';
 
 export async function setupGameStart(initUsers = [userNickname]){
   setPlayers(initUsers);
@@ -43,7 +43,7 @@ export async function setupHTMLInit(){
   window.history.pushState({}, '', '?admin=true');
   document.body.innerHTML = html.toString();
   jest.resetModules();
-  await import("../../game.js");
+  await import("../../src/game.js");
 }
 
 export async function checkAlert(alertTitle = "", level = 3){

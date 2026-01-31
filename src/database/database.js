@@ -1,7 +1,7 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
 import { getDatabase, ref, set, onValue, get, child, update} from "https://www.gstatic.com/firebasejs/12.7.0/firebase-database.js";
-import { firebaseConfig } from "./config.js";
-import { DATABASE_KEYS } from "./modules.js";
+import { firebaseConfig } from "../../config.js";
+import { DATABASE_KEYS } from "../modules/modules.js";
 
 class GameDatabase {
   app = null;
