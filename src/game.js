@@ -18,13 +18,63 @@ gameDatabase.onValueListener(DATABASE_KEYS.CHAT_DATA_KEY, (data) => {
   chatHandler.settingChatHistory(data);
 })
 
-gameDatabase.onValueListener(DATABASE_KEYS.GAME_DATA_KEY, (data) => {
-  gameSetting(data);
+gameDatabase.onValueListener(DATABASE_KEYS.GAME_DATA_KEY, (newData) => {
+  gameHandler.newDatabase = newData;
+
+  if(gameHandler.isLastAnswerTurn){
+    const data = newData[TABLE_KEYS.LAST_ANSWER];
+    gameOver(data, true);
+    return;
+  }
+
+  if(gameHandler.isPlayerOut){
+    outGame();
+    return;
+  }
+
+  gameSetting(newData);
 
   logger.clearLog();
 
-  logSetting(data);
+  logSetting(newData);
 });
+
+function gameSetting(snapshot){
+  voteHandler.playerSelectCheck = [];
+
+  gameData.setDefaultGameInfos(snapshot);
+
+  if(gameHandler.isInitSetting){
+    const newDatabase = gameStartInit();
+    gameDatabase.updateData(newDatabase); 
+    return;
+  }
+
+  if(gameHandler.isHintTurn){
+    const data = snapshot[TABLE_KEYS.SEQUENCE];
+    const newDatabase = routeGameFlow(data);
+
+    gameDatabase.updateData(newDatabase); 
+    return;
+  }
+
+  if(gameHandler.isVoteEnd){
+    const data = snapshot[TABLE_KEYS.SELECT_CULPRIT];
+    votesEnd(data);
+    return;
+  }
+
+  if(gameHandler.isTieOfVotes){
+    const data = snapshot[TABLE_KEYS.RE_SELECT_CULPRIT];
+    const newDatabase = tieOfVotes(data);
+
+    gameDatabase.updateData(newDatabase); 
+    return;
+  }
+
+  const newDatabase = votes(snapshot);
+  gameDatabase.updateData(newDatabase);
+}
 
 function logSetting(data){
   const { startPlaySequence } = gameData;
@@ -111,6 +161,8 @@ function routeGameFlow(data){
   if(gameData.state === TABLE_KEYS.START){
     gameHandler.startGame();
   }
+
+  return {};
 }
 
 function tieOfVotes(data){
@@ -164,69 +216,6 @@ function votesEnd(data){
   else {
     alert.show("범인을 찾았습니다.", "범인이 답을 입력하고 있습니다.");
     timer.startTimer(SUSEPCT_ANSWER_TIME);
-  }
-}
-
-function gameSetting(snapshot){
-  let updateDatabase = {};
-  voteHandler.playerSelectCheck = [];
-
-  gameData.setDefaultGameInfos(snapshot);
-  gameHandler.newDatabase = snapshot;
-
-  if(gameHandler.isHintTurn){
-    const data = snapshot[TABLE_KEYS.SEQUENCE];
-    const newDatabase = routeGameFlow(data);
-
-    updateDatabase = {
-      ...updateDatabase,
-      ...newDatabase
-    };
-  }
-
-  if(gameHandler.isLastAnswerTurn){
-    const data = snapshot[TABLE_KEYS.LAST_ANSWER];
-    gameOver(data, true);
-    return;
-  }
-
-  if(gameHandler.isVoteEnd){
-    const data = snapshot[TABLE_KEYS.SELECT_CULPRIT];
-    votesEnd(data);
-  }
-
-  if(gameHandler.isInitSetting){
-    const newDatabase = gameStartInit();
-
-    updateDatabase = {
-      ...updateDatabase,
-      ...newDatabase
-    };
-  }
-
-  if(gameHandler.isTieOfVotes){
-    const data = snapshot[TABLE_KEYS.RE_SELECT_CULPRIT];
-    const newDatabase = tieOfVotes(data);
-
-    updateDatabase = {
-      ...updateDatabase,
-      ...newDatabase
-    }
-  }
-
-  const newDatabase = votes(snapshot);
-
-  updateDatabase = {
-    ...updateDatabase,
-    ...newDatabase
-  }
-
-  if(gameHandler.isPlayerOut){
-    outGame();
-  }
-
-  if(Object.keys(updateDatabase).length > 0){
-    gameDatabase.updateData(updateDatabase); 
   }
 }
 

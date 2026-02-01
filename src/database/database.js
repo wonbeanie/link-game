@@ -15,7 +15,9 @@ class GameDatabase {
   }
 
   updateData(data, table = DATABASE_KEYS.GAME_DATA_KEY) {
-    update(ref(this.db, table), data);
+    if(Object.keys(data).length > 0){
+      update(ref(this.db, table), data);
+    }
   }
   
   clearDatabase() {
