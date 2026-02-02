@@ -1,9 +1,9 @@
 import { correctList } from "./modules/keywords.js";
-import { pickRandom, shuffleStrings, alert, logger, timer, TABLE_KEYS, DATABASE_KEYS, SEQUENCE_END } from "./modules/modules.js";
+import { pickRandom, shuffleStrings, alert, timer, TABLE_KEYS, DATABASE_KEYS, SEQUENCE_END } from "./modules/modules.js";
 import gameDatabase from "./database/database.js";
 import gameData from "./modules/game-data.js";
 import gameElements from "./modules/game-elements.js";
-import {chatHandler, gameHandler, hintHandler, voteHandler} from "./handler/index.js";
+import {chatHandler, gameHandler, hintHandler, messageHandler, voteHandler} from "./handler/index.js";
 
 gameElements.nickname.btn.addEventListener("click", (e) => {
   let result = {};
@@ -34,9 +34,8 @@ gameDatabase.onValueListener(DATABASE_KEYS.GAME_DATA_KEY, (newData) => {
 
   gameSetting(newData);
 
-  logger.clearLog();
-
-  logSetting(newData);
+  messageHandler.setMessages(newData);
+  messageHandler.logView();
 });
 
 function gameSetting(snapshot){
@@ -70,71 +69,6 @@ function gameSetting(snapshot){
   }
 
   votes(snapshot);
-}
-
-function logSetting(data){
-  const { startPlaySequence } = gameData;
-  let playerHints = {};
-
-  let votingList = {};
-
-  const startPlaySequenceString = startPlaySequence.join(",");
-
-  Object.entries(data).forEach(([key, value]) => {
-    if(startPlaySequenceString.includes(key) || gameData.state === ""){
-      playerHints[key] = value;
-
-      if(startPlaySequence.length === 0){
-        logger.setLog(key, value);
-      }
-      return;
-    }
-
-    if(key.includes(TABLE_KEYS.SUSPECT_LIST)){
-      votingList[key.split("-")[1]] = value;
-      return;
-    }
-
-    if(key.includes(TABLE_KEYS.CHAT_HISTORY)){
-      chatHandler.chatHistory = value;
-      return;
-    }
-  });
-
-  activityLog({
-    playerHints,
-    votingList
-  });
-}
-
-function activityLog({playerHints,votingList}){
-  votingLog(votingList);
-
-  hintLog(playerHints);
-}
-
-function votingLog(votingList){
-  if(gameData.state !== ""){
-    logger.setLog(`투표`, '---------------');
-  }
-
-  Object.keys(votingList).forEach((player)=>{
-    logger.setLog(`${player}`, `${votingList[player]}님을 투표하였습니다.`);
-  });
-}
-
-function hintLog(playerHints){
-  if(gameData.state !== ""){
-    logger.setLog(`힌트`, '---------------');
-  }
-
-  gameData.startPlaySequence.forEach((player)=>{
-    if(!playerHints[player]){
-      return;
-    }
-    
-    logger.setLog(player, playerHints[player]);
-  });
 }
 
 function gameStartInit(){
