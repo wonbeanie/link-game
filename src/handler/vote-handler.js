@@ -4,7 +4,7 @@ import gameElements from "../modules/game-elements.js";
 import { alert, TABLE_KEYS, timer } from "../modules/modules.js";
 
 class VoteHandler {
-  playerSelectCheck = [];
+  playerSelectCheck = {};
   selectTimeout = false;
   sendSuspectCheck = false;
   VOTE_TIME = 60;
@@ -67,6 +67,51 @@ class VoteHandler {
       gameElements.vote.appendChild(optionElement);
     });
   }
+
+  calculateResult = () => {
+    let selectList = {};
+
+    for (const value of Object.values(this.playerSelectCheck)){
+      const selectSuspect = value;
+      if(!selectList[selectSuspect]){
+        selectList[selectSuspect] = 0;
+      }
+      selectList[selectSuspect] += 1;
+    }
+
+    let maxSuspect = {
+      suspect: "",
+      count: 0
+    };
+
+    let sameList = [];
+
+    for(const [suspect, count] of Object.entries(selectList)){
+      if(count > maxSuspect.count){
+        maxSuspect.suspect = suspect;
+        maxSuspect.count = count;
+        sameList = [suspect];
+      }
+      else if(count === maxSuspect.count){
+        sameList.push(suspect);
+      }
+    }
+
+    let result = {};
+
+    if(sameList.length > 1){
+      result[TABLE_KEYS.RE_SELECT_CULPRIT] = sameList;
+
+      gameData.playerList.forEach((player)=>{
+        result[`${TABLE_KEYS.SUSPECT_LIST}-${player}`] = null;
+      });
+    }
+    else {
+      result[TABLE_KEYS.SELECT_CULPRIT] = maxSuspect.suspect;
+    }
+
+    gameDatabase.updateData(result);
+  }  
 }
 
 const voteHandler = new VoteHandler();

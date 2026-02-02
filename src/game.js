@@ -157,56 +157,9 @@ function votes(snapshot){
 
   if(TABLE_KEYS.SELECT_TIMEOUT in snapshot){
     if(Object.keys(voteHandler.playerSelectCheck).length === gameData.playerList.length && gameData.admin){
-      selectCulprit();
+      voteHandler.calculateResult();
     }
   }
-}
-
-function selectCulprit(){
-  let selectList = {
-
-  };
-
-  Object.keys(voteHandler.playerSelectCheck).forEach((key)=>{
-    const selectSuspect = voteHandler.playerSelectCheck[key];
-    if(!selectList[selectSuspect]){
-      selectList[selectSuspect] = 0;
-    }
-    selectList[selectSuspect] += 1;
-  });
-
-  let maxSuspect = {
-    suspect: "",
-    count: 0
-  };
-
-  let sameList = [];
-
-  Object.keys(selectList).forEach((suspect)=>{
-    if(selectList[suspect] > maxSuspect.count){
-      maxSuspect.suspect = suspect;
-      maxSuspect.count = selectList[suspect];
-      sameList = [suspect];
-    }
-    else if(selectList[suspect] === maxSuspect.count){
-      sameList.push(suspect);
-    }
-  });
-
-  let result = {};
-
-  if(sameList.length > 1){
-    result[TABLE_KEYS.RE_SELECT_CULPRIT] = sameList;
-
-    gameData.playerList.forEach((player)=>{
-      result[`${TABLE_KEYS.SUSPECT_LIST}-${player}`] = null;
-    });
-  }
-  else {
-    result[TABLE_KEYS.SELECT_CULPRIT] = maxSuspect.suspect;
-  }
-
-  gameDatabase.updateData(result);
 }
 
 gameElements.admin.start.addEventListener("click",adminHandler.start);
