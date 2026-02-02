@@ -18,7 +18,7 @@ class VoteHandler {
     });
   
     this.selectTimeout = false;
-    return this.getVoteTransitionData();
+    this.getVoteTransitionData();
   }
 
   voteStart(){
@@ -27,8 +27,7 @@ class VoteHandler {
     alert.show("토론시간", "1분의 토론시간이 주어집니다.");
     gameElements.vote.show();
     gameElements.hint.hide();
-
-    return this.init();
+    this.init();
   }
 
   getVoteTransitionData(){
@@ -36,7 +35,8 @@ class VoteHandler {
     result[TABLE_KEYS.RE_SELECT_CULPRIT] = null;
     result[TABLE_KEYS.SEQUENCE] = null;
     result[TABLE_KEYS.SELECT_TIMEOUT] = null;
-    return result;
+
+    gameDatabase.updateData(result);
   }
 
   send(){

@@ -42,19 +42,18 @@ gameDatabase.onValueListener(DATABASE_KEYS.GAME_DATA_KEY, (newData) => {
 function gameSetting(snapshot){
   voteHandler.playerSelectCheck = [];
 
-  gameData.setDefaultGameInfos(snapshot);
+  if(!gameData.isDefaultGameInfo){
+    gameData.setDefaultGameInfos(snapshot);
+  }
 
   if(gameHandler.isInitSetting){
-    const newDatabase = gameStartInit();
-    gameDatabase.updateData(newDatabase); 
+    gameStartInit();
     return;
   }
 
   if(gameHandler.isHintTurn){
     const data = snapshot[TABLE_KEYS.SEQUENCE];
-    const newDatabase = routeGameFlow(data);
-
-    gameDatabase.updateData(newDatabase); 
+    routeGameFlow(data);
     return;
   }
 
@@ -66,14 +65,11 @@ function gameSetting(snapshot){
 
   if(gameHandler.isTieOfVotes){
     const data = snapshot[TABLE_KEYS.RE_SELECT_CULPRIT];
-    const newDatabase = tieOfVotes(data);
-
-    gameDatabase.updateData(newDatabase); 
+    tieOfVotes(data);
     return;
   }
 
-  const newDatabase = votes(snapshot);
-  gameDatabase.updateData(newDatabase);
+  votes(snapshot);
 }
 
 function logSetting(data){
@@ -148,12 +144,13 @@ function gameStartInit(){
 
   const result = {};
   result[TABLE_KEYS.START] = null;
-  return result;
+  gameDatabase.updateData(result); 
 }
 
 function routeGameFlow(data){
   if(data === SEQUENCE_END){
-    return voteHandler.voteStart();
+    voteHandler.voteStart();
+    return;
   }
 
   hintHandler.turnProcessor(data);
@@ -168,7 +165,7 @@ function routeGameFlow(data){
 function tieOfVotes(data){
   alert.show("투표 동점", `${data.join(",")}중에 한명을 선택해주세요.`);
   voteHandler.setSuspectVoteList(data);
-  return voteHandler.init();
+  voteHandler.init();
 }
 
 function gameOver(data, findSusepct = false){
@@ -235,11 +232,9 @@ function votes(snapshot){
 
   if(TABLE_KEYS.SELECT_TIMEOUT in snapshot){
     if(Object.keys(voteHandler.playerSelectCheck).length === gameData.playerList.length && gameData.admin){
-      return selectCulprit();
+      selectCulprit();
     }
   }
-
-  return {};
 }
 
 function selectCulprit(){
@@ -286,7 +281,7 @@ function selectCulprit(){
     result[TABLE_KEYS.SELECT_CULPRIT] = maxSuspect.suspect;
   }
 
-  return result;
+  gameDatabase.updateData(result);
 }
 
 function gameInit(){

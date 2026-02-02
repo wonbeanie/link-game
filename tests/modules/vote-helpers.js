@@ -80,21 +80,25 @@ async function suspectExposed(playerList){
 }
 
 async function voteTestFlow(voteSetting){
-  doneVoteInit(voteSetting);
+  await doneVoteInit(voteSetting);
 
   await checkVoting(voteSetting.votingList);
 }
 
-function doneVoteInit({votingList, suspect}){
+async function doneVoteInit({votingList, suspect}){
+  const gameDataModule = await import('../../src/modules/game-data.js');
+  const gameData = gameDataModule.default;
+
+  gameData.suspect = suspect;
+  gameData.correct = MOCK_CORRECT;
+  gameData.fakeCorrect = MOCK_FAKE_CORRECT;
+
   let result = {};
   result[TABLE_KEYS.SEQUENCE] = null;
 
   votingList.forEach(([player, voting])=> {
     result[`${TABLE_KEYS.SUSPECT_LIST}-${player}`] = voting;
   })
-  result[TABLE_KEYS.SUSPECT] = suspect;
-  result[TABLE_KEYS.CORRECT] = MOCK_CORRECT;
-  result[TABLE_KEYS.FAKE_CORRECT] = MOCK_FAKE_CORRECT;
 
   mockDatabaseUpdate(result, false, true);
 }

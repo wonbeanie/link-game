@@ -58,6 +58,10 @@ class GameData {
   get myVotingKey(){
     return `${TABLE_KEYS.SUSPECT_LIST}-${this.nickname}`;
   }
+
+  get isDefaultGameInfo(){
+    return this.correct && this.fakeCorrect && this.category && this.suspect;
+  }
 }
 
 const gameData = new GameData;
