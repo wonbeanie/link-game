@@ -3,16 +3,7 @@ import { pickRandom, shuffleStrings, alert, timer, TABLE_KEYS, DATABASE_KEYS, SE
 import gameDatabase from "./database/database.js";
 import gameData from "./modules/game-data.js";
 import gameElements from "./modules/game-elements.js";
-import {chatHandler, gameHandler, hintHandler, messageHandler, voteHandler} from "./handler/index.js";
-
-gameElements.nickname.btn.addEventListener("click", (e) => {
-  let result = {};
-  result[gameElements.nickname.value] = "Ready";
-  gameDatabase.updateData(result);
-
-  gameData.nickname = gameElements.nickname.value;
-  gameElements.info.nickname.textContent = gameData.nickname;
-});
+import {adminHandler, chatHandler, gameHandler, hintHandler, messageHandler, voteHandler} from "./handler/index.js";
 
 gameDatabase.onValueListener(DATABASE_KEYS.CHAT_DATA_KEY, (data) => {
   chatHandler.settingChatHistory(data);
@@ -142,7 +133,7 @@ function votesEnd(data){
     gameData.lastAnswer = data;
     gameElements.hint.hide();
     gameElements.answer.show();
-    timer.startTimer(SUSEPCT_ANSWER_TIME, sendLastAnswer);
+    timer.startTimer(SUSEPCT_ANSWER_TIME, gameHandler.sendLastAnswer);
   }
   else {
     alert.show("범인을 찾았습니다.", "범인이 답을 입력하고 있습니다.");
@@ -218,98 +209,12 @@ function selectCulprit(){
   gameDatabase.updateData(result);
 }
 
-function gameInit(){
-  const category = pickRandom(Object.keys(correctList));
-  const correct = pickRandom(correctList[category]);
-
-  let noCorrectList = [];
-
-  correctList[category].forEach((data)=>{
-    if(correct === data){
-      return;
-    }
-    noCorrectList.push(data);
-  });
-
-  const fakeCorrect = pickRandom(noCorrectList);
-
-  let result = {};
-
-  result[TABLE_KEYS.CATEGORY] = category;
-  result[TABLE_KEYS.CORRECT] = correct;
-  result[TABLE_KEYS.FAKE_CORRECT] = fakeCorrect;
-
-  gameData.category = category;
-  gameData.correct = correct;
-  gameData.fakeCorrect = fakeCorrect;
-
-  return result;
-}
-
-gameElements.admin.start.addEventListener("click",()=>{
-  gameDatabase.getData(DATABASE_KEYS.GAME_DATA_KEY).then((data) => {
-    let list = [];
-
-    if(!data){
-      return;
-    }
-
-    Object.entries(data).forEach(([key, value]) => {
-      if(key === TABLE_KEYS.START){
-        return;
-      }
-
-      list.push(key);
-    });
-
-    let result = gameInit();
-
-    const shuffleList = shuffleStrings(list);
-
-    gameData.suspect = pickRandom(shuffleList);
-
-    const {suspect, category, fakeCorrect, isSuspect, correct} = gameData;
-    result[TABLE_KEYS.SEQUENCE] = shuffleList;
-    result[TABLE_KEYS.SUSPECT] = suspect;
-
-    gameElements.info.category.textContent = category;
-    
-    if(isSuspect){
-      gameElements.info.correct.textContent = fakeCorrect;
-    }
-    else {
-      gameElements.info.correct.textContent = correct;
-    }
-
-    gameDatabase.updateData(result);
-  });
-
-  gameDatabase.clearDatabase();
-  let result = {};
-  result[TABLE_KEYS.START] = `Start Game${new Date().getTime()}`
-  gameDatabase.updateData(result);
-});
-
-
-gameElements.admin.clear.addEventListener("click",()=>{
-  gameDatabase.clearDatabase();
-});
-
-
+gameElements.admin.start.addEventListener("click",adminHandler.start);
+gameElements.admin.clear.addEventListener("click",adminHandler.clear);
 gameElements.hint.btn.addEventListener("click", hintHandler.send);
-
-gameElements.answer.btn.addEventListener("click",sendLastAnswer);
-
-function sendLastAnswer(){
-  if(gameData.lastAnswer === gameData.nickname){
-    let result = {};
-    result[TABLE_KEYS.LAST_ANSWER] = gameElements.answer.value;
-    result[TABLE_KEYS.SELECT_CULPRIT] = "";
-    gameDatabase.updateData(result);
-  }
-}
-
+gameElements.answer.btn.addEventListener("click",gameHandler.sendLastAnswer);
 gameElements.vote.btn.addEventListener("click",voteHandler.send);
+gameElements.nickname.btn.addEventListener("click", gameHandler.sendNickname);
 
 function reloadEvent(){
   removeReloadEvent();
