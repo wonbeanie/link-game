@@ -5,6 +5,16 @@ import { correctList } from "../modules/keywords.js";
 import { DATABASE_KEYS, pickRandom, shuffleStrings, TABLE_KEYS } from "../modules/modules.js";
 
 class AdminHandler {
+  admin = false;
+
+  setAdmin() {
+    const urlParams = new URLSearchParams(window.location.search);
+    this.admin = Boolean(urlParams.get('admin')) || false;
+    
+    if(this.admin){
+      gameElements.admin.display.show();
+    }
+  }
 
   start = () => {
     gameDatabase.getData(DATABASE_KEYS.GAME_DATA_KEY).then((data) => {

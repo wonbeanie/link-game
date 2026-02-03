@@ -1,3 +1,4 @@
+import adminHandler from "../handler/admin-handler.js";
 import gameElements from "./game-elements.js";
 import { TABLE_KEYS } from "./modules.js";
 
@@ -10,23 +11,13 @@ class GameData {
   category = "";
   correct = "";
   state = "";
-  admin = false;
   lastAnswer = "";
 
   constructor(){
     this.nickname = localStorage.getItem('userNickname') || "";
     gameElements.nickname.value = this.nickname;
 
-    this.checkAdmin();
-  }
-
-  checkAdmin() {
-    const urlParams = new URLSearchParams(window.location.search);
-    this.admin = Boolean(urlParams.get('admin')) || false;
-    
-    if(this.admin){
-      gameElements.admin.display.show();
-    }
+    adminHandler.setAdmin();
   }
 
   setDefaultGameInfos(newDatabase){

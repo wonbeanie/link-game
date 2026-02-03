@@ -1,5 +1,4 @@
-import { correctList } from "./modules/keywords.js";
-import { pickRandom, shuffleStrings, alert, timer, TABLE_KEYS, DATABASE_KEYS, SEQUENCE_END } from "./modules/modules.js";
+import { alert, timer, TABLE_KEYS, DATABASE_KEYS, SEQUENCE_END } from "./modules/modules.js";
 import gameDatabase from "./database/database.js";
 import gameData from "./modules/game-data.js";
 import gameElements from "./modules/game-elements.js";
@@ -156,7 +155,7 @@ function votes(snapshot){
   });
 
   if(TABLE_KEYS.SELECT_TIMEOUT in snapshot){
-    if(Object.keys(voteHandler.playerSelectCheck).length === gameData.playerList.length && gameData.admin){
+    if(Object.keys(voteHandler.playerSelectCheck).length === gameData.playerList.length && adminHandler.admin){
       voteHandler.calculateResult();
     }
   }
