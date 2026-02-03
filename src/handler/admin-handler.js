@@ -16,48 +16,54 @@ class AdminHandler {
     }
   }
 
-  start = () => {
-    gameDatabase.getData(DATABASE_KEYS.GAME_DATA_KEY).then((data) => {
-      let list = [];
+  start = async () => {
+    const data = await gameDatabase.getData(DATABASE_KEYS.GAME_DATA_KEY);
 
-      if(!data){
+    gameDatabase.clearDatabase();
+    
+    let result = {};
+
+    result = this.createDefaultData(data);
+
+
+    const {category, fakeCorrect, correct} = gameData;
+    gameElements.info.category.textContent = category;
+    if(gameData.isSuspect){
+      gameElements.info.correct.textContent = fakeCorrect;
+    }
+    else {
+      gameElements.info.correct.textContent = correct;
+    }
+
+    result[TABLE_KEYS.START] = `Start Game${new Date().getTime()}`
+    gameDatabase.updateData(result);
+  }
+
+  createDefaultData = (data) => {
+    let list = [];
+
+    if(!data){
+      return;
+    }
+
+    Object.entries(data).forEach(([key, value]) => {
+      if(key === TABLE_KEYS.START){
         return;
       }
 
-      Object.entries(data).forEach(([key, value]) => {
-        if(key === TABLE_KEYS.START){
-          return;
-        }
-
-        list.push(key);
-      });
-
-      let result = this.gameInit();
-
-      const shuffleList = shuffleStrings(list);
-
-      gameData.suspect = pickRandom(shuffleList);
-
-      const {suspect, category, fakeCorrect, isSuspect, correct} = gameData;
-      result[TABLE_KEYS.SEQUENCE] = shuffleList;
-      result[TABLE_KEYS.SUSPECT] = suspect;
-
-      gameElements.info.category.textContent = category;
-      
-      if(isSuspect){
-        gameElements.info.correct.textContent = fakeCorrect;
-      }
-      else {
-        gameElements.info.correct.textContent = correct;
-      }
-
-      gameDatabase.updateData(result);
+      list.push(key);
     });
 
-    gameDatabase.clearDatabase();
-    let result = {};
-    result[TABLE_KEYS.START] = `Start Game${new Date().getTime()}`
-    gameDatabase.updateData(result);
+    let result = this.gameInit();
+
+    const shuffleList = shuffleStrings(list);
+
+    gameData.suspect = pickRandom(shuffleList);
+    
+    result[TABLE_KEYS.SEQUENCE] = shuffleList;
+    result[TABLE_KEYS.SUSPECT] = gameData.suspect;
+
+    return result;
   }
 
   clear = () => {

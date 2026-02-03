@@ -43,7 +43,7 @@ export async function setupHTMLInit(){
   window.history.pushState({}, '', '?admin=true');
   document.body.innerHTML = html.toString();
   jest.resetModules();
-  await import("../../src/game.js");
+  await import("../../src/game-controller.js");
 }
 
 export async function checkAlert(alertTitle = "", level = 3){
