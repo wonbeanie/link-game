@@ -2,6 +2,7 @@ import gameData from "../modules/game-data.js";
 import gameDatabase from "../database/database.js";
 import { DATABASE_KEYS, TABLE_KEYS } from "../modules/modules.js";
 import uiHandler from "./ui-handler.js";
+import gameElements from "../modules/game-elements.js";
 
 class ChatHandler {
   chatInput = null;
@@ -25,28 +26,21 @@ class ChatHandler {
   }
 
   chatStart(){
-    const chatInput = this.getChatInput();
-    const chatSend = this.getChatSend();
-
-    chatSend.addEventListener('click', this.sendClick);
-    chatInput.addEventListener('keypress', this.onEnterPress);
+    gameElements.chat.btn.addEventListener('click', this.sendClick);
+    gameElements.chat.input.addEventListener('keypress', this.onEnterPress);
     this.startChat = true;
     this.addChatMessage("서버", "채팅에 접속하였습니다.");
   }
 
   sendClick = () => {
-    const chatInput = this.getChatInput();
-    const msg = chatInput.value.trim();
+    const msg = gameElements.chat.input.value.trim();
     this.onSendClick(msg);
-    chatInput.value = '';
+    gameElements.chat.input.value = '';
   }
 
   chatClose(){
-    const chatInput = this.getChatInput();
-    const chatSend = this.getChatSend();
-
-    chatSend.removeEventListener('click', this.sendClick);
-    chatInput.removeEventListener('keypress', this.onEnterPress);
+    gameElements.chat.btn.removeEventListener('click', this.sendClick);
+    gameElements.chat.input.removeEventListener('keypress', this.onEnterPress);
     this.addChatMessage("서버", "채팅이 종료되었습니다.");
     this.startChat = false;
   }
@@ -79,25 +73,7 @@ class ChatHandler {
   }
 
   onEnterPress = (e) => {
-    const chatSend = this.getChatSend();
-    if (e.key === 'Enter') chatSend.click();
-  }
-
-
-  getChatInput(){
-    if(!this.chatInput){
-      this.chatInput = document.getElementById('chat-input');
-    }
-
-    return this.chatInput;
-  }
-
-  getChatSend(){
-    if(!this.chatSend){
-      this.chatSend = document.getElementById('chat-send');
-    }
-
-    return this.chatSend;
+    if (e.key === 'Enter') gameElements.chat.btn.click();
   }
 }
 

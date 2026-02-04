@@ -34,6 +34,14 @@ class ElementWrapper {
   removeEventListener(event, callback){
     this.element.removeEventListener(event, callback);
   }
+
+  appendChild(element){
+    this.element.appendChild(element);
+  }
+
+  click(){
+    this.element.click();
+  }
 }
 
 class UIGroup {
@@ -88,6 +96,12 @@ class GameElements {
       correct : new ElementWrapper("correct"),
       state : new ElementWrapper("state-info"),
       nickname : new ElementWrapper("nickname-info")
+    }
+
+    this.chat = {
+      input : new ElementWrapper('chat-input'),
+      btn : new ElementWrapper('chat-send'),
+      display : new ElementWrapper('chat-window')
     }
   }
 }

@@ -50,23 +50,12 @@ class UiHandler {
     msgDiv.className = 'chat-msg';
     msgDiv.innerHTML = `<b>${nickname}:</b> ${message}`;
 
-
-    const chatWindow = this.getChatWindow();
-    chatWindow.appendChild(msgDiv);
-    chatWindow.scrollTop = chatWindow.scrollHeight;
+    gameElements.chat.display.appendChild(msgDiv);
+    gameElements.chat.display.scrollTop = gameElements.chat.display.scrollHeight;
   }
 
   clearChatMessageToDisplay(){
-    const chatWindow = this.getChatWindow();
-    chatWindow.innerHTML = "";
-  }
-
-  getChatWindow(){
-    if(!this.chatWindow){
-      this.chatWindow = document.getElementById('chat-window');
-    }
-
-    return this.chatWindow;
+    gameElements.chat.display.textContent = "";
   }
 }
 
