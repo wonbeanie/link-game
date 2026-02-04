@@ -37,7 +37,7 @@ class UiHandler {
     gameElements.info.correct.textContent = myCorrect;
   }
 
-  updateNicknameUI(){
+  updateNicknameInfoUI(){
     gameElements.info.nickname.textContent = gameData.nickname;
   }
 
@@ -131,6 +131,12 @@ class UiHandler {
   showAnswerInputGroup(){
     gameElements.answer.show();
   }
+
+  updateNicknameUI(value){
+    gameElements.nickname.value = value;
+  }
+
+  
 }
 
 const uiHandler = new UiHandler();

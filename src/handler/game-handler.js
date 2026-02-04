@@ -29,7 +29,7 @@ class GameHandler {
     gameDatabase.updateData(result);
 
     gameData.nickname = gameElements.nickname.value;
-    uiHandler.updateNicknameUI();
+    uiHandler.updateNicknameInfoUI();
   }
 
   reloadEvent(){

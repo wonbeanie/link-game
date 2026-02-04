@@ -1,4 +1,5 @@
 import adminHandler from "../handler/admin-handler.js";
+import uiHandler from "../handler/ui-handler.js";
 import gameElements from "./game-elements.js";
 import { TABLE_KEYS } from "./modules.js";
 
@@ -15,7 +16,7 @@ class GameData {
 
   constructor(){
     this.nickname = localStorage.getItem('userNickname') || "";
-    gameElements.nickname.value = this.nickname;
+    uiHandler.updateNicknameUI(this.nickname);
 
     adminHandler.setAdmin();
   }
@@ -34,7 +35,7 @@ class GameData {
   set nickname(nickname){
     this.nickname = nickname;
     localStorage.setItem('userNickname', nickname);
-    gameElements.nickname.value = this.nickname;
+    uiHandler.updateNicknameUI(nickname);
   }
 
   get isSuspect(){
