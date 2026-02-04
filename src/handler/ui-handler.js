@@ -1,44 +1,39 @@
-import gameData from "../modules/game-data.js";
 import gameElements from "../modules/game-elements.js";
 import { alert } from "../modules/modules.js";
 
 class UiHandler {
   chatWindow = null;
 
-  showGameStartAlert(){
-    const {category, myCorrect} = gameData;
-    alert.show("게임시작", `카테고리는 ${category}, 제시어는 ${myCorrect}입니다.`);
+  showGameStartAlert(category, correct){
+    alert.show("게임시작", `카테고리는 ${category}, 제시어는 ${correct}입니다.`);
   }
 
   showGameOutAlert(){
     alert.show("알림","플레이어중 한명이 나갔습니다.\n게임을 초기화합니다.");
   }
 
-  showGameOverAlert(data, findSusepct = false){
-    const {correct, fakeCorrect, suspect} = gameData;
+  showGameOverAlert(gameInfo, lastAnswer = "", findSusepct = false){
+    const {correct, fakeCorrect, suspect} = gameInfo;
     if(findSusepct){
-      if(correct === data){
-        alert.show("범인 승리", `범인이 정답(${data})을 맞췄습니다.\n 범인의 제시어 ${fakeCorrect}\n 시민의 제시어 ${correct}`);
+      if(correct === lastAnswer){
+        alert.show("범인 승리", `범인이 정답(${lastAnswer})을 맞췄습니다.\n 범인의 제시어 ${fakeCorrect}\n 시민의 제시어 ${correct}`);
       }
       else {
-        alert.show("시민 승리",`범인의 최종 답은 ${data}으로 답하였습니다.\n 범인의 제시어 ${fakeCorrect}\n 시민의 제시어 ${correct}`);
+        alert.show("시민 승리",`범인의 최종 답은 ${lastAnswer}으로 답하였습니다.\n 범인의 제시어 ${fakeCorrect}\n 시민의 제시어 ${correct}`);
       }
+      return;
     }
-    else {
-      if(suspect !== data){
-        alert.show("범인이 아닙니다.", `범인은 ${suspect}였습니다.`);
-      }
-    }
+
+    alert.show("범인이 아닙니다.", `범인은 ${suspect}였습니다.`);
   }
 
-  updateGameInfoUI(){
-    const {category, myCorrect} = gameData;
+  updateGameInfoUI(category, correct){
     gameElements.info.category.textContent = category;
-    gameElements.info.correct.textContent = myCorrect;
+    gameElements.info.correct.textContent = correct;
   }
 
-  updateNicknameInfoUI(){
-    gameElements.info.nickname.textContent = gameData.nickname;
+  updateNicknameInfoUI(nickname){
+    gameElements.info.nickname.textContent = nickname;
   }
 
   showAdminBtns(){
@@ -74,8 +69,8 @@ class UiHandler {
     gameElements.hint.show();
   }
 
-  updateTurnStateUI(){
-    gameElements.info.state.textContent = `${gameData.playSequence[0]}님이 입력하고 있습니다.`;
+  updateTurnStateUI(player){
+    gameElements.info.state.textContent = `${player}님이 입력하고 있습니다.`;
   }
 
   addLogDisplay(player, text){

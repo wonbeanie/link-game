@@ -10,7 +10,8 @@ class GameHandler {
   newDatabase = {};
 
   startGame() {
-    uiHandler.showGameStartAlert();
+    const {category, myCorrect} = gameData;
+    uiHandler.showGameStartAlert(category, myCorrect);
     gameData.state = "Playing";
   }
 
@@ -24,12 +25,13 @@ class GameHandler {
   }
 
   sendNickname(){
+    const nickname = gameElements.nickname.value;
     let result = {};
-    result[gameElements.nickname.value] = "Ready";
+    result[nickname] = "Ready";
     gameDatabase.updateData(result);
 
-    gameData.nickname = gameElements.nickname.value;
-    uiHandler.updateNicknameInfoUI();
+    gameData.nickname = nickname;
+    uiHandler.updateNicknameInfoUI(nickname);
   }
 
   reloadEvent(){
@@ -57,7 +59,12 @@ class GameHandler {
   }
 
   gameOver(data, findSusepct = false){
-    uiHandler.showGameOverAlert(data, findSusepct);
+    const gameInfo = {
+      correct : gameData.correct,
+      fakeCorrect : gameData.fakeCorrect,
+      suspect : gameData.suspect
+    }
+    uiHandler.showGameOverAlert(gameInfo, data, findSusepct);
 
     timer.stopTimer();
     gameHandler.reloadEvent();
@@ -90,7 +97,8 @@ class GameHandler {
     gameData.correct = keywords.correct;
     gameData.fakeCorrect = keywords.fakeCorrect;
 
-    uiHandler.updateGameInfoUI();
+    const {category, myCorrect} = gameData;
+    uiHandler.updateGameInfoUI(category, myCorrect);
 
     let result = {};
 

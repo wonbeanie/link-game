@@ -109,7 +109,7 @@ class VoteHandler {
     const {suspect, isSuspect} = gameData;
     const failFindSuspect = suspect !== data;
     if(failFindSuspect){
-      gameHandler.gameOver(data);
+      gameHandler.gameOver();
       return;
     }
 

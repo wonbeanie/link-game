@@ -41,8 +41,9 @@ class HintHandler {
     }
 
     gameData.playSequence = data;
-    uiHandler.updateGameInfoUI();
-    uiHandler.updateTurnStateUI();
+    uiHandler.updateGameInfoUI(category, myCorrect);
+
+    uiHandler.updateTurnStateUI(data[0]);
 
     if(gameData.myTurn){
       timer.startTimer(30, this.send);
