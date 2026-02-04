@@ -57,6 +57,10 @@ class UiHandler {
   clearChatMessageToDisplay(){
     gameElements.chat.display.textContent = "";
   }
+
+  clearChatInput(){
+    gameElements.chat.input.value = '';
+  }
 }
 
 const uiHandler = new UiHandler();

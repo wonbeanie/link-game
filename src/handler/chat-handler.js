@@ -35,7 +35,7 @@ class ChatHandler {
   sendClick = () => {
     const msg = gameElements.chat.input.value.trim();
     this.onSendClick(msg);
-    gameElements.chat.input.value = '';
+    uiHandler.clearChatInput();
   }
 
   chatClose(){
