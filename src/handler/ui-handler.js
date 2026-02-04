@@ -107,6 +107,30 @@ class UiHandler {
   clearLogDisplay(){
     gameElements.log.textContent = "";
   }
+
+  showVoteInputGroup(){
+    gameElements.vote.show();
+  }
+
+  hideVoteInputGroup(){
+    gameElements.vote.hide();
+  }
+
+  updateSuspectVoteOptions(voteList){
+    gameElements.vote.allClearChildren();
+    
+    JSON.parse(JSON.stringify(voteList)).sort().forEach((player)=>{
+      const optionElement = document.createElement("option");
+      optionElement.value = player;
+      optionElement.textContent = player;
+
+      gameElements.vote.appendChild(optionElement);
+    });
+  }
+
+  showAnswerInputGroup(){
+    gameElements.answer.show();
+  }
 }
 
 const uiHandler = new UiHandler();

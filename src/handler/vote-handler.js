@@ -4,6 +4,7 @@ import gameElements from "../modules/game-elements.js";
 import { alert, TABLE_KEYS, timer } from "../modules/modules.js";
 import adminHandler from "./admin-handler.js";
 import gameHandler from "./game-handler.js";
+import uiHandler from "./ui-handler.js";
 
 class VoteHandler {
   playerSelectCheck = {};
@@ -26,10 +27,10 @@ class VoteHandler {
 
   voteStart(){
     gameData.playerList = gameData.startPlaySequence;
-    this.setSuspectVoteList(gameData.startPlaySequence);
+    uiHandler.updateSuspectVoteOptions(gameData.startPlaySequence);
     alert.show("토론시간", "1분의 토론시간이 주어집니다.");
-    gameElements.vote.show();
-    gameElements.hint.hide();
+    uiHandler.showVoteInputGroup();
+    uiHandler.hideHintInputGroup();
     this.init();
   }
 
@@ -57,18 +58,6 @@ class VoteHandler {
     }
 
     gameDatabase.updateData(result);
-  }
-
-  setSuspectVoteList(voteList){
-    gameElements.vote.allClearChildren();
-    
-    JSON.parse(JSON.stringify(voteList)).sort().forEach((player)=>{
-      const optionElement = document.createElement("option");
-      optionElement.value = player;
-      optionElement.textContent = player;
-
-      gameElements.vote.appendChild(optionElement);
-    });
   }
 
   calculateResult = () => {
@@ -124,15 +113,15 @@ class VoteHandler {
       return;
     }
 
-    gameElements.vote.hide();
+    uiHandler.hideVoteInputGroup();
 
     timer.stopTimer();
 
     if(isSuspect){
       alert.show("범인인것을 걸렸습니다.", "정답을 맞춰주세요.");
       gameData.lastAnswer = data;
-      gameElements.hint.hide();
-      gameElements.answer.show();
+      uiHandler.hideHintInputGroup();
+      uiHandler.showAnswerInputGroup();
       timer.startTimer(this.SUSEPCT_ANSWER_TIME, gameHandler.sendLastAnswer);
     }
     else {
@@ -143,7 +132,7 @@ class VoteHandler {
 
   tieOfVotes(data){
     alert.show("투표 동점", `${data.join(",")}중에 한명을 선택해주세요.`);
-    this.setSuspectVoteList(data);
+    uiHandler.updateSuspectVoteOptions(data);
     this.init();
   }
 
