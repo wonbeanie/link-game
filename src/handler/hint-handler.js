@@ -46,7 +46,7 @@ class HintHandler {
 
     if(gameData.myTurn){
       timer.startTimer(30, this.send);
-      alert.show("당신 순서입니다.",`카테고리는 ${category}, 제시어는 ${myCorrect}입니다.`);
+      uiHandler.showMyTurnAlert(category, myCorrect);
       gameData.state = "Playing";
       uiHandler.showHintInputGroup();
       return;

@@ -136,7 +136,25 @@ class UiHandler {
     gameElements.nickname.value = value;
   }
 
-  
+  showMyTurnAlert(category, correct){
+    alert.show("당신 순서입니다.",`카테고리는 ${category}, 제시어는 ${correct}입니다.`);
+  }
+
+  showVoteTurnAlert(){
+    alert.show("토론시간", "1분의 토론시간이 주어집니다.");
+  }
+
+  showAnswerTurnAlert(){
+    alert.show("범인인것을 걸렸습니다.", "정답을 맞춰주세요.");
+  }
+
+  showWeFindSuspectAlert(){
+    alert.show("범인을 찾았습니다.", "범인이 답을 입력하고 있습니다.");
+  }
+
+  showTieOfVotesAlert(suspectList){
+    alert.show("투표 동점", `${suspectList}중에 한명을 선택해주세요.`);
+  }
 }
 
 const uiHandler = new UiHandler();

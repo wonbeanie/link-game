@@ -28,7 +28,7 @@ class VoteHandler {
   voteStart(){
     gameData.playerList = gameData.startPlaySequence;
     uiHandler.updateSuspectVoteOptions(gameData.startPlaySequence);
-    alert.show("토론시간", "1분의 토론시간이 주어집니다.");
+    uiHandler.showVoteTurnAlert();
     uiHandler.showVoteInputGroup();
     uiHandler.hideHintInputGroup();
     this.init();
@@ -118,20 +118,20 @@ class VoteHandler {
     timer.stopTimer();
 
     if(isSuspect){
-      alert.show("범인인것을 걸렸습니다.", "정답을 맞춰주세요.");
+      uiHandler.showAnswerTurnAlert();
       gameData.lastAnswer = data;
       uiHandler.hideHintInputGroup();
       uiHandler.showAnswerInputGroup();
       timer.startTimer(this.SUSEPCT_ANSWER_TIME, gameHandler.sendLastAnswer);
     }
     else {
-      alert.show("범인을 찾았습니다.", "범인이 답을 입력하고 있습니다.");
+      uiHandler.showWeFindSuspectAlert();
       timer.startTimer(this.SUSEPCT_ANSWER_TIME);
     }
   }
 
   tieOfVotes(data){
-    alert.show("투표 동점", `${data.join(",")}중에 한명을 선택해주세요.`);
+    uiHandler.showTieOfVotesAlert(data.join(","));
     uiHandler.updateSuspectVoteOptions(data);
     this.init();
   }
