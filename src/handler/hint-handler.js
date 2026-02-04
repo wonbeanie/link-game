@@ -6,7 +6,7 @@ import uiHandler from "./ui-handler.js";
 
 class HintHandler {
   initHintTurn(data){
-    gameElements.nickname.hide();
+    uiHandler.hideNicknameInputGroup();
     gameData.startPlaySequence = data;
   }
 
@@ -22,12 +22,12 @@ class HintHandler {
       }
       else {
         result[TABLE_KEYS.SEQUENCE] = SEQUENCE_END;
-        gameElements.hint.hide();
+        uiHandler.hideHintInputGroup();
       }
 
       result[nickname] = gameElements.hint.value;
 
-      gameElements.hint.hide();
+      uiHandler.hideHintInputGroup();
       gameDatabase.updateData(result);
     }
   }
@@ -42,13 +42,13 @@ class HintHandler {
 
     gameData.playSequence = data;
     uiHandler.updateGameInfoUI();
-    gameElements.info.state.textContent = `${gameData.playSequence[0]}님이 입력하고 있습니다.`;
+    uiHandler.updateTurnStateUI();
 
     if(gameData.myTurn){
       timer.startTimer(30, this.send);
       alert.show("당신 순서입니다.",`카테고리는 ${category}, 제시어는 ${myCorrect}입니다.`);
       gameData.state = "Playing";
-      gameElements.hint.show();
+      uiHandler.showHintInputGroup();
       return;
     }
 

@@ -61,6 +61,22 @@ class UiHandler {
   clearChatInput(){
     gameElements.chat.input.value = '';
   }
+
+  hideNicknameInputGroup(){
+    gameElements.nickname.hide();
+  }
+
+  hideHintInputGroup(){
+    gameElements.hint.hide();
+  }
+
+  showHintInputGroup(){
+    gameElements.hint.show();
+  }
+
+  updateTurnStateUI(){
+    gameElements.info.state.textContent = `${gameData.playSequence[0]}님이 입력하고 있습니다.`;
+  }
 }
 
 const uiHandler = new UiHandler();
