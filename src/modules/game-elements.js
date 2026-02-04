@@ -105,6 +105,7 @@ class GameElements {
     }
 
     this.log = new ElementWrapper("log-display");
+    this.timer = new ElementWrapper("timer");
   }
 }
 

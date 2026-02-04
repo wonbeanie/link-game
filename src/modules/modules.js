@@ -1,3 +1,5 @@
+import uiHandler from "../handler/ui-handler.js";
+
 export function shuffleStrings(array) {
   for (let i = array.length - 1; i > 0; i--) {
     let j = Math.floor(Math.random() * (i + 1));
@@ -94,9 +96,7 @@ class Alerter {
 export const alert = new Alerter();
 
 export const timer = (function Timer(){
-  const timerField = document.getElementById("timer");
   let inteval = null;
-  
   
   function startTimer(timeLimit = 30, timeoutCallback = () => {}) {
     function action(){
@@ -112,7 +112,7 @@ export const timer = (function Timer(){
       const displayMinutes = String(minutes).padStart(2, '0');
       const displaySeconds = String(seconds).padStart(2, '0');
 
-      timerField.textContent = `${displayMinutes}:${displaySeconds}`;
+      uiHandler.showTimerUI(displayMinutes, displaySeconds);
       
       time -= 1;
     }
@@ -130,7 +130,7 @@ export const timer = (function Timer(){
 
   function stopTimer() {
     clearInterval(inteval);
-    timerField.textContent = "";
+    uiHandler.clearTimerUI();
   }
 
   return {

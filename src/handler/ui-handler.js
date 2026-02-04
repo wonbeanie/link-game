@@ -2,8 +2,6 @@ import gameElements from "../modules/game-elements.js";
 import { alert } from "../modules/modules.js";
 
 class UiHandler {
-  chatWindow = null;
-
   showGameStartAlert(category, correct){
     alert.show("게임시작", `카테고리는 ${category}, 제시어는 ${correct}입니다.`);
   }
@@ -149,6 +147,14 @@ class UiHandler {
 
   showTieOfVotesAlert(suspectList){
     alert.show("투표 동점", `${suspectList}중에 한명을 선택해주세요.`);
+  }
+
+  showTimerUI(minutes, seconds){
+    gameElements.timer.textContent = `${minutes}:${seconds}`;
+  }
+
+  clearTimerUI(){
+    gameElements.timer.textContent = "";
   }
 }
 
