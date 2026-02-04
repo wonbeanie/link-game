@@ -2,6 +2,7 @@ import gameDatabase from "../database/database.js";
 import gameData from "../modules/game-data.js";
 import gameElements from "../modules/game-elements.js";
 import { alert, SEQUENCE_END, TABLE_KEYS, timer } from "../modules/modules.js";
+import gameHandler from "./game-handler.js";
 
 class HintHandler {
   initHintTurn(data){
@@ -40,8 +41,7 @@ class HintHandler {
     }
 
     gameData.playSequence = data;
-    gameElements.info.category.textContent = category;
-    gameElements.info.correct.textContent = myCorrect;
+    gameHandler.updateGameInfoUI();
     gameElements.info.state.textContent = `${gameData.playSequence[0]}님이 입력하고 있습니다.`;
 
     if(gameData.myTurn){

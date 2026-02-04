@@ -1,7 +1,8 @@
 import gameDatabase from "../database/database.js";
 import gameData from "../modules/game-data.js";
 import gameElements from "../modules/game-elements.js";
-import { alert, TABLE_KEYS, timer } from "../modules/modules.js";
+import { correctList } from "../modules/keywords.js";
+import { alert, DATABASE_KEYS, pickRandom, shuffleStrings, TABLE_KEYS, timer } from "../modules/modules.js";
 import chatHandler from "./chat-handler.js";
 
 class GameHandler {
@@ -74,6 +75,73 @@ class GameHandler {
     timer.stopTimer();
     gameHandler.reloadEvent();
     chatHandler.chatClose();
+  }
+
+  createDefaultData = async () => {
+    const data = await gameDatabase.getData(DATABASE_KEYS.GAME_DATA_KEY);
+
+    let list = [];
+
+    if(!data){
+      return;
+    }
+
+    Object.entries(data).forEach(([key, value]) => {
+      if(key === TABLE_KEYS.START){
+        return;
+      }
+
+      list.push(key);
+    });
+
+    const keywords = this.generateKeywords();
+
+    const shuffleList = shuffleStrings(list);
+
+    gameData.suspect = pickRandom(shuffleList);
+    gameData.category = keywords.category;
+    gameData.correct = keywords.correct;
+    gameData.fakeCorrect = keywords.fakeCorrect;
+
+    this.updateGameInfoUI();
+
+    let result = {};
+
+    result[TABLE_KEYS.SEQUENCE] = shuffleList;
+    result[TABLE_KEYS.SUSPECT] = gameData.suspect;
+    result[TABLE_KEYS.CATEGORY] = gameData.category;
+    result[TABLE_KEYS.CORRECT] = gameData.correct;
+    result[TABLE_KEYS.FAKE_CORRECT] = gameData.fakeCorrect;
+
+    return result;
+  }
+
+  updateGameInfoUI(){
+    const {category, myCorrect} = gameData;
+    gameElements.info.category.textContent = category;
+    gameElements.info.correct.textContent = myCorrect;
+  }
+
+  generateKeywords = () => {
+    const category = pickRandom(Object.keys(correctList));
+    const correct = pickRandom(correctList[category]);
+
+    let noCorrectList = [];
+
+    correctList[category].forEach((data)=>{
+      if(correct === data){
+        return;
+      }
+      noCorrectList.push(data);
+    });
+
+    const fakeCorrect = pickRandom(noCorrectList);
+
+    return {
+      category,
+      correct,
+      fakeCorrect
+    };
   }
 
   set newDatabase(newDatabase){
