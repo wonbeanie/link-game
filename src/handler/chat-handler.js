@@ -1,11 +1,11 @@
 import gameData from "../modules/game-data.js";
 import gameDatabase from "../database/database.js";
 import { DATABASE_KEYS, TABLE_KEYS } from "../modules/modules.js";
+import uiHandler from "./ui-handler.js";
 
 class ChatHandler {
   chatInput = null;
   chatSend = null;
-  chatWindow = null;
   startChat = false;
   chatHistory = [];
 
@@ -13,19 +13,11 @@ class ChatHandler {
     if(!this.startChat){
       return;
     }
-    const msgDiv = document.createElement('div');
-    msgDiv.className = 'chat-msg';
-    msgDiv.innerHTML = `<b>${nickname}:</b> ${message}`;
-
-
-    const chatWindow = this.getChatWindow();
-    chatWindow.appendChild(msgDiv);
-    chatWindow.scrollTop = chatWindow.scrollHeight;
+    uiHandler.addChatMessageToDisplay(nickname, message);
   }
 
   chatClear(){
-    const chatWindow = this.getChatWindow();
-    chatWindow.innerHTML = "";
+    uiHandler.clearChatMessageToDisplay();
     if(this.startChat){
       this.addChatMessage("서버", "채팅에 접속하였습니다.");
       return;
@@ -106,14 +98,6 @@ class ChatHandler {
     }
 
     return this.chatSend;
-  }
-
-  getChatWindow(){
-    if(!this.chatWindow){
-      this.chatWindow = document.getElementById('chat-window');
-    }
-
-    return this.chatWindow;
   }
 }
 

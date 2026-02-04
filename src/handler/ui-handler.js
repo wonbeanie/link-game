@@ -3,6 +3,8 @@ import gameElements from "../modules/game-elements.js";
 import { alert } from "../modules/modules.js";
 
 class UiHandler {
+  chatWindow = null;
+
   showGameStartAlert(){
     const {category, myCorrect} = gameData;
     alert.show("게임시작", `카테고리는 ${category}, 제시어는 ${myCorrect}입니다.`);
@@ -43,7 +45,29 @@ class UiHandler {
     gameElements.admin.display.show();
   }
 
-  
+  addChatMessageToDisplay(nickname, message){
+    const msgDiv = document.createElement('div');
+    msgDiv.className = 'chat-msg';
+    msgDiv.innerHTML = `<b>${nickname}:</b> ${message}`;
+
+
+    const chatWindow = this.getChatWindow();
+    chatWindow.appendChild(msgDiv);
+    chatWindow.scrollTop = chatWindow.scrollHeight;
+  }
+
+  clearChatMessageToDisplay(){
+    const chatWindow = this.getChatWindow();
+    chatWindow.innerHTML = "";
+  }
+
+  getChatWindow(){
+    if(!this.chatWindow){
+      this.chatWindow = document.getElementById('chat-window');
+    }
+
+    return this.chatWindow;
+  }
 }
 
 const uiHandler = new UiHandler();
