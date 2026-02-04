@@ -4,13 +4,13 @@ import gameElements from "../modules/game-elements.js";
 import { correctList } from "../modules/keywords.js";
 import { alert, DATABASE_KEYS, pickRandom, shuffleStrings, TABLE_KEYS, timer } from "../modules/modules.js";
 import chatHandler from "./chat-handler.js";
+import uiHandler from "./ui-handler.js";
 
 class GameHandler {
   newDatabase = {};
 
   startGame() {
-    const {category, myCorrect} = gameData;
-    alert.show("게임시작", `카테고리는 ${category}, 제시어는 ${myCorrect}입니다.`);
+    uiHandler.showGameStartAlert();
     gameData.state = "Playing";
   }
 
@@ -29,7 +29,7 @@ class GameHandler {
     gameDatabase.updateData(result);
 
     gameData.nickname = gameElements.nickname.value;
-    gameElements.info.nickname.textContent = gameData.nickname;
+    uiHandler.updateNicknameUI();
   }
 
   reloadEvent(){
@@ -50,27 +50,14 @@ class GameHandler {
   }
 
   outGame(){
-    alert.show("알림","플레이어중 한명이 나갔습니다.\n게임을 초기화합니다.");
+    uiHandler.showGameOutAlert();
     gameDatabase.clearDatabase();
     this.removeReloadEvent();
     alert.restart = true;
   }
 
   gameOver(data, findSusepct = false){
-    const {correct, fakeCorrect, suspect} = gameData;
-    if(findSusepct){
-      if(correct === data){
-        alert.show("범인 승리", `범인이 정답(${data})을 맞췄습니다.\n 범인의 제시어 ${fakeCorrect}\n 시민의 제시어 ${correct}`);
-      }
-      else {
-        alert.show("시민 승리",`범인의 최종 답은 ${data}으로 답하였습니다.\n 범인의 제시어 ${fakeCorrect}\n 시민의 제시어 ${correct}`);
-      }
-    }
-    else {
-      if(suspect !== data){
-        alert.show("범인이 아닙니다.", `범인은 ${suspect}였습니다.`);
-      }
-    }
+    uiHandler.showGameOverAlert(data, findSusepct);
 
     timer.stopTimer();
     gameHandler.reloadEvent();
@@ -103,7 +90,7 @@ class GameHandler {
     gameData.correct = keywords.correct;
     gameData.fakeCorrect = keywords.fakeCorrect;
 
-    this.updateGameInfoUI();
+    uiHandler.updateGameInfoUI();
 
     let result = {};
 
@@ -114,12 +101,6 @@ class GameHandler {
     result[TABLE_KEYS.FAKE_CORRECT] = gameData.fakeCorrect;
 
     return result;
-  }
-
-  updateGameInfoUI(){
-    const {category, myCorrect} = gameData;
-    gameElements.info.category.textContent = category;
-    gameElements.info.correct.textContent = myCorrect;
   }
 
   generateKeywords = () => {

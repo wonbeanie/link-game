@@ -4,3 +4,4 @@ export {default as hintHandler} from "./hint-handler.js";
 export {default as voteHandler} from "./vote-handler.js";
 export {default as messageHandler} from "./message-handler.js";
 export {default as adminHandler} from "./admin-handler.js";
+export {default as uiHandler} from "./ui-handler.js";
