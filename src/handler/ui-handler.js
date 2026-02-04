@@ -38,6 +38,12 @@ class UiHandler {
   updateNicknameUI(){
     gameElements.info.nickname.textContent = gameData.nickname;
   }
+
+  showAdminBtns(){
+    gameElements.admin.display.show();
+  }
+
+  
 }
 
 const uiHandler = new UiHandler();

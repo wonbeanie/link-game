@@ -2,6 +2,7 @@ import gameDatabase from "../database/database.js";
 import gameElements from "../modules/game-elements.js";
 import { TABLE_KEYS } from "../modules/modules.js";
 import gameHandler from "./game-handler.js";
+import uiHandler from "./ui-handler.js";
 
 class AdminHandler {
   admin = false;
@@ -11,7 +12,7 @@ class AdminHandler {
     this.admin = Boolean(urlParams.get('admin')) || false;
     
     if(this.admin){
-      gameElements.admin.display.show();
+      uiHandler.showAdminBtns();
     }
   }
 
