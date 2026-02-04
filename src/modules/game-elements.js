@@ -103,6 +103,8 @@ class GameElements {
       btn : new ElementWrapper('chat-send'),
       display : new ElementWrapper('chat-window')
     }
+
+    this.log = new ElementWrapper("log-display");
   }
 }
 

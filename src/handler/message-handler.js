@@ -1,6 +1,7 @@
 import gameData from "../modules/game-data.js";
-import { logger, TABLE_KEYS } from "../modules/modules.js";
+import { TABLE_KEYS } from "../modules/modules.js";
 import chatHandler from "./chat-handler.js";
+import uiHandler from "./ui-handler.js";
 
 class MessageHandler {
   votingList = [];
@@ -8,17 +9,17 @@ class MessageHandler {
 
   votingLog(){
     if(gameData.state !== ""){
-      logger.setLog(`투표`, '---------------');
+      uiHandler.addLogDisplay(`투표`, '---------------');
     }
 
     this.votingList.forEach(([player, vote])=>{
-      logger.setLog(`${player}`, `${vote}님을 투표하였습니다.`);
+      uiHandler.addLogDisplay(`${player}`, `${vote}님을 투표하였습니다.`);
     });
   }
 
   hintLog(){
     if(gameData.state !== ""){
-      logger.setLog(`힌트`, '---------------');
+      uiHandler.addLogDisplay(`힌트`, '---------------');
     }
 
     gameData.startPlaySequence.forEach((player)=>{
@@ -26,12 +27,12 @@ class MessageHandler {
         return;
       }
       
-      logger.setLog(player, this.playerHints[player]);
+      uiHandler.addLogDisplay(player, this.playerHints[player]);
     });
   }
 
   setMessages(newData){
-    logger.clearLog();
+    uiHandler.clearLogDisplay();
     
     let votingList = {};
     let playerHints = {};
@@ -43,7 +44,7 @@ class MessageHandler {
         playerHints[key] = value;
 
         if(startPlaySequence.length === 0){
-          logger.setLog(key, value);
+          uiHandler.addLogDisplay(key, value);
         }
         return;
       }

@@ -93,55 +93,6 @@ class Alerter {
 }
 export const alert = new Alerter();
 
-export const logger = (function Logger(){
-  let display = null;
-
-  const getDisplay = () => {
-    if(!display){
-      display = document.getElementById("display");
-    }
-
-    return display;
-  }
-
-  function setLog(player, text){
-    const display = getDisplay();
-    const playerElement = document.createElement("div");
-    playerElement.className = "player-hint-item"; 
-
-    const playerNameElement = document.createElement("span");
-    playerNameElement.style.fontWeight = "bold";
-    playerNameElement.style.color = "var(--primary-color)";
-    playerNameElement.textContent = player;
-
-    const separator = document.createElement("span");
-    separator.textContent = " : ";
-    separator.style.color = "#a0aec0";
-
-    const hintElement = document.createElement("span");
-    hintElement.style.color = "var(--text-color)";
-    hintElement.textContent = text;
-
-    playerElement.appendChild(playerNameElement);
-    playerElement.appendChild(separator);
-    playerElement.appendChild(hintElement);
-
-    display.appendChild(playerElement);
-
-    display.scrollTop = display.scrollHeight;
-  }
-
-  function clearLog(){
-    const display = getDisplay();
-    display.innerHTML = "";
-  }
-
-  return {
-    setLog,
-    clearLog
-  }
-})();
-
 export const timer = (function Timer(){
   const timerField = document.getElementById("timer");
   let inteval = null;

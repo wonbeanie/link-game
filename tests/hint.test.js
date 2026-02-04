@@ -22,7 +22,7 @@ describe("힌트 입력 테스트", () => {
 
     await checkAlert(`${userNickname}님이 입력하고 있습니다.`, 2);
 
-    const logDisplay = document.getElementById("display");
+    const logDisplay = document.getElementById("log-display");
     const {getByText} = within(logDisplay);
     const nicknameLog = getByText(nickname);
     const hintLog = getByText(hintWord);

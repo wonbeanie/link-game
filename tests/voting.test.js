@@ -45,7 +45,7 @@ describe("투표 테스트", () => {
     const activityLog = screen.getByText(/활동 로그/);
     const logDisplay = activityLog.nextElementSibling;
 
-    expect(logDisplay).toHaveAttribute('id', 'display');
+    expect(logDisplay).toHaveAttribute('id', 'log-display');
 
     const { findByText, findAllByText } = within(logDisplay);
     const nicknameLog = await findAllByText(nickname);

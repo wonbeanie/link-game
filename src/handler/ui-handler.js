@@ -77,6 +77,36 @@ class UiHandler {
   updateTurnStateUI(){
     gameElements.info.state.textContent = `${gameData.playSequence[0]}님이 입력하고 있습니다.`;
   }
+
+  addLogDisplay(player, text){
+    const playerElement = document.createElement("div");
+    playerElement.className = "player-hint-item"; 
+
+    const playerNameElement = document.createElement("span");
+    playerNameElement.style.fontWeight = "bold";
+    playerNameElement.style.color = "var(--primary-color)";
+    playerNameElement.textContent = player;
+
+    const separator = document.createElement("span");
+    separator.textContent = " : ";
+    separator.style.color = "#a0aec0";
+
+    const hintElement = document.createElement("span");
+    hintElement.style.color = "var(--text-color)";
+    hintElement.textContent = text;
+
+    playerElement.appendChild(playerNameElement);
+    playerElement.appendChild(separator);
+    playerElement.appendChild(hintElement);
+
+    gameElements.log.appendChild(playerElement);
+
+    gameElements.log.scrollTop = gameElements.log.scrollHeight;
+  }
+
+  clearLogDisplay(){
+    gameElements.log.textContent = "";
+  }
 }
 
 const uiHandler = new UiHandler();
