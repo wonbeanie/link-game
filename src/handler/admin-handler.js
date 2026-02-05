@@ -1,19 +1,20 @@
 import gameDatabase from "../database/database.js";
 import gameElements from "../modules/game-elements.js";
+import gameStore from "../modules/game-store.js";
 import { TABLE_KEYS } from "../modules/modules.js";
 import gameHandler from "./game-handler.js";
 import uiHandler from "./ui-handler.js";
 
 class AdminHandler {
-  admin = false;
-
   setAdmin() {
     const urlParams = new URLSearchParams(window.location.search);
-    this.admin = Boolean(urlParams.get('admin')) || false;
+    const admin = Boolean(urlParams.get('admin')) || false;
     
-    if(this.admin){
+    if(admin){
       uiHandler.showAdminBtns();
     }
+
+    return admin;
   }
 
   start = async () => {

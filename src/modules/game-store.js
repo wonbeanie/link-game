@@ -12,12 +12,13 @@ class GameStore {
   correct = "";
   state = "";
   lastAnswer = "";
+  admin = false;
 
   constructor(){
     this.nickname = localStorage.getItem('userNickname') || "";
     uiHandler.updateNicknameUI(this.nickname);
 
-    adminHandler.setAdmin();
+    this.admin = adminHandler.setAdmin();
   }
 
   setDefaultGameInfos(newDatabase){

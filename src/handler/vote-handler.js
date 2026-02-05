@@ -2,7 +2,6 @@ import gameDatabase from "../database/database.js";
 import gameStore from "../modules/game-store.js";
 import gameElements from "../modules/game-elements.js";
 import { alert, TABLE_KEYS, timer } from "../modules/modules.js";
-import adminHandler from "./admin-handler.js";
 import gameHandler from "./game-handler.js";
 import uiHandler from "./ui-handler.js";
 
@@ -144,7 +143,7 @@ class VoteHandler {
     });
 
     if(TABLE_KEYS.SELECT_TIMEOUT in snapshot){
-      if(Object.keys(this.playerSelectCheck).length === gameStore.playerList.length && adminHandler.admin){
+      if(Object.keys(this.playerSelectCheck).length === gameStore.playerList.length && gameStore.admin){
         this.calculateResult();
       }
     }
