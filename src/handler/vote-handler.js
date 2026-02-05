@@ -1,5 +1,5 @@
 import gameDatabase from "../database/database.js";
-import gameData from "../modules/game-data.js";
+import gameStore from "../modules/game-store.js";
 import gameElements from "../modules/game-elements.js";
 import { alert, TABLE_KEYS, timer } from "../modules/modules.js";
 import adminHandler from "./admin-handler.js";
@@ -26,8 +26,8 @@ class VoteHandler {
   }
 
   voteStart(){
-    gameData.playerList = gameData.startPlaySequence;
-    uiHandler.updateSuspectVoteOptions(gameData.startPlaySequence);
+    gameStore.playerList = gameStore.startPlaySequence;
+    uiHandler.updateSuspectVoteOptions(gameStore.startPlaySequence);
     uiHandler.showVoteTurnAlert();
     uiHandler.showVoteInputGroup();
     uiHandler.hideHintInputGroup();
@@ -45,7 +45,7 @@ class VoteHandler {
 
   send(){
     let result = {};
-    const {nickname, myVotingKey} = gameData;
+    const {nickname, myVotingKey} = gameStore;
     const {selectTimeout, sendSuspectCheck, playerSelectCheck} = this;
 
     if(!selectTimeout || (!sendSuspectCheck && !playerSelectCheck[nickname])){
@@ -94,7 +94,7 @@ class VoteHandler {
     if(sameList.length > 1){
       result[TABLE_KEYS.RE_SELECT_CULPRIT] = sameList;
 
-      gameData.playerList.forEach((player)=>{
+      gameStore.playerList.forEach((player)=>{
         result[`${TABLE_KEYS.SUSPECT_LIST}-${player}`] = null;
       });
     }
@@ -106,7 +106,7 @@ class VoteHandler {
   }
 
   votesEnd(data){
-    const {suspect, isSuspect} = gameData;
+    const {suspect, isSuspect} = gameStore;
     const failFindSuspect = suspect !== data;
     if(failFindSuspect){
       gameHandler.gameOver();
@@ -119,7 +119,7 @@ class VoteHandler {
 
     if(isSuspect){
       uiHandler.showAnswerTurnAlert();
-      gameData.lastAnswer = data;
+      gameStore.lastAnswer = data;
       uiHandler.hideHintInputGroup();
       uiHandler.showAnswerInputGroup();
       timer.startTimer(this.SUSEPCT_ANSWER_TIME, gameHandler.sendLastAnswer);
@@ -144,7 +144,7 @@ class VoteHandler {
     });
 
     if(TABLE_KEYS.SELECT_TIMEOUT in snapshot){
-      if(Object.keys(this.playerSelectCheck).length === gameData.playerList.length && adminHandler.admin){
+      if(Object.keys(this.playerSelectCheck).length === gameStore.playerList.length && adminHandler.admin){
         this.calculateResult();
       }
     }

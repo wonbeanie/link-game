@@ -1,5 +1,5 @@
 import gameDatabase from "../database/database.js";
-import gameData from "../modules/game-data.js";
+import gameStore from "../modules/game-store.js";
 import gameElements from "../modules/game-elements.js";
 import { correctList } from "../modules/keywords.js";
 import { alert, DATABASE_KEYS, pickRandom, shuffleStrings, TABLE_KEYS, timer } from "../modules/modules.js";
@@ -10,13 +10,13 @@ class GameHandler {
   newDatabase = {};
 
   startGame() {
-    const {category, myCorrect} = gameData;
+    const {category, myCorrect} = gameStore;
     uiHandler.showGameStartAlert(category, myCorrect);
-    gameData.state = "Playing";
+    gameStore.state = "Playing";
   }
 
   sendLastAnswer(){
-    if(gameData.lastAnswer === gameData.nickname){
+    if(gameStore.lastAnswer === gameStore.nickname){
       let result = {};
       result[TABLE_KEYS.LAST_ANSWER] = gameElements.answer.value;
       result[TABLE_KEYS.SELECT_CULPRIT] = "";
@@ -30,7 +30,7 @@ class GameHandler {
     result[nickname] = "Ready";
     gameDatabase.updateData(result);
 
-    gameData.nickname = nickname;
+    gameStore.nickname = nickname;
     uiHandler.updateNicknameInfoUI(nickname);
   }
 
@@ -44,7 +44,7 @@ class GameHandler {
   }
 
   outGameEvent(e){
-    if(gameData.state !== ""){
+    if(gameStore.state !== ""){
       let result = {};
       result[TABLE_KEYS.OUT_GAME] = true;
       gameDatabase.updateData(result);
@@ -60,9 +60,9 @@ class GameHandler {
 
   gameOver(data, findSusepct = false){
     const gameInfo = {
-      correct : gameData.correct,
-      fakeCorrect : gameData.fakeCorrect,
-      suspect : gameData.suspect
+      correct : gameStore.correct,
+      fakeCorrect : gameStore.fakeCorrect,
+      suspect : gameStore.suspect
     }
     uiHandler.showGameOverAlert(gameInfo, data, findSusepct);
 
@@ -92,21 +92,21 @@ class GameHandler {
 
     const shuffleList = shuffleStrings(list);
 
-    gameData.suspect = pickRandom(shuffleList);
-    gameData.category = keywords.category;
-    gameData.correct = keywords.correct;
-    gameData.fakeCorrect = keywords.fakeCorrect;
+    gameStore.suspect = pickRandom(shuffleList);
+    gameStore.category = keywords.category;
+    gameStore.correct = keywords.correct;
+    gameStore.fakeCorrect = keywords.fakeCorrect;
 
-    const {category, myCorrect} = gameData;
+    const {category, myCorrect} = gameStore;
     uiHandler.updateGameInfoUI(category, myCorrect);
 
     let result = {};
 
     result[TABLE_KEYS.SEQUENCE] = shuffleList;
-    result[TABLE_KEYS.SUSPECT] = gameData.suspect;
-    result[TABLE_KEYS.CATEGORY] = gameData.category;
-    result[TABLE_KEYS.CORRECT] = gameData.correct;
-    result[TABLE_KEYS.FAKE_CORRECT] = gameData.fakeCorrect;
+    result[TABLE_KEYS.SUSPECT] = gameStore.suspect;
+    result[TABLE_KEYS.CATEGORY] = gameStore.category;
+    result[TABLE_KEYS.CORRECT] = gameStore.correct;
+    result[TABLE_KEYS.FAKE_CORRECT] = gameStore.fakeCorrect;
 
     return result;
   }

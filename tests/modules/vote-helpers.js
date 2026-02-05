@@ -86,12 +86,12 @@ async function voteTestFlow(voteSetting){
 }
 
 async function doneVoteInit({votingList, suspect}){
-  const gameDataModule = await import('../../src/modules/game-data.js');
-  const gameData = gameDataModule.default;
+  const gameStoreModule = await import('../../src/modules/game-store.js');
+  const gameStore = gameStoreModule.default;
 
-  gameData.suspect = suspect;
-  gameData.correct = MOCK_CORRECT;
-  gameData.fakeCorrect = MOCK_FAKE_CORRECT;
+  gameStore.suspect = suspect;
+  gameStore.correct = MOCK_CORRECT;
+  gameStore.fakeCorrect = MOCK_FAKE_CORRECT;
 
   let result = {};
   result[TABLE_KEYS.SEQUENCE] = null;

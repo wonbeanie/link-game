@@ -1,12 +1,10 @@
-import gameData from "../modules/game-data.js";
+import gameStore from "../modules/game-store.js";
 import gameDatabase from "../database/database.js";
 import { DATABASE_KEYS, TABLE_KEYS } from "../modules/modules.js";
 import uiHandler from "./ui-handler.js";
 import gameElements from "../modules/game-elements.js";
 
 class ChatHandler {
-  chatInput = null;
-  chatSend = null;
   startChat = false;
   chatHistory = [];
 
@@ -54,7 +52,7 @@ class ChatHandler {
       }
 
       this.chatHistory.push({
-        nickname : gameData.nickname,
+        nickname : gameStore.nickname,
         message : msg
       });
 

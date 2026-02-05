@@ -1,9 +1,8 @@
 import adminHandler from "../handler/admin-handler.js";
 import uiHandler from "../handler/ui-handler.js";
-import gameElements from "./game-elements.js";
 import { TABLE_KEYS } from "./modules.js";
 
-class GameData {
+class GameStore {
   playerList = [];
   playSequence = [];
   startPlaySequence = [];
@@ -56,6 +55,6 @@ class GameData {
   }
 }
 
-const gameData = new GameData;
+const gameStore = new GameStore;
 
-export default gameData;
+export default gameStore;

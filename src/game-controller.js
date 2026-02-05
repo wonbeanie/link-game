@@ -1,6 +1,6 @@
 import gameDatabase from "./database/database.js";
 import { adminHandler, chatHandler, gameHandler, hintHandler, messageHandler, voteHandler } from "./handler/index.js";
-import gameData from "./modules/game-data.js";
+import gameStore from "./modules/game-store.js";
 import gameElements from "./modules/game-elements.js";
 import { DATABASE_KEYS, SEQUENCE_END, TABLE_KEYS } from "./modules/modules.js";
 
@@ -67,9 +67,9 @@ class GameController {
   }
 
   activateGameStart(newData){
-    gameData.setDefaultGameInfos(newData);
+    gameStore.setDefaultGameInfos(newData);
     chatHandler.chatStart();
-    gameData.state = TABLE_KEYS.START;
+    gameStore.state = TABLE_KEYS.START;
     gameHandler.reloadEvent();
 
     const result = {};
@@ -85,7 +85,7 @@ class GameController {
 
     hintHandler.turnProcessor(data);
 
-    if(gameData.state === TABLE_KEYS.START){
+    if(gameStore.state === TABLE_KEYS.START){
       gameHandler.startGame();
     }
   }

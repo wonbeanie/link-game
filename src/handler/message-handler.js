@@ -1,4 +1,4 @@
-import gameData from "../modules/game-data.js";
+import gameStore from "../modules/game-store.js";
 import { TABLE_KEYS } from "../modules/modules.js";
 import chatHandler from "./chat-handler.js";
 import uiHandler from "./ui-handler.js";
@@ -8,7 +8,7 @@ class MessageHandler {
   playerHints = [];
 
   votingLog(){
-    if(gameData.state !== ""){
+    if(gameStore.state !== ""){
       uiHandler.addLogDisplay(`투표`, '---------------');
     }
 
@@ -18,11 +18,11 @@ class MessageHandler {
   }
 
   hintLog(){
-    if(gameData.state !== ""){
+    if(gameStore.state !== ""){
       uiHandler.addLogDisplay(`힌트`, '---------------');
     }
 
-    gameData.startPlaySequence.forEach((player)=>{
+    gameStore.startPlaySequence.forEach((player)=>{
       if(!this.playerHints[player]){
         return;
       }
@@ -36,11 +36,11 @@ class MessageHandler {
     
     let votingList = {};
     let playerHints = {};
-    const { startPlaySequence } = gameData;
+    const { startPlaySequence } = gameStore;
     const startPlaySequenceString = startPlaySequence.join(",");
 
     Object.entries(newData).forEach(([key, value]) => {
-      if(startPlaySequenceString.includes(key) || gameData.state === ""){
+      if(startPlaySequenceString.includes(key) || gameStore.state === ""){
         playerHints[key] = value;
 
         if(startPlaySequence.length === 0){
