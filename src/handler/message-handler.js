@@ -1,6 +1,5 @@
 import gameStore from "../modules/game-store.js";
 import { TABLE_KEYS } from "../modules/modules.js";
-import chatHandler from "./chat-handler.js";
 import uiHandler from "./ui-handler.js";
 
 class MessageHandler {
@@ -55,7 +54,7 @@ class MessageHandler {
       }
 
       if(key.includes(TABLE_KEYS.CHAT_HISTORY)){
-        chatHandler.chatHistory = value;
+        gameStore.chatHistory = value;
         return;
       }
     });

@@ -13,6 +13,7 @@ class GameStore {
   state = "";
   lastAnswer = "";
   admin = false;
+  chatHistory = [];
 
   constructor(){
     this.nickname = localStorage.getItem('userNickname') || "";

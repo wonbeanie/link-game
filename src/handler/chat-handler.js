@@ -6,7 +6,6 @@ import gameElements from "../modules/game-elements.js";
 
 class ChatHandler {
   startChat = false;
-  chatHistory = [];
 
   addChatMessage(nickname, message) {
     if(!this.startChat){
@@ -47,25 +46,25 @@ class ChatHandler {
     if (msg) {
       let result = {};
 
-      if(this.chatHistory.length >= 30){
-        this.chatHistory.shift();
+      if(gameStore.chatHistory.length >= 30){
+        gameStore.chatHistory.shift();
       }
 
-      this.chatHistory.push({
+      gameStore.chatHistory.push({
         nickname : gameStore.nickname,
         message : msg
       });
 
-      result[TABLE_KEYS.CHAT_HISTORY] = this.chatHistory;
+      result[TABLE_KEYS.CHAT_HISTORY] = gameStore.chatHistory;
 
       gameDatabase.updateData(result, DATABASE_KEYS.CHAT_DATA_KEY);
     }
   }
 
   settingChatHistory(newChatData){
-    this.chatHistory = newChatData[TABLE_KEYS.CHAT_HISTORY];
+    gameStore.chatHistory = newChatData[TABLE_KEYS.CHAT_HISTORY];
     this.chatClear();
-    this.chatHistory.forEach((chat)=>{
+    gameStore.chatHistory.forEach((chat)=>{
       this.addChatMessage(chat.nickname, chat.message);
     });
   }
