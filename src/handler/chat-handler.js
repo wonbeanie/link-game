@@ -1,6 +1,6 @@
 import gameStore from "../modules/game-store.js";
 import gameDatabase from "../database/database.js";
-import { DATABASE_KEYS, TABLE_KEYS } from "../modules/modules.js";
+import { DATABASE_KEYS, deepCopy, TABLE_KEYS } from "../modules/modules.js";
 import uiHandler from "./ui-handler.js";
 import gameElements from "../modules/game-elements.js";
 
@@ -45,26 +45,29 @@ class ChatHandler {
   onSendClick = (msg) => {
     if (msg) {
       let result = {};
+      const MAX_CHAT_LENGTH = 30;
+      const newChatHistory = gameStore.chatHistory.length >= MAX_CHAT_LENGTH
+                       ? gameStore.chatHistory.slice(1)
+                       : deepCopy(gameStore.chatHistory);
 
-      if(gameStore.chatHistory.length >= 30){
-        gameStore.chatHistory.shift();
-      }
-
-      gameStore.chatHistory.push({
+      newChatHistory.push({
         nickname : gameStore.nickname,
         message : msg
       });
 
-      result[TABLE_KEYS.CHAT_HISTORY] = gameStore.chatHistory;
+      gameStore.chatHistory = newChatHistory;
+
+      result[TABLE_KEYS.CHAT_HISTORY] = newChatHistory;
 
       gameDatabase.updateData(result, DATABASE_KEYS.CHAT_DATA_KEY);
     }
   }
 
   settingChatHistory(newChatData){
-    gameStore.chatHistory = newChatData[TABLE_KEYS.CHAT_HISTORY];
+    const newChatHistory = newChatData[TABLE_KEYS.CHAT_HISTORY];
+    gameStore.chatHistory = newChatHistory;
     this.chatClear();
-    gameStore.chatHistory.forEach((chat)=>{
+    newChatHistory.forEach((chat)=>{
       this.addChatMessage(chat.nickname, chat.message);
     });
   }
