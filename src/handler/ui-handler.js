@@ -1,5 +1,5 @@
 import gameElements from "../modules/game-elements.js";
-import { alert } from "../modules/modules.js";
+import { alert, deepCopy } from "../modules/modules.js";
 
 class UiHandler {
   showGameStartAlert(category, correct){
@@ -112,7 +112,7 @@ class UiHandler {
   updateSuspectVoteOptions(voteList){
     gameElements.vote.allClearChildren();
     
-    JSON.parse(JSON.stringify(voteList)).sort().forEach((player)=>{
+    deepCopy(voteList).sort().forEach((player)=>{
       const optionElement = document.createElement("option");
       optionElement.value = player;
       optionElement.textContent = player;

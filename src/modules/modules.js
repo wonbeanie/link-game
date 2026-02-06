@@ -139,6 +139,10 @@ export const timer = (function Timer(){
   }
 })();
 
+export function deepCopy(obj){
+  return JSON.parse(JSON.stringify(obj));
+}
+
 export const TABLE_KEYS = Object.freeze({
   CATEGORY : "Category",
   CORRECT : "Correct",
