@@ -1,7 +1,7 @@
 import gameDatabase from "../database/database.js";
 import gameStore from "../modules/game-store.js";
 import gameElements from "../modules/game-elements.js";
-import { alert, SEQUENCE_END, TABLE_KEYS, timer } from "../modules/modules.js";
+import { SEQUENCE_END, TABLE_KEYS, timer } from "../modules/modules.js";
 import uiHandler from "./ui-handler.js";
 
 class HintHandler {
@@ -15,20 +15,21 @@ class HintHandler {
 
     if(gameStore.myTurn){
       timer.stopTimer();
-      let result = {};
+      const newSequence = playSequence.length !== 1
+                        ? playSequence.slice(1, playSequence.length)
+                        : SEQUENCE_END;
 
-      if(playSequence.length !== 1){
-        result[TABLE_KEYS.SEQUENCE] = playSequence.slice(1, playSequence.length);
-      }
-      else {
-        result[TABLE_KEYS.SEQUENCE] = SEQUENCE_END;
+      if(newSequence === SEQUENCE_END){
         uiHandler.hideHintInputGroup();
       }
 
-      result[nickname] = gameElements.hint.value;
+      const newDatabase = {
+        [TABLE_KEYS.SEQUENCE] : newSequence,
+        [nickname] : gameElements.hint.value
+      }
 
       uiHandler.hideHintInputGroup();
-      gameDatabase.updateData(result);
+      gameDatabase.updateData(newDatabase);
     }
   }
 

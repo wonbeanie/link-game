@@ -44,7 +44,6 @@ class ChatHandler {
 
   onSendClick = (msg) => {
     if (msg) {
-      let result = {};
       const MAX_CHAT_LENGTH = 30;
       const newChatHistory = gameStore.chatHistory.length >= MAX_CHAT_LENGTH
                        ? gameStore.chatHistory.slice(1)
@@ -57,9 +56,11 @@ class ChatHandler {
 
       gameStore.chatHistory = newChatHistory;
 
-      result[TABLE_KEYS.CHAT_HISTORY] = newChatHistory;
+      const newDatabase = {
+        [TABLE_KEYS.CHAT_HISTORY] : newChatHistory
+      };
 
-      gameDatabase.updateData(result, DATABASE_KEYS.CHAT_DATA_KEY);
+      gameDatabase.updateData(newDatabase, DATABASE_KEYS.CHAT_DATA_KEY);
     }
   }
 

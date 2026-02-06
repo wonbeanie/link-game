@@ -17,18 +17,20 @@ class GameHandler {
 
   sendLastAnswer(){
     if(gameStore.lastAnswer === gameStore.nickname){
-      let result = {};
-      result[TABLE_KEYS.LAST_ANSWER] = gameElements.answer.value;
-      result[TABLE_KEYS.SELECT_CULPRIT] = "";
-      gameDatabase.updateData(result);
+      const newDatabase = {
+        [TABLE_KEYS.SELECT_CULPRIT] : "",
+        [TABLE_KEYS.LAST_ANSWER] : gameElements.answer.value
+      };
+      gameDatabase.updateData(newDatabase);
     }
   }
 
   sendNickname(){
     const nickname = gameElements.nickname.value;
-    let result = {};
-    result[nickname] = "Ready";
-    gameDatabase.updateData(result);
+    const newDatabase = {
+      [nickname] : "Ready"
+    };
+    gameDatabase.updateData(newDatabase);
 
     gameStore.nickname = nickname;
     uiHandler.updateNicknameInfoUI(nickname);
@@ -45,9 +47,10 @@ class GameHandler {
 
   outGameEvent(e){
     if(gameStore.state !== ""){
-      let result = {};
-      result[TABLE_KEYS.OUT_GAME] = true;
-      gameDatabase.updateData(result);
+      const newDatabase = {
+        [TABLE_KEYS.OUT_GAME] : true
+      };
+      gameDatabase.updateData(newDatabase);
     }
   }
 
@@ -91,20 +94,20 @@ class GameHandler {
     const keywords = this.generateKeywords();
     const shuffleList = shuffleStrings(list);
 
-    let result = {};
+    const newDatabase = {
+      [TABLE_KEYS.SEQUENCE] : shuffleList,
+      [TABLE_KEYS.SUSPECT] : pickRandom(shuffleList),
+      [TABLE_KEYS.CATEGORY] : keywords.category,
+      [TABLE_KEYS.CORRECT] : keywords.correct,
+      [TABLE_KEYS.FAKE_CORRECT] : keywords.fakeCorrect
+    };
 
-    result[TABLE_KEYS.SEQUENCE] = shuffleList;
-    result[TABLE_KEYS.SUSPECT] = pickRandom(shuffleList);
-    result[TABLE_KEYS.CATEGORY] = keywords.category;
-    result[TABLE_KEYS.CORRECT] = keywords.correct;
-    result[TABLE_KEYS.FAKE_CORRECT] = keywords.fakeCorrect;
-
-    gameStore.setDefaultGameInfos(result);
+    gameStore.setDefaultGameInfos(newDatabase);
 
     const {category, myCorrect} = gameStore;
     uiHandler.updateGameInfoUI(category, myCorrect);
 
-    return result;
+    return newDatabase;
   }
 
   generateKeywords = () => {

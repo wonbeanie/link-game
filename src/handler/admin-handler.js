@@ -1,6 +1,4 @@
 import gameDatabase from "../database/database.js";
-import gameElements from "../modules/game-elements.js";
-import gameStore from "../modules/game-store.js";
 import { TABLE_KEYS } from "../modules/modules.js";
 import gameHandler from "./game-handler.js";
 import uiHandler from "./ui-handler.js";
@@ -22,15 +20,12 @@ class AdminHandler {
 
     gameDatabase.clearDatabase();
 
-    let result = {};
-    
-    result[TABLE_KEYS.START] = `Start Game${new Date().getTime()}`
-    result = {
-      ...result,
-      ...defaultData
+    const newDatabase = {
+      ...defaultData,
+      [TABLE_KEYS.START] : `Start Game(${new Date().getTime()})`
     };
 
-    gameDatabase.updateData(result);
+    gameDatabase.updateData(newDatabase);
   }
 
   clear = () => {

@@ -1,7 +1,7 @@
 import gameDatabase from "../database/database.js";
 import gameStore from "../modules/game-store.js";
 import gameElements from "../modules/game-elements.js";
-import { alert, TABLE_KEYS, timer } from "../modules/modules.js";
+import { TABLE_KEYS, timer } from "../modules/modules.js";
 import gameHandler from "./game-handler.js";
 import uiHandler from "./ui-handler.js";
 
@@ -34,29 +34,33 @@ class VoteHandler {
   }
 
   getVoteTransitionData(){
-    let result = {};
-    result[TABLE_KEYS.RE_SELECT_CULPRIT] = null;
-    result[TABLE_KEYS.SEQUENCE] = null;
-    result[TABLE_KEYS.SELECT_TIMEOUT] = null;
+    const newDatabase = {
+      [TABLE_KEYS.RE_SELECT_CULPRIT] : null,
+      [TABLE_KEYS.SEQUENCE] : null,
+      [TABLE_KEYS.SELECT_TIMEOUT] : null
+    };
 
-    gameDatabase.updateData(result);
+    gameDatabase.updateData(newDatabase);
   }
 
   send(){
-    let result = {};
     const {nickname, myVotingKey} = gameStore;
     const {selectTimeout, sendSuspectCheck, playerSelectCheck} = this;
 
-    if(!selectTimeout || (!sendSuspectCheck && !playerSelectCheck[nickname])){
-      result[myVotingKey] = gameElements.vote.value;
-      this.sendSuspectCheck = true;
+    const isPossibleVote = !selectTimeout || (!sendSuspectCheck && !playerSelectCheck[nickname]);
+
+    const newDatabase = {
+      ...(isPossibleVote && { [myVotingKey] : gameElements.vote.value }),
+      ...(selectTimeout && { [TABLE_KEYS.SELECT_TIMEOUT] : true }),
     }
 
-    if(selectTimeout){
-      result[TABLE_KEYS.SELECT_TIMEOUT] = true;
-    }
+    if(Object.keys(newDatabase).length > 0){
+      gameDatabase.updateData(newDatabase);
 
-    gameDatabase.updateData(result);
+      if(isPossibleVote){
+        this.sendSuspectCheck = true;
+      }
+    }
   }
 
   calculateResult = () => {
@@ -88,20 +92,22 @@ class VoteHandler {
       }
     }
 
-    let result = {};
-
-    if(sameList.length > 1){
-      result[TABLE_KEYS.RE_SELECT_CULPRIT] = sameList;
-
-      gameStore.playerList.forEach((player)=>{
-        result[`${TABLE_KEYS.SUSPECT_LIST}-${player}`] = null;
-      });
+    const isReVote = sameList.length > 1;
+    const resetVoteData = isReVote ? {
+      [TABLE_KEYS.RE_SELECT_CULPRIT] : sameList,
+      ...Object.fromEntries(
+        gameStore.playerList.map(player => [
+          [`${TABLE_KEYS.SUSPECT_LIST}-${player}`], null
+        ])
+      )
     }
-    else {
-      result[TABLE_KEYS.SELECT_CULPRIT] = maxSuspect.suspect;
-    }
+    : {};
+                            
+    const newDatabase = isReVote
+      ? resetVoteData
+      : { [TABLE_KEYS.SELECT_CULPRIT] : maxSuspect.suspect }
 
-    gameDatabase.updateData(result);
+    gameDatabase.updateData(newDatabase);
   }
 
   votesEnd(data){
