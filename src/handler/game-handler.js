@@ -89,24 +89,20 @@ class GameHandler {
     });
 
     const keywords = this.generateKeywords();
-
     const shuffleList = shuffleStrings(list);
-
-    gameStore.suspect = pickRandom(shuffleList);
-    gameStore.category = keywords.category;
-    gameStore.correct = keywords.correct;
-    gameStore.fakeCorrect = keywords.fakeCorrect;
-
-    const {category, myCorrect} = gameStore;
-    uiHandler.updateGameInfoUI(category, myCorrect);
 
     let result = {};
 
     result[TABLE_KEYS.SEQUENCE] = shuffleList;
-    result[TABLE_KEYS.SUSPECT] = gameStore.suspect;
-    result[TABLE_KEYS.CATEGORY] = gameStore.category;
-    result[TABLE_KEYS.CORRECT] = gameStore.correct;
-    result[TABLE_KEYS.FAKE_CORRECT] = gameStore.fakeCorrect;
+    result[TABLE_KEYS.SUSPECT] = pickRandom(shuffleList);
+    result[TABLE_KEYS.CATEGORY] = keywords.category;
+    result[TABLE_KEYS.CORRECT] = keywords.correct;
+    result[TABLE_KEYS.FAKE_CORRECT] = keywords.fakeCorrect;
+
+    gameStore.setDefaultGameInfos(result);
+
+    const {category, myCorrect} = gameStore;
+    uiHandler.updateGameInfoUI(category, myCorrect);
 
     return result;
   }
