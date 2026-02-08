@@ -1,3 +1,5 @@
+import eventBus from "../modules/event-bus.js";
+import { GameEvents } from "../modules/events.js";
 import gameStore from "../modules/game-store.js";
 import { TABLE_KEYS } from "../modules/modules.js";
 import uiHandler from "./ui-handler.js";
@@ -5,6 +7,11 @@ import uiHandler from "./ui-handler.js";
 class MessageHandler {
   votingList = [];
   playerHints = [];
+
+  constructor(){
+    eventBus.on(GameEvents.ADD_LOG, (message)=>this.setMessages(message));
+    eventBus.on(GameEvents.DRAW_LOG, ()=>this.logView());
+  }
 
   votingLog(){
     if(gameStore.state !== ""){

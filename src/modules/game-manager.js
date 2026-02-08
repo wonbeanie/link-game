@@ -26,8 +26,8 @@ class GameManager {
 
     this.dispatchGameUpdate();
 
-    messageHandler.setMessages(newData);
-    messageHandler.logView();
+    eventBus.emit(GameEvents.ADD_LOG, newData);
+    eventBus.emit(GameEvents.DRAW_LOG);
   }
 
   dispatchGameUpdate(){
