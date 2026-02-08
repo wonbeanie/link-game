@@ -1,7 +1,7 @@
-import gameDatabase from "../database/database";
-import { chatHandler, uiHandler } from "../handler";
-import gameStore from "../modules/game-store";
-import { alert, TABLE_KEYS, timer } from "../modules/modules";
+import gameDatabase from "../database/database.js";
+import { chatHandler, uiHandler } from "../handler/index.js";
+import gameStore from "../modules/game-store.js";
+import { alert, TABLE_KEYS, timer } from "../modules/modules.js";
 import eventBus from "../modules/event-bus.js";
 import {GameEvents} from "../modules/events.js";
 
