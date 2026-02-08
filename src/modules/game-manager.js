@@ -1,5 +1,6 @@
 import gameDatabase from "../database/database.js";
-import { chatHandler, gameHandler, hintHandler, messageHandler, voteHandler } from "../handler/index.js";
+import { chatHandler, hintHandler, messageHandler, voteHandler } from "../handler/index.js";
+import gameStateManager from "../service/game-state-manager.js";
 import gameStore from "./game-store.js";
 import { SEQUENCE_END, TABLE_KEYS } from "./modules.js";
 
@@ -10,12 +11,12 @@ class GameManager {
     this.newDatabase = newData;
 
     if(this.isLastAnswerTurn){
-      gameHandler.gameOver(newData[TABLE_KEYS.LAST_ANSWER], true);
+      gameStateManager.gameOver(newData[TABLE_KEYS.LAST_ANSWER], true);
       return;
     }
 
     if(this.isPlayerOut){
-      gameHandler.outGame();
+      gameStateManager.outGame();
       return;
     }
 
@@ -55,7 +56,7 @@ class GameManager {
     gameStore.setDefaultGameInfos(this.newDatabase);
     chatHandler.chatStart();
     gameStore.state = TABLE_KEYS.START;
-    gameHandler.reloadEvent();
+    gameStateManager.reloadEvent();
 
     const result = {};
     result[TABLE_KEYS.START] = null;
@@ -72,7 +73,7 @@ class GameManager {
     hintHandler.turnProcessor(sequenceData);
 
     if(gameStore.state === TABLE_KEYS.START){
-      gameHandler.startGame();
+      gameStateManager.startGame();
     }
   }
 
