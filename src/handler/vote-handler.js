@@ -4,7 +4,8 @@ import gameElements from "../modules/game-elements.js";
 import { TABLE_KEYS, timer } from "../modules/modules.js";
 import gameHandler from "./game-handler.js";
 import uiHandler from "./ui-handler.js";
-import gameStateManager from "../service/game-state-manager.js";
+import eventBus from "../modules/event-bus.js";
+import { GameEvents } from "../modules/events.js";
 
 class VoteHandler {
   playerSelectCheck = {};
@@ -115,7 +116,7 @@ class VoteHandler {
     const {suspect, isSuspect} = gameStore;
     const failFindSuspect = suspect !== data;
     if(failFindSuspect){
-      gameStateManager.gameOver();
+      eventBus.emit(GameEvents.GAME_OVER);
       return;
     }
 

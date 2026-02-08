@@ -2,8 +2,17 @@ import gameDatabase from "../database/database";
 import { chatHandler, uiHandler } from "../handler";
 import gameStore from "../modules/game-store";
 import { alert, TABLE_KEYS, timer } from "../modules/modules";
+import eventBus from "../modules/event-bus.js";
+import {GameEvents} from "../modules/events.js";
 
 class GameStateManager {
+  constructor(){
+    eventBus.on(GameEvents.GAME_OVER, ({data, findSuspect} = {}) => this.gameOver(data, findSuspect));
+    eventBus.on(GameEvents.CHANGE_START, () => this.startGame());
+    eventBus.on(GameEvents.RELOAD_EVENT, () => this.reloadEvent());
+    eventBus.on(GameEvents.PLAYER_OUT, () => this.outGame());
+  }
+
   startGame() {
     const {category, myCorrect} = gameStore;
     uiHandler.showGameStartAlert(category, myCorrect);

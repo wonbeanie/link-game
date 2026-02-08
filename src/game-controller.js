@@ -3,6 +3,7 @@ import gameManager from "./modules/game-manager.js";
 import { adminHandler, chatHandler, gameHandler, hintHandler, voteHandler } from "./handler/index.js";
 import gameElements from "./modules/game-elements.js";
 import { DATABASE_KEYS } from "./modules/modules.js";
+import "./service/game-state-manager.js";
 
 class GameController {
   init(){
