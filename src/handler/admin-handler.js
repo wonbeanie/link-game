@@ -1,6 +1,6 @@
 import gameDatabase from "../database/database.js";
 import { TABLE_KEYS } from "../modules/modules.js";
-import gameHandler from "./game-handler.js";
+import gameSetupService from "../service/game-setup-service.js";
 import uiHandler from "./ui-handler.js";
 
 class AdminHandler {
@@ -16,7 +16,7 @@ class AdminHandler {
   }
 
   start = async () => {
-    const defaultData = await gameHandler.createDefaultData();
+    const defaultData = await gameSetupService.createDefaultData();
 
     gameDatabase.clearDatabase();
 
