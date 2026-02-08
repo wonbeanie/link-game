@@ -1,13 +1,15 @@
 import gameDatabase from "../database/database.js";
 import gameStore from "../modules/game-store.js";
 import gameElements from "../modules/game-elements.js";
-import { SEQUENCE_END, TABLE_KEYS, timer } from "../modules/modules.js";
+import { GAME_STATE, SEQUENCE_END, TABLE_KEYS, timer } from "../modules/modules.js";
 import uiHandler from "./ui-handler.js";
+import eventBus from "../modules/event-bus.js";
+import { GameEvents } from "../modules/events.js";
 
 class HintHandler {
   initHintTurn(data){
     uiHandler.hideNicknameInputGroup();
-    gameStore.startPlaySequence = data;
+    eventBus.emit(GameEvents.SET_PLAYER_LIST, data);
   }
 
   send(){
@@ -41,7 +43,7 @@ class HintHandler {
       this.initHintTurn(data);
     }
 
-    gameStore.playSequence = data;
+    eventBus.emit(GameEvents.SET_PLAY_SEQUENCE, data);
     uiHandler.updateGameInfoUI(category, myCorrect);
 
     uiHandler.updateTurnStateUI(data[0]);
@@ -49,7 +51,7 @@ class HintHandler {
     if(gameStore.myTurn){
       timer.startTimer(30, this.send);
       uiHandler.showMyTurnAlert(category, myCorrect);
-      gameStore.state = "Playing";
+      eventBus.emit(GameEvents.STATE_UPDATE, GAME_STATE.PLAYING);
       uiHandler.showHintInputGroup();
       return;
     }

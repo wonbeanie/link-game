@@ -1,8 +1,8 @@
 import gameDatabase from "../database/database.js";
-import gameStore from "../modules/game-store.js";
 import { correctList } from "../modules/keywords.js";
 import { DATABASE_KEYS, pickRandom, shuffleStrings, TABLE_KEYS } from "../modules/modules.js";
-import {uiHandler} from "../handler/index.js";
+import eventBus from "../modules/event-bus.js";
+import { GameEvents } from "../modules/events.js";
 
 class GameSetupService {
   createDefaultData = async () => {
@@ -33,10 +33,7 @@ class GameSetupService {
       [TABLE_KEYS.FAKE_CORRECT] : keywords.fakeCorrect
     };
 
-    gameStore.setDefaultGameInfos(newDatabase);
-
-    const {category, myCorrect} = gameStore;
-    uiHandler.updateGameInfoUI(category, myCorrect);
+    eventBus.emit(GameEvents.GAME_INFOS_UPDATE, newDatabase);
 
     return newDatabase;
   }

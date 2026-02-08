@@ -3,11 +3,12 @@ import gameStore from "../modules/game-store.js";
 import gameElements from "../modules/game-elements.js";
 import { TABLE_KEYS } from "../modules/modules.js";
 import uiHandler from "./ui-handler.js";
+import eventBus from "../modules/event-bus.js";
+import { GameEvents } from "../modules/events.js";
 
 class GameHandler {
-
   sendLastAnswer(){
-    if(gameStore.lastAnswer === gameStore.nickname){
+    if(gameStore.isLastAnswerTurn){
       const newDatabase = {
         [TABLE_KEYS.SELECT_CULPRIT] : "",
         [TABLE_KEYS.LAST_ANSWER] : gameElements.answer.value
@@ -23,7 +24,7 @@ class GameHandler {
     };
     gameDatabase.updateData(newDatabase);
 
-    gameStore.nickname = nickname;
+    eventBus.emit(GameEvents.REQUEST_CHANGE_NICKNAME, nickname);
     uiHandler.updateNicknameInfoUI(nickname);
   }
 }

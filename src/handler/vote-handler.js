@@ -34,7 +34,6 @@ class VoteHandler {
   }
 
   voteStart(){
-    gameStore.playerList = gameStore.startPlaySequence;
     uiHandler.updateSuspectVoteOptions(gameStore.startPlaySequence);
     uiHandler.showVoteTurnAlert();
     uiHandler.showVoteInputGroup();
@@ -133,7 +132,7 @@ class VoteHandler {
 
     if(isSuspect){
       uiHandler.showAnswerTurnAlert();
-      gameStore.lastAnswer = selectedSuspect;
+      eventBus.emit(GameEvents.SET_LAST_ANSWER, selectedSuspect);
       uiHandler.hideHintInputGroup();
       uiHandler.showAnswerInputGroup();
       timer.startTimer(this.SUSEPCT_ANSWER_TIME, gameHandler.sendLastAnswer);

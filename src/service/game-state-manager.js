@@ -1,7 +1,7 @@
 import gameDatabase from "../database/database.js";
 import { chatHandler, uiHandler } from "../handler/index.js";
 import gameStore from "../modules/game-store.js";
-import { alert, TABLE_KEYS, timer } from "../modules/modules.js";
+import { alert, GAME_STATE, TABLE_KEYS, timer } from "../modules/modules.js";
 import eventBus from "../modules/event-bus.js";
 import {GameEvents} from "../modules/events.js";
 
@@ -16,7 +16,8 @@ class GameStateManager {
   startGame() {
     const {category, myCorrect} = gameStore;
     uiHandler.showGameStartAlert(category, myCorrect);
-    gameStore.state = "Playing";
+
+    eventBus.emit(GameEvents.SET_STATE, GAME_STATE.PLAYING);
   }
 
   reloadEvent(){

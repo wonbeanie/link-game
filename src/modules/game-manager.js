@@ -55,9 +55,8 @@ class GameManager {
   }
 
   activateGameStart(){
-    gameStore.setDefaultGameInfos(this.newDatabase);
+    eventBus.emit(GameEvents.GAME_INFOS_UPDATE, this.newDatabase);
     chatHandler.chatStart();
-    gameStore.state = TABLE_KEYS.START;
     eventBus.emit(GameEvents.RELOAD_EVENT);
 
     const result = {};

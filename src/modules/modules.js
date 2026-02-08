@@ -166,3 +166,9 @@ export const DATABASE_KEYS = Object.freeze({
 })
 
 export const SEQUENCE_END = "END";
+
+export const GAME_STATE = {
+  START : "Start",
+  PLAYING : "Playing",
+  END : "End"
+}

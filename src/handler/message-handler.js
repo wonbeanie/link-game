@@ -61,7 +61,7 @@ class MessageHandler {
       }
 
       if(key.includes(TABLE_KEYS.CHAT_HISTORY)){
-        gameStore.chatHistory = value;
+        eventBus.emit(GameEvents.SET_CHAT_HISTORY, value);
         return;
       }
     });

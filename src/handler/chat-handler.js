@@ -3,6 +3,8 @@ import gameDatabase from "../database/database.js";
 import { DATABASE_KEYS, deepCopy, TABLE_KEYS } from "../modules/modules.js";
 import uiHandler from "./ui-handler.js";
 import gameElements from "../modules/game-elements.js";
+import eventBus from "../modules/event-bus.js";
+import { GameEvents } from "../modules/events.js";
 
 class ChatHandler {
   startChat = false;
@@ -54,7 +56,7 @@ class ChatHandler {
         message : msg
       });
 
-      gameStore.chatHistory = newChatHistory;
+      eventBus.emit(GameEvents.SET_CHAT_HISTORY, newChatHistory);
 
       const newDatabase = {
         [TABLE_KEYS.CHAT_HISTORY] : newChatHistory
@@ -66,7 +68,7 @@ class ChatHandler {
 
   settingChatHistory(newChatData){
     const newChatHistory = newChatData[TABLE_KEYS.CHAT_HISTORY];
-    gameStore.chatHistory = newChatHistory;
+    eventBus.emit(GameEvents.SET_CHAT_HISTORY, newChatHistory);
     this.chatClear();
     newChatHistory.forEach((chat)=>{
       this.addChatMessage(chat.nickname, chat.message);
