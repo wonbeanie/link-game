@@ -1,5 +1,5 @@
 import gameDatabase from "../database/database.js";
-import { chatHandler, hintHandler, messageHandler, voteHandler } from "../handler/index.js";
+import { chatHandler, hintHandler } from "../handler/index.js";
 import eventBus from "./event-bus.js";
 import { GameEvents } from "./events.js";
 import gameStore from "./game-store.js";
@@ -31,8 +31,6 @@ class GameManager {
   }
 
   dispatchGameUpdate(){
-    voteHandler.playerSelectCheck = [];
-
     if(this.isInitSetting){
       this.activateGameStart();
       return;
@@ -44,16 +42,16 @@ class GameManager {
     }
 
     if(this.isVoteEnd){
-      voteHandler.votesEnd(this.newDatabase[TABLE_KEYS.SELECT_CULPRIT]);
+      eventBus.emit(GameEvents.VOTE_END, this.newDatabase[TABLE_KEYS.SELECT_CULPRIT]);
       return;
     }
 
     if(this.isTieOfVotes){
-      voteHandler.tieOfVotes(this.newDatabase[TABLE_KEYS.RE_SELECT_CULPRIT]);
+      eventBus.emit(GameEvents.TIE_OF_VOTES, this.newDatabase[TABLE_KEYS.RE_SELECT_CULPRIT]);
       return;
     }
 
-    voteHandler.votes(this.newDatabase);
+    eventBus.emit(GameEvents.VOTE_UPDATE, this.newDatabase);
   }
 
   activateGameStart(){
@@ -70,7 +68,7 @@ class GameManager {
   routeGameFlow(){
     const sequenceData = this.newDatabase[TABLE_KEYS.SEQUENCE];
     if(sequenceData === SEQUENCE_END){
-      voteHandler.voteStart();
+      eventBus.emit(GameEvents.VOTE_START);
       return;
     }
 

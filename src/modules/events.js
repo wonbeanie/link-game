@@ -6,4 +6,9 @@ export const GameEvents = {
 
   ADD_LOG : "log:add",
   DRAW_LOG : "log:draw",
+
+  VOTE_START : "vote:start",
+  VOTE_END : "vote:end",
+  TIE_OF_VOTES : "vote:tie",
+  VOTE_UPDATE : "vote:dataUpdate",
 }

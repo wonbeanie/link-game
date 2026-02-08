@@ -14,6 +14,13 @@ class VoteHandler {
   VOTE_TIME = 60;
   SUSEPCT_ANSWER_TIME = 60;
 
+  constructor(){
+    eventBus.on(GameEvents.VOTE_START, ()=>this.voteStart());
+    eventBus.on(GameEvents.VOTE_END, (selectedSuspect)=>this.votesEnd(selectedSuspect));
+    eventBus.on(GameEvents.TIE_OF_VOTES, (tiePlayer)=>this.tieOfVotes(tiePlayer));
+    eventBus.on(GameEvents.VOTE_UPDATE, (newData)=>this.votes(newData));
+  }
+
   init(){
     this.sendSuspectCheck = false;
     
@@ -112,9 +119,9 @@ class VoteHandler {
     gameDatabase.updateData(newDatabase);
   }
 
-  votesEnd(data){
+  votesEnd(selectedSuspect){
     const {suspect, isSuspect} = gameStore;
-    const failFindSuspect = suspect !== data;
+    const failFindSuspect = suspect !== selectedSuspect;
     if(failFindSuspect){
       eventBus.emit(GameEvents.GAME_OVER);
       return;
@@ -126,7 +133,7 @@ class VoteHandler {
 
     if(isSuspect){
       uiHandler.showAnswerTurnAlert();
-      gameStore.lastAnswer = data;
+      gameStore.lastAnswer = selectedSuspect;
       uiHandler.hideHintInputGroup();
       uiHandler.showAnswerInputGroup();
       timer.startTimer(this.SUSEPCT_ANSWER_TIME, gameHandler.sendLastAnswer);
@@ -143,14 +150,15 @@ class VoteHandler {
     this.init();
   }
 
-  votes(snapshot){
-    Object.keys(snapshot).forEach((key)=>{
+  votes(newData){
+    this.playerSelectCheck = {};
+    Object.keys(newData).forEach((key)=>{
       if(key.includes(TABLE_KEYS.SUSPECT_LIST)){
-        this.playerSelectCheck[key.split("-")[1]] = snapshot[key];
+        this.playerSelectCheck[key.split("-")[1]] = newData[key];
       }
     });
 
-    if(TABLE_KEYS.SELECT_TIMEOUT in snapshot){
+    if(TABLE_KEYS.SELECT_TIMEOUT in newData){
       if(Object.keys(this.playerSelectCheck).length === gameStore.playerList.length && gameStore.admin){
         this.calculateResult();
       }

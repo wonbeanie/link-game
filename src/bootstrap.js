@@ -1,4 +1,5 @@
 import "./service/game-state-manager.js";
+import "./handler/index.js"
 import gameController from "./game-controller.js";
 import gameDatabase from "./database/database.js";
 import gameManager from "./modules/game-manager.js";
