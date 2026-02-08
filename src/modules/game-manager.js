@@ -4,53 +4,55 @@ import gameStore from "./game-store.js";
 import { SEQUENCE_END, TABLE_KEYS } from "./modules.js";
 
 class GameManager {
-  updateGame = (newData) => {
-    gameHandler.newDatabase = newData;
+  newDatabase = {};
 
-    if(gameHandler.isLastAnswerTurn){
+  updateGame = (newData) => {
+    this.newDatabase = newData;
+
+    if(this.isLastAnswerTurn){
       gameHandler.gameOver(newData[TABLE_KEYS.LAST_ANSWER], true);
       return;
     }
 
-    if(gameHandler.isPlayerOut){
+    if(this.isPlayerOut){
       gameHandler.outGame();
       return;
     }
 
-    this.dispatchGameUpdate(newData);
+    this.dispatchGameUpdate();
 
     messageHandler.setMessages(newData);
     messageHandler.logView();
   }
 
-  dispatchGameUpdate(newData){
+  dispatchGameUpdate(){
     voteHandler.playerSelectCheck = [];
 
-    if(gameHandler.isInitSetting){
-      this.activateGameStart(newData);
+    if(this.isInitSetting){
+      this.activateGameStart();
       return;
     }
 
-    if(gameHandler.isHintTurn){
-      this.routeGameFlow(newData[TABLE_KEYS.SEQUENCE]);
+    if(this.isHintTurn){
+      this.routeGameFlow();
       return;
     }
 
-    if(gameHandler.isVoteEnd){
-      voteHandler.votesEnd(newData[TABLE_KEYS.SELECT_CULPRIT]);
+    if(this.isVoteEnd){
+      voteHandler.votesEnd(this.newDatabase[TABLE_KEYS.SELECT_CULPRIT]);
       return;
     }
 
-    if(gameHandler.isTieOfVotes){
-      voteHandler.tieOfVotes(newData[TABLE_KEYS.RE_SELECT_CULPRIT]);
+    if(this.isTieOfVotes){
+      voteHandler.tieOfVotes(this.newDatabase[TABLE_KEYS.RE_SELECT_CULPRIT]);
       return;
     }
 
-    voteHandler.votes(newData);
+    voteHandler.votes(this.newDatabase);
   }
 
-  activateGameStart(newData){
-    gameStore.setDefaultGameInfos(newData);
+  activateGameStart(){
+    gameStore.setDefaultGameInfos(this.newDatabase);
     chatHandler.chatStart();
     gameStore.state = TABLE_KEYS.START;
     gameHandler.reloadEvent();
@@ -60,17 +62,42 @@ class GameManager {
     gameDatabase.updateData(result); 
   }
 
-  routeGameFlow(data){
-    if(data === SEQUENCE_END){
+  routeGameFlow(){
+    const sequenceData = this.newDatabase[TABLE_KEYS.SEQUENCE];
+    if(sequenceData === SEQUENCE_END){
       voteHandler.voteStart();
       return;
     }
 
-    hintHandler.turnProcessor(data);
+    hintHandler.turnProcessor(sequenceData);
 
     if(gameStore.state === TABLE_KEYS.START){
       gameHandler.startGame();
     }
+  }
+
+  get isHintTurn() {
+    return TABLE_KEYS.SEQUENCE in this.newDatabase;
+  }
+
+  get isLastAnswerTurn(){
+    return TABLE_KEYS.LAST_ANSWER in this.newDatabase;
+  }
+
+  get isVoteEnd(){
+    return TABLE_KEYS.SELECT_CULPRIT in this.newDatabase;
+  }
+
+  get isInitSetting(){
+    return TABLE_KEYS.START in this.newDatabase;
+  }
+
+  get isTieOfVotes(){
+    return TABLE_KEYS.RE_SELECT_CULPRIT in this.newDatabase;
+  }
+
+  get isPlayerOut(){
+    return TABLE_KEYS.OUT_GAME in this.newDatabase;
   }
 }
 

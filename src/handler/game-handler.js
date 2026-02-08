@@ -7,7 +7,6 @@ import chatHandler from "./chat-handler.js";
 import uiHandler from "./ui-handler.js";
 
 class GameHandler {
-  newDatabase = {};
 
   startGame() {
     const {category, myCorrect} = gameStore;
@@ -130,34 +129,6 @@ class GameHandler {
       correct,
       fakeCorrect
     };
-  }
-
-  set newDatabase(newDatabase){
-    this.newDatabase = newDatabase;
-  }
-
-  get isHintTurn() {
-    return TABLE_KEYS.SEQUENCE in this.newDatabase;
-  }
-
-  get isLastAnswerTurn(){
-    return TABLE_KEYS.LAST_ANSWER in this.newDatabase;
-  }
-
-  get isVoteEnd(){
-    return TABLE_KEYS.SELECT_CULPRIT in this.newDatabase;
-  }
-
-  get isInitSetting(){
-    return TABLE_KEYS.START in this.newDatabase;
-  }
-
-  get isTieOfVotes(){
-    return TABLE_KEYS.RE_SELECT_CULPRIT in this.newDatabase;
-  }
-
-  get isPlayerOut(){
-    return TABLE_KEYS.OUT_GAME in this.newDatabase;
   }
 }
 
