@@ -7,6 +7,10 @@ import eventBus from "../modules/event-bus.js";
 import { GameEvents } from "../modules/events.js";
 
 class HintHandler {
+  constructor(){
+    eventBus.on(GameEvents.NEXT_TURN, (playerList)=>this.turnProcessor(playerList));
+  }
+
   initHintTurn(data){
     uiHandler.hideNicknameInputGroup();
     eventBus.emit(GameEvents.SET_PLAYER_LIST, data);

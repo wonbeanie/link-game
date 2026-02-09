@@ -19,4 +19,6 @@ export const GameEvents = {
   SET_PLAYER_LIST : "store:setPlayerList",
   SET_PLAY_SEQUENCE : "store:setPlaySequence",
   SET_LAST_ANSWER : "store:setLastAnswer",
+
+  NEXT_TURN : "hint:nextTurn",
 }

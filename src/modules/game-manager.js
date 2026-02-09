@@ -1,5 +1,5 @@
 import gameDatabase from "../database/database.js";
-import { chatHandler, hintHandler } from "../handler/index.js";
+import { chatHandler } from "../handler/index.js";
 import eventBus from "./event-bus.js";
 import { GameEvents } from "./events.js";
 import gameStore from "./game-store.js";
@@ -71,7 +71,7 @@ class GameManager {
       return;
     }
 
-    hintHandler.turnProcessor(sequenceData);
+    eventBus.emit(GameEvents.NEXT_TURN, sequenceData);
 
     if(gameStore.state === TABLE_KEYS.START){
       eventBus.emit(GameEvents.CHANGE_START);
