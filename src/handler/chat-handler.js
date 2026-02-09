@@ -1,7 +1,6 @@
 import gameStore from "../modules/game-store.js";
 import gameDatabase from "../database/database.js";
 import { DATABASE_KEYS, deepCopy, TABLE_KEYS } from "../modules/modules.js";
-import uiHandler from "./ui-handler.js";
 import gameElements from "../modules/game-elements.js";
 import eventBus from "../modules/event-bus.js";
 import { GameEvents } from "../modules/events.js";
@@ -12,18 +11,21 @@ class ChatHandler {
   constructor(){
     eventBus.on(GameEvents.CHAT_START, ()=>this.chatStart());
     eventBus.on(GameEvents.GAME_OVER, ()=>this.chatClose());
-    eventBus.on(GameEvents.CHAT_UPDATE, (newChatData)=>this.settingChatHistory(newChatData));
+    eventBus.on(GameEvents.CHAT_UPDATE, (newChatData)=>{
+      this.chatClear();
+      this.settingChatHistory(newChatData);
+    });
   }
 
   addChatMessage(nickname, message) {
     if(!this.startChat){
       return;
     }
-    uiHandler.addChatMessageToDisplay(nickname, message);
+    eventBus.emit(GameEvents.ADD_CHAT_MESSAGE, {nickname, message});
   }
 
   chatClear(){
-    uiHandler.clearChatMessageToDisplay();
+    eventBus.emit(GameEvents.CLEAR_CHAT_DISPLAY);
     if(this.startChat){
       this.addChatMessage("서버", "채팅에 접속하였습니다.");
       return;
@@ -40,7 +42,6 @@ class ChatHandler {
   sendClick = () => {
     const msg = gameElements.chat.input.value.trim();
     this.onSendClick(msg);
-    uiHandler.clearChatInput();
   }
 
   chatClose(){
@@ -75,7 +76,6 @@ class ChatHandler {
   settingChatHistory(newChatData){
     const newChatHistory = newChatData[TABLE_KEYS.CHAT_HISTORY];
     eventBus.emit(GameEvents.SET_CHAT_HISTORY, newChatHistory);
-    this.chatClear();
     newChatHistory.forEach((chat)=>{
       this.addChatMessage(chat.nickname, chat.message);
     });

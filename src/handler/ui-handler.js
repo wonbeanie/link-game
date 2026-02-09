@@ -8,14 +8,20 @@ class UiHandler {
     eventBus.on(GameEvents.CHANGE_START, ({category, correct}) => {
       this.showGameStartAlert(category, correct);
     });
-
     eventBus.on(GameEvents.PLAYER_OUT, () => this.showGameOutAlert());
-
     eventBus.on(GameEvents.GAME_OVER, ({gameInfo, data : lastAnswer, findSuspect}) => {
       this.showGameOverAlert(gameInfo, lastAnswer, findSuspect);
     })
-
     eventBus.on(GameEvents.INIT_ADMIN, () => this.showAdminBtns());
+    eventBus.on(GameEvents.ADD_CHAT_MESSAGE, ({nickname, message}) => {
+      this.addChatMessageToDisplay(nickname, message);
+    });
+    eventBus.on(GameEvents.CLEAR_CHAT_DISPLAY, () => {
+      this.clearChatMessageToDisplay();
+    });
+    eventBus.on(GameEvents.SET_CHAT_HISTORY, () => {
+      this.clearChatInput();
+    });
   }
 
   showGameStartAlert(category, correct){
