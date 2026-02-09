@@ -21,7 +21,7 @@ class GameStore {
     this.nickname = localStorage.getItem('userNickname') || "";
     uiHandler.updateNicknameUI(this.nickname);
 
-    this.admin = adminHandler.setAdmin();
+    this.setAdmin();
 
     eventBus.on(GameEvents.GAME_INFOS_UPDATE, (newDatabase) => {
       this.setDefaultGameInfos(newDatabase);
@@ -36,6 +36,17 @@ class GameStore {
     eventBus.on(GameEvents.SET_PLAY_SEQUENCE, (playerList) => this.playSequence = playerList);
     eventBus.on(GameEvents.SET_LAST_ANSWER, (lastAnswer)=>this.lastAnswer = lastAnswer);
     eventBus.on(GameEvents.CHANGE_START, () => this.state = GAME_STATE.PLAYING);
+  }
+
+  setAdmin() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const admin = Boolean(urlParams.get('admin')) || false;
+
+    if(admin){
+      eventBus.emit(GameEvents.INIT_ADMIN);
+    }
+
+    this.admin = admin;
   }
 
   changeNickname(nickname){

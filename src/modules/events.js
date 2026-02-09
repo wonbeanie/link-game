@@ -24,5 +24,7 @@ export const GameEvents = {
 
   CHAT_START : "chat:start",
   CHAT_STOP : "chat:stop",
-  CHAT_UPDATE : "chat:update"
+  CHAT_UPDATE : "chat:update",
+
+  INIT_ADMIN : "admin:init",
 }

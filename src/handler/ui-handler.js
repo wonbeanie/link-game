@@ -14,6 +14,8 @@ class UiHandler {
     eventBus.on(GameEvents.GAME_OVER, ({gameInfo, data : lastAnswer, findSuspect}) => {
       this.showGameOverAlert(gameInfo, lastAnswer, findSuspect);
     })
+
+    eventBus.on(GameEvents.INIT_ADMIN, () => this.showAdminBtns());
   }
 
   showGameStartAlert(category, correct){
