@@ -119,10 +119,14 @@ class VoteHandler {
   }
 
   votesEnd(selectedSuspect){
-    const {suspect, isSuspect} = gameStore;
+    const {suspect, isSuspect, gameInfo} = gameStore;
     const failFindSuspect = suspect !== selectedSuspect;
     if(failFindSuspect){
-      eventBus.emit(GameEvents.GAME_OVER);
+      eventBus.emit(GameEvents.GAME_OVER, {
+        gameInfo,
+        data : null,
+        findSuspect : false
+      });
       return;
     }
 

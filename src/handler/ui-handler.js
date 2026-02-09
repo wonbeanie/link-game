@@ -1,7 +1,21 @@
+import eventBus from "../modules/event-bus.js";
+import { GameEvents } from "../modules/events.js";
 import gameElements from "../modules/game-elements.js";
 import { alert, deepCopy } from "../modules/modules.js";
 
 class UiHandler {
+  constructor(){
+    eventBus.on(GameEvents.CHANGE_START, ({category, correct}) => {
+      this.showGameStartAlert(category, correct);
+    });
+
+    eventBus.on(GameEvents.PLAYER_OUT, () => this.showGameOutAlert());
+
+    eventBus.on(GameEvents.GAME_OVER, ({gameInfo, data : lastAnswer, findSuspect}) => {
+      this.showGameOverAlert(gameInfo, lastAnswer, findSuspect);
+    })
+  }
+
   showGameStartAlert(category, correct){
     alert.show("게임시작", `카테고리는 ${category}, 제시어는 ${correct}입니다.`);
   }

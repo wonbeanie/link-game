@@ -1,23 +1,14 @@
 import gameDatabase from "../database/database.js";
-import { uiHandler } from "../handler/index.js";
 import gameStore from "../modules/game-store.js";
-import { alert, GAME_STATE, TABLE_KEYS, timer } from "../modules/modules.js";
+import { alert, TABLE_KEYS, timer } from "../modules/modules.js";
 import eventBus from "../modules/event-bus.js";
 import {GameEvents} from "../modules/events.js";
 
 class GameStateManager {
   constructor(){
-    eventBus.on(GameEvents.GAME_OVER, ({data, findSuspect} = {}) => this.gameOver(data, findSuspect));
-    eventBus.on(GameEvents.CHANGE_START, () => this.startGame());
+    eventBus.on(GameEvents.GAME_OVER, () => this.gameOver());
     eventBus.on(GameEvents.RELOAD_EVENT, () => this.reloadEvent());
     eventBus.on(GameEvents.PLAYER_OUT, () => this.outGame());
-  }
-
-  startGame() {
-    const {category, myCorrect} = gameStore;
-    uiHandler.showGameStartAlert(category, myCorrect);
-
-    eventBus.emit(GameEvents.SET_STATE, GAME_STATE.PLAYING);
   }
 
   reloadEvent(){
@@ -39,23 +30,14 @@ class GameStateManager {
   }
 
   outGame(){
-    uiHandler.showGameOutAlert();
     gameDatabase.clearDatabase();
     this.removeReloadEvent();
     alert.restart = true;
   }
 
-  gameOver(data, findSuspect = false){
-    const gameInfo = {
-      correct : gameStore.correct,
-      fakeCorrect : gameStore.fakeCorrect,
-      suspect : gameStore.suspect
-    }
-    uiHandler.showGameOverAlert(gameInfo, data, findSuspect);
-
+  gameOver(){
     timer.stopTimer();
     this.reloadEvent();
-    eventBus.emit(GameEvents.CHAT_STOP);
   }
 }
 

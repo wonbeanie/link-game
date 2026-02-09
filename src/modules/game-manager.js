@@ -13,7 +13,8 @@ class GameManager {
     if(this.isLastAnswerTurn){
       eventBus.emit(GameEvents.GAME_OVER, {
         data : newData[TABLE_KEYS.LAST_ANSWER],
-        findSuspect : true
+        findSuspect : true,
+        gameInfo : gameStore.gameInfo
       });
       return;
     }
@@ -73,7 +74,8 @@ class GameManager {
     eventBus.emit(GameEvents.NEXT_TURN, sequenceData);
 
     if(gameStore.state === TABLE_KEYS.START){
-      eventBus.emit(GameEvents.CHANGE_START);
+      const {category, myCorrect} = gameStore;
+      eventBus.emit(GameEvents.CHANGE_START, {category, correct : myCorrect});
     }
   }
 

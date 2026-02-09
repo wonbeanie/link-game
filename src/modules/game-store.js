@@ -34,8 +34,8 @@ class GameStore {
       this.playerList = playerList;
     });
     eventBus.on(GameEvents.SET_PLAY_SEQUENCE, (playerList) => this.playSequence = playerList);
-    eventBus.on(GameEvents.SET_STATE, (state) => this.state = state);
     eventBus.on(GameEvents.SET_LAST_ANSWER, (lastAnswer)=>this.lastAnswer = lastAnswer);
+    eventBus.on(GameEvents.CHANGE_START, () => this.state = GAME_STATE.PLAYING);
   }
 
   changeNickname(nickname){
@@ -75,6 +75,14 @@ class GameStore {
 
   get isLastAnswerTurn(){
     return this.lastAnswer === this.nickname;
+  }
+
+  get gameInfo() {
+    return {
+      correct : this.correct,
+      fakeCorrect : this.fakeCorrect,
+      suspect : this.suspect
+    };
   }
 }
 

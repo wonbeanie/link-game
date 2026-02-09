@@ -11,7 +11,7 @@ class ChatHandler {
 
   constructor(){
     eventBus.on(GameEvents.CHAT_START, ()=>this.chatStart());
-    eventBus.on(GameEvents.CHAT_STOP, ()=>this.chatClose());
+    eventBus.on(GameEvents.GAME_OVER, ()=>this.chatClose());
     eventBus.on(GameEvents.CHAT_UPDATE, (newChatData)=>this.settingChatHistory(newChatData));
   }
 
