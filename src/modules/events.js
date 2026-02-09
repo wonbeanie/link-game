@@ -21,4 +21,8 @@ export const GameEvents = {
   SET_LAST_ANSWER : "store:setLastAnswer",
 
   NEXT_TURN : "hint:nextTurn",
+
+  CHAT_START : "chat:start",
+  CHAT_STOP : "chat:stop",
+  CHAT_UPDATE : "chat:update"
 }

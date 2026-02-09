@@ -9,6 +9,12 @@ import { GameEvents } from "../modules/events.js";
 class ChatHandler {
   startChat = false;
 
+  constructor(){
+    eventBus.on(GameEvents.CHAT_START, ()=>this.chatStart());
+    eventBus.on(GameEvents.CHAT_STOP, ()=>this.chatClose());
+    eventBus.on(GameEvents.CHAT_UPDATE, (newChatData)=>this.settingChatHistory(newChatData));
+  }
+
   addChatMessage(nickname, message) {
     if(!this.startChat){
       return;

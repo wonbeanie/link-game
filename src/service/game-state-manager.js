@@ -1,5 +1,5 @@
 import gameDatabase from "../database/database.js";
-import { chatHandler, uiHandler } from "../handler/index.js";
+import { uiHandler } from "../handler/index.js";
 import gameStore from "../modules/game-store.js";
 import { alert, GAME_STATE, TABLE_KEYS, timer } from "../modules/modules.js";
 import eventBus from "../modules/event-bus.js";
@@ -55,7 +55,7 @@ class GameStateManager {
 
     timer.stopTimer();
     this.reloadEvent();
-    chatHandler.chatClose();
+    eventBus.emit(GameEvents.CHAT_STOP);
   }
 }
 

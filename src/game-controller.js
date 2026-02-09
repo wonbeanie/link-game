@@ -1,4 +1,6 @@
-import { adminHandler, chatHandler, gameHandler, hintHandler, voteHandler } from "./handler/index.js";
+import { adminHandler, gameHandler, hintHandler, voteHandler } from "./handler/index.js";
+import eventBus from "./modules/event-bus.js";
+import { GameEvents } from "./modules/events.js";
 import gameElements from "./modules/game-elements.js";
 
 class GameController {
@@ -12,7 +14,7 @@ class GameController {
   }
 
   updateChat(newChat){
-    chatHandler.settingChatHistory(newChat);
+    eventBus.emit(GameEvents.CHAT_UPDATE, newChat);
   }
 }
 

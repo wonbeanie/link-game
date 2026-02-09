@@ -1,5 +1,4 @@
 import gameDatabase from "../database/database.js";
-import { chatHandler } from "../handler/index.js";
 import eventBus from "./event-bus.js";
 import { GameEvents } from "./events.js";
 import gameStore from "./game-store.js";
@@ -56,7 +55,7 @@ class GameManager {
 
   activateGameStart(){
     eventBus.emit(GameEvents.GAME_INFOS_UPDATE, this.newDatabase);
-    chatHandler.chatStart();
+    eventBus.emit(GameEvents.CHAT_START);
     eventBus.emit(GameEvents.RELOAD_EVENT);
 
     const result = {};
