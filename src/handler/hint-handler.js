@@ -1,8 +1,7 @@
 import gameDatabase from "../database/database.js";
 import gameStore from "../modules/game-store.js";
 import gameElements from "../modules/game-elements.js";
-import { GAME_STATE, SEQUENCE_END, TABLE_KEYS, timer } from "../modules/modules.js";
-import uiHandler from "./ui-handler.js";
+import { SEQUENCE_END, TABLE_KEYS, timer } from "../modules/modules.js";
 import eventBus from "../modules/event-bus.js";
 import { GameEvents } from "../modules/events.js";
 
@@ -12,8 +11,7 @@ class HintHandler {
   }
 
   initHintTurn(data){
-    uiHandler.hideNicknameInputGroup();
-    eventBus.emit(GameEvents.SET_PLAYER_LIST, data);
+    eventBus.emit(GameEvents.INIT_HINT, data);
   }
 
   send(){
@@ -25,17 +23,13 @@ class HintHandler {
                         ? playSequence.slice(1, playSequence.length)
                         : SEQUENCE_END;
 
-      if(newSequence === SEQUENCE_END){
-        uiHandler.hideHintInputGroup();
-      }
-
       const newDatabase = {
         [TABLE_KEYS.SEQUENCE] : newSequence,
         [nickname] : gameElements.hint.value
       }
 
-      uiHandler.hideHintInputGroup();
       gameDatabase.updateData(newDatabase);
+      eventBus.emit(GameEvents.TURN_END_HINT);
     }
   }
 
@@ -48,15 +42,18 @@ class HintHandler {
     }
 
     eventBus.emit(GameEvents.SET_PLAY_SEQUENCE, data);
-    uiHandler.updateGameInfoUI(category, myCorrect);
-
-    uiHandler.updateTurnStateUI(data[0]);
+    eventBus.emit(GameEvents.UPDATE_TURN_UI, {
+      correctTurn : data[0],
+      category,
+      correct : myCorrect
+    })
 
     if(gameStore.myTurn){
       timer.startTimer(30, this.send);
-      uiHandler.showMyTurnAlert(category, myCorrect);
-      eventBus.emit(GameEvents.STATE_UPDATE, GAME_STATE.PLAYING);
-      uiHandler.showHintInputGroup();
+      eventBus.emit(GameEvents.TURN_START_HINT, {
+        correct : myCorrect,
+        category,
+      });
       return;
     }
 

@@ -22,6 +22,16 @@ class UiHandler {
     eventBus.on(GameEvents.SET_CHAT_HISTORY, () => {
       this.clearChatInput();
     });
+    eventBus.on(GameEvents.INIT_HINT, () => this.hideNicknameInputGroup());
+    eventBus.on(GameEvents.TURN_END_HINT, () => this.hideHintInputGroup());
+    eventBus.on(GameEvents.TURN_START_HINT, ({category, correct}) => {
+      this.showMyTurnAlert(category, correct);
+      this.showHintInputGroup();
+    });
+    eventBus.on(GameEvents.UPDATE_TURN_UI, ({correctTurn, category, correct}) => {
+      this.updateTurnStateUI(correctTurn);
+      this.updateGameInfoUI(category, correct);
+    });
   }
 
   showGameStartAlert(category, correct){

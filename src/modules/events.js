@@ -30,4 +30,8 @@ export const GameEvents = {
   CHAT_SEND_COMPLETE : "chat:sendComplete",
 
   INIT_ADMIN : "admin:init",
+  INIT_HINT : "hint:init",
+  TURN_END_HINT : "hint:turnEndHint",
+  TURN_START_HINT : "hint:turnStartHint",
+  UPDATE_TURN_UI : "hint:updateTurnUI",
 }

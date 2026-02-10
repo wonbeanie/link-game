@@ -29,7 +29,7 @@ class GameStore {
     });
     eventBus.on(GameEvents.SET_CHAT_HISTORY, (newChatHistory) => this.chatHistory = newChatHistory);
     eventBus.on(GameEvents.REQUEST_CHANGE_NICKNAME, (nickname) => this.changeNickname(nickname));
-    eventBus.on(GameEvents.SET_PLAYER_LIST, (playerList) => {
+    eventBus.on(GameEvents.INIT_HINT, (playerList) => {
       this.startPlaySequence = playerList;
       this.playerList = playerList;
     });
