@@ -2,7 +2,6 @@ import gameDatabase from "../database/database.js";
 import gameStore from "../modules/game-store.js";
 import gameElements from "../modules/game-elements.js";
 import { TABLE_KEYS } from "../modules/modules.js";
-import uiHandler from "./ui-handler.js";
 import eventBus from "../modules/event-bus.js";
 import { GameEvents } from "../modules/events.js";
 
@@ -25,7 +24,6 @@ class GameHandler {
     gameDatabase.updateData(newDatabase);
 
     eventBus.emit(GameEvents.REQUEST_CHANGE_NICKNAME, nickname);
-    uiHandler.updateNicknameInfoUI(nickname);
   }
 }
 
