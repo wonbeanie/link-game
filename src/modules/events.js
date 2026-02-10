@@ -34,4 +34,6 @@ export const GameEvents = {
   TURN_END_HINT : "hint:turnEndHint",
   TURN_START_HINT : "hint:turnStartHint",
   UPDATE_TURN_UI : "hint:updateTurnUI",
+  READY_LOG_DATA : "log:readyLogData",
+  READY_PLAYER_UI : "log:readyPlayerUI",
 }

@@ -32,6 +32,21 @@ class UiHandler {
       this.updateTurnStateUI(correctTurn);
       this.updateGameInfoUI(category, correct);
     });
+    eventBus.on(GameEvents.READY_LOG_DATA, ({vote, hint}) => {
+      this.showActiveLog(vote, hint)
+    })
+    eventBus.on(GameEvents.ADD_LOG, () => this.clearLogDisplay());
+    eventBus.on(GameEvents.READY_PLAYER_UI, ({player, text}) => this.addLogDisplay(player, text));
+  }
+
+  showActiveLog(vote, hint){
+    vote.forEach(([player, text]) => {
+      this.addLogDisplay(player, text);
+    });
+
+    hint.forEach(([player, text]) => {
+      this.addLogDisplay(player, text);
+    });
   }
 
   showGameStartAlert(category, correct){
