@@ -1,4 +1,6 @@
 import uiHandler from "../handler/ui-handler.js";
+import eventBus from "./event-bus.js";
+import { GameEvents } from "./events.js";
 
 export function shuffleStrings(array) {
   for (let i = array.length - 1; i > 0; i--) {
@@ -112,7 +114,10 @@ export const timer = (function Timer(){
       const displayMinutes = String(minutes).padStart(2, '0');
       const displaySeconds = String(seconds).padStart(2, '0');
 
-      uiHandler.showTimerUI(displayMinutes, displaySeconds);
+      eventBus.emit(GameEvents.UPDATE_TIME, {
+        displayMinutes,
+        displaySeconds
+      });
       
       time -= 1;
     }
@@ -130,7 +135,7 @@ export const timer = (function Timer(){
 
   function stopTimer() {
     clearInterval(inteval);
-    uiHandler.clearTimerUI();
+    eventBus.emit(GameEvents.STOP_TIMER);
   }
 
   return {

@@ -55,6 +55,10 @@ class UiHandler {
     eventBus.on(GameEvents.DEFAULT_GAME_INFO_UPDATED, ({category, correct}) => {
       this.updateGameInfoUI(category, correct);
     })
+    eventBus.on(GameEvents.UPDATE_TIME, ({displayMinutes, displaySeconds}) => {
+      this.showTimerUI(displayMinutes, displaySeconds);
+    })
+    eventBus.on(GameEvents.STOP_TIMER, () => this.clearTimerUI());
   }
 
   showVotingResults(isSuspect){
