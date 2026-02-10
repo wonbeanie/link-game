@@ -37,6 +37,29 @@ class UiHandler {
     })
     eventBus.on(GameEvents.ADD_LOG, () => this.clearLogDisplay());
     eventBus.on(GameEvents.READY_PLAYER_UI, ({player, text}) => this.addLogDisplay(player, text));
+    eventBus.on(GameEvents.VOTE_START, (startPlaySequence) => {
+      this.updateSuspectVoteOptions(startPlaySequence);
+      this.showVoteTurnAlert();
+      this.showVoteInputGroup();
+      this.hideHintInputGroup();
+    });
+    eventBus.on(GameEvents.VOTE_END, ({isSuspect}) => this.showVotingResults(isSuspect));
+    eventBus.on(GameEvents.TIE_OF_VOTES, (tiePlayer) => {
+      this.showTieOfVotesAlert(tiePlayer.join(","));
+      this.updateSuspectVoteOptions(tiePlayer);
+    });
+  }
+
+  showVotingResults(isSuspect){
+    this.hideVoteInputGroup();
+    if(isSuspect){
+      this.showAnswerTurnAlert();
+      this.hideHintInputGroup();
+      this.showAnswerInputGroup();
+    }
+    else {
+      this.showWeFindSuspectAlert();
+    }
   }
 
   showActiveLog(vote, hint){

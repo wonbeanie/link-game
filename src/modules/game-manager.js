@@ -42,7 +42,11 @@ class GameManager {
     }
 
     if(this.isVoteEnd){
-      eventBus.emit(GameEvents.VOTE_END, this.newDatabase[TABLE_KEYS.SELECT_CULPRIT]);
+      const {isSuspect} = gameStore;
+      eventBus.emit(GameEvents.VOTE_END, {
+        isSuspect,
+        selectedSuspect : this.newDatabase[TABLE_KEYS.SELECT_CULPRIT]
+      });
       return;
     }
 
@@ -67,7 +71,8 @@ class GameManager {
   routeGameFlow(){
     const sequenceData = this.newDatabase[TABLE_KEYS.SEQUENCE];
     if(sequenceData === SEQUENCE_END){
-      eventBus.emit(GameEvents.VOTE_START);
+      const {startPlaySequence} = gameStore;
+      eventBus.emit(GameEvents.VOTE_START, startPlaySequence);
       return;
     }
 

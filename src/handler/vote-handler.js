@@ -3,7 +3,6 @@ import gameStore from "../modules/game-store.js";
 import gameElements from "../modules/game-elements.js";
 import { TABLE_KEYS, timer } from "../modules/modules.js";
 import gameHandler from "./game-handler.js";
-import uiHandler from "./ui-handler.js";
 import eventBus from "../modules/event-bus.js";
 import { GameEvents } from "../modules/events.js";
 
@@ -15,9 +14,9 @@ class VoteHandler {
   SUSEPCT_ANSWER_TIME = 60;
 
   constructor(){
-    eventBus.on(GameEvents.VOTE_START, ()=>this.voteStart());
-    eventBus.on(GameEvents.VOTE_END, (selectedSuspect)=>this.votesEnd(selectedSuspect));
-    eventBus.on(GameEvents.TIE_OF_VOTES, (tiePlayer)=>this.tieOfVotes(tiePlayer));
+    eventBus.on(GameEvents.VOTE_START, ()=>this.init());
+    eventBus.on(GameEvents.VOTE_END, ({selectedSuspect})=>this.votesEnd(selectedSuspect));
+    eventBus.on(GameEvents.TIE_OF_VOTES, ()=> this.init());
     eventBus.on(GameEvents.VOTE_UPDATE, (newData)=>this.votes(newData));
   }
 
@@ -31,14 +30,6 @@ class VoteHandler {
   
     this.selectTimeout = false;
     this.getVoteTransitionData();
-  }
-
-  voteStart(){
-    uiHandler.updateSuspectVoteOptions(gameStore.startPlaySequence);
-    uiHandler.showVoteTurnAlert();
-    uiHandler.showVoteInputGroup();
-    uiHandler.hideHintInputGroup();
-    this.init();
   }
 
   getVoteTransitionData(){
@@ -130,27 +121,15 @@ class VoteHandler {
       return;
     }
 
-    uiHandler.hideVoteInputGroup();
-
     timer.stopTimer();
 
     if(isSuspect){
-      uiHandler.showAnswerTurnAlert();
       eventBus.emit(GameEvents.SET_LAST_ANSWER, selectedSuspect);
-      uiHandler.hideHintInputGroup();
-      uiHandler.showAnswerInputGroup();
       timer.startTimer(this.SUSEPCT_ANSWER_TIME, gameHandler.sendLastAnswer);
     }
     else {
-      uiHandler.showWeFindSuspectAlert();
       timer.startTimer(this.SUSEPCT_ANSWER_TIME);
     }
-  }
-
-  tieOfVotes(data){
-    uiHandler.showTieOfVotesAlert(data.join(","));
-    uiHandler.updateSuspectVoteOptions(data);
-    this.init();
   }
 
   votes(newData){
