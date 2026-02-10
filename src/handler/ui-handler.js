@@ -48,6 +48,12 @@ class UiHandler {
       this.showTieOfVotesAlert(tiePlayer.join(","));
       this.updateSuspectVoteOptions(tiePlayer);
     });
+    eventBus.on(GameEvents.REQUEST_CHANGE_NICKNAME, (nickname) => {
+      this.updateNicknameUI(nickname);
+    });
+    eventBus.on(GameEvents.DEFAULT_GAME_INFO_UPDATED, ({category, correct}) => {
+      this.updateGameInfoUI(category, correct);
+    })
   }
 
   showVotingResults(isSuspect){

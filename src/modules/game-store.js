@@ -1,5 +1,3 @@
-import adminHandler from "../handler/admin-handler.js";
-import uiHandler from "../handler/ui-handler.js";
 import eventBus from "./event-bus.js";
 import { GameEvents } from "./events.js";
 import { GAME_STATE, TABLE_KEYS } from "./modules.js";
@@ -19,7 +17,7 @@ class GameStore {
 
   constructor(){
     this.nickname = localStorage.getItem('userNickname') || "";
-    uiHandler.updateNicknameUI(this.nickname);
+    eventBus.emit(GameEvents.REQUEST_CHANGE_NICKNAME, this.nickname);
 
     this.setAdmin();
 
@@ -52,7 +50,6 @@ class GameStore {
   changeNickname(nickname){
     this.nickname= nickname;
     localStorage.setItem('userNickname', nickname);
-    uiHandler.updateNicknameUI(nickname);
   }
 
   setDefaultGameInfos(newDatabase){
@@ -60,7 +57,11 @@ class GameStore {
     this.fakeCorrect = newDatabase[TABLE_KEYS.FAKE_CORRECT];
     this.category = newDatabase[TABLE_KEYS.CATEGORY];
     this.suspect = newDatabase[TABLE_KEYS.SUSPECT];
-    uiHandler.updateGameInfoUI(this.category, this.myCorrect);
+
+    eventBus.emit(GameEvents.DEFAULT_GAME_INFO_UPDATED,{
+      category : this.category,
+      correct : this.myCorrect
+    })
   }
 
   get myTurn() {

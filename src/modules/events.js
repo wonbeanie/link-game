@@ -36,4 +36,5 @@ export const GameEvents = {
   UPDATE_TURN_UI : "hint:updateTurnUI",
   READY_LOG_DATA : "log:readyLogData",
   READY_PLAYER_UI : "log:readyPlayerUI",
+  DEFAULT_GAME_INFO_UPDATED : "store:defaultGameInfoUpdated"
 }
