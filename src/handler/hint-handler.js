@@ -7,7 +7,7 @@ import { GameEvents } from "../modules/events.js";
 
 class HintHandler {
   constructor(){
-    eventBus.on(GameEvents.NEXT_TURN, (playerList)=>this.turnProcessor(playerList));
+    eventBus.on(GameEvents.NEXT_TURN, (data)=>this.turnProcessor(data));
   }
 
   initHintTurn(data){

@@ -34,7 +34,7 @@ class UiHandler {
 
   updateInfosUI({correctTurn, category, correct}){
     this.updateTurnStateUI(correctTurn);
-    this.updateGameInfoUI(category, correct);
+    this.updateGameInfoUI({category, correct});
   }
 
   showVotingResults(isSuspect){
@@ -49,22 +49,22 @@ class UiHandler {
     }
   }
 
-  showStartMyturnHint(category, correct){
+  showStartMyturnHint({category, correct}){
     this.showMyTurnAlert(category, correct);
     this.showHintInputGroup();
   }
 
-  showActiveLog(vote, hint){
+  showActiveLog({vote, hint}){
     vote.forEach(([player, text]) => {
-      this.addLogDisplay(player, text);
+      this.addLogDisplay({player, text});
     });
 
     hint.forEach(([player, text]) => {
-      this.addLogDisplay(player, text);
+      this.addLogDisplay({player, text});
     });
   }
 
-  showGameStartAlert(category, correct){
+  showGameStartAlert({category, correct}){
     alert.show("게임시작", `카테고리는 ${category}, 제시어는 ${correct}입니다.`);
   }
 
@@ -87,7 +87,7 @@ class UiHandler {
     alert.show("범인이 아닙니다.", `범인은 ${suspect}였습니다.`);
   }
 
-  updateGameInfoUI(category, correct){
+  updateGameInfoUI({category, correct}){
     gameElements.info.category.textContent = category;
     gameElements.info.correct.textContent = correct;
   }
@@ -100,7 +100,7 @@ class UiHandler {
     gameElements.admin.display.show();
   }
 
-  addChatMessageToDisplay(nickname, message){
+  addChatMessageToDisplay({nickname, message}){
     const msgDiv = document.createElement('div');
     msgDiv.className = 'chat-msg';
     msgDiv.innerHTML = `<b>${nickname}:</b> ${message}`;
@@ -133,7 +133,7 @@ class UiHandler {
     gameElements.info.state.textContent = `${player}님이 입력하고 있습니다.`;
   }
 
-  addLogDisplay(player, text){
+  addLogDisplay({player, text}){
     const playerElement = document.createElement("div");
     playerElement.className = "player-hint-item"; 
 
@@ -211,8 +211,8 @@ class UiHandler {
     alert.show("투표 동점", `${suspectList}중에 한명을 선택해주세요.`);
   }
 
-  showTimerUI(minutes, seconds){
-    gameElements.timer.textContent = `${minutes}:${seconds}`;
+  showTimerUI({displayMinutes, displaySeconds}){
+    gameElements.timer.textContent = `${displayMinutes}:${displaySeconds}`;
   }
 
   clearTimerUI(){

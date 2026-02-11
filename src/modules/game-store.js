@@ -16,20 +16,24 @@ class GameStore {
   chatHistory = [];
 
   constructor(){
-    eventBus.on(GameEvents.GAME_INFOS_UPDATE, (newDatabase) => {
-      this.setDefaultGameInfos(newDatabase);
-      this.state = GAME_STATE.START;
-    });
+    eventBus.on(GameEvents.GAME_INFOS_UPDATE, (data) => this.updateGameInfos(data));
     eventBus.on(GameEvents.SET_CHAT_HISTORY, (newChatHistory) => this.chatHistory = newChatHistory);
     eventBus.on(GameEvents.REQUEST_CHANGE_NICKNAME, (nickname) => this.changeNickname(nickname));
-    eventBus.on(GameEvents.INIT_HINT, (playerList) => {
-      this.startPlaySequence = playerList;
-      this.playerList = playerList;
-    });
+    eventBus.on(GameEvents.INIT_HINT, (data) => this.initHint(data));
     eventBus.on(GameEvents.SET_PLAY_SEQUENCE, (playerList) => this.playSequence = playerList);
-    eventBus.on(GameEvents.SET_LAST_ANSWER, (lastAnswer)=>this.lastAnswer = lastAnswer);
+    eventBus.on(GameEvents.SET_LAST_ANSWER, (lastAnswer) => this.lastAnswer = lastAnswer);
     eventBus.on(GameEvents.CHANGE_START, () => this.state = GAME_STATE.PLAYING);
     eventBus.on(GameEvents.INIT_NICKNAME, () => this.initNickname());
+  }
+
+  initHint(playerList){
+    this.startPlaySequence = playerList;
+    this.playerList = playerList;
+  }
+
+  updateGameInfos(newDatabase){
+    this.setDefaultGameInfos(newDatabase);
+    this.state = GAME_STATE.START;
   }
 
   initNickname = () => {

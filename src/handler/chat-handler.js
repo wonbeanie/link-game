@@ -11,10 +11,12 @@ class ChatHandler {
   constructor(){
     eventBus.on(GameEvents.CHAT_START, ()=>this.chatStart());
     eventBus.on(GameEvents.GAME_OVER, ()=>this.chatClose());
-    eventBus.on(GameEvents.CHAT_UPDATE, (newChatData)=>{
-      this.chatClear();
-      this.settingChatHistory(newChatData);
-    });
+    eventBus.on(GameEvents.CHAT_UPDATE, (data)=>this.chatUpdate(data));
+  }
+
+  chatUpdate(newChatData){
+    this.chatClear();
+    this.settingChatHistory(newChatData);
   }
 
   addChatMessage(nickname, message) {
