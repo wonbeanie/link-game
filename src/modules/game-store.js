@@ -16,11 +16,6 @@ class GameStore {
   chatHistory = [];
 
   constructor(){
-    this.nickname = localStorage.getItem('userNickname') || "";
-    eventBus.emit(GameEvents.REQUEST_CHANGE_NICKNAME, this.nickname);
-
-    this.setAdmin();
-
     eventBus.on(GameEvents.GAME_INFOS_UPDATE, (newDatabase) => {
       this.setDefaultGameInfos(newDatabase);
       this.state = GAME_STATE.START;
@@ -34,6 +29,14 @@ class GameStore {
     eventBus.on(GameEvents.SET_PLAY_SEQUENCE, (playerList) => this.playSequence = playerList);
     eventBus.on(GameEvents.SET_LAST_ANSWER, (lastAnswer)=>this.lastAnswer = lastAnswer);
     eventBus.on(GameEvents.CHANGE_START, () => this.state = GAME_STATE.PLAYING);
+    eventBus.on(GameEvents.INIT_NICKNAME, () => this.initNickname());
+  }
+
+  initNickname = () => {
+    this.nickname = localStorage.getItem('userNickname') || "";
+    eventBus.emit(GameEvents.REQUEST_CHANGE_NICKNAME, this.nickname);
+
+    this.setAdmin();
   }
 
   setAdmin() {

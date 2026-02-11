@@ -4,61 +4,37 @@ import gameElements from "../modules/game-elements.js";
 import { alert, deepCopy } from "../modules/modules.js";
 
 class UiHandler {
-  constructor(){
-    eventBus.on(GameEvents.CHANGE_START, ({category, correct}) => {
-      this.showGameStartAlert(category, correct);
-    });
-    eventBus.on(GameEvents.PLAYER_OUT, () => this.showGameOutAlert());
-    eventBus.on(GameEvents.GAME_OVER, ({gameInfo, data : lastAnswer, findSuspect}) => {
-      this.showGameOverAlert(gameInfo, lastAnswer, findSuspect);
-    })
-    eventBus.on(GameEvents.INIT_ADMIN, () => this.showAdminBtns());
-    eventBus.on(GameEvents.ADD_CHAT_MESSAGE, ({nickname, message}) => {
-      this.addChatMessageToDisplay(nickname, message);
-    });
-    eventBus.on(GameEvents.CLEAR_CHAT_DISPLAY, () => {
-      this.clearChatMessageToDisplay();
-    });
-    eventBus.on(GameEvents.SET_CHAT_HISTORY, () => {
-      this.clearChatInput();
-    });
-    eventBus.on(GameEvents.INIT_HINT, () => this.hideNicknameInputGroup());
-    eventBus.on(GameEvents.TURN_END_HINT, () => this.hideHintInputGroup());
-    eventBus.on(GameEvents.TURN_START_HINT, ({category, correct}) => {
-      this.showMyTurnAlert(category, correct);
-      this.showHintInputGroup();
-    });
-    eventBus.on(GameEvents.UPDATE_TURN_UI, ({correctTurn, category, correct}) => {
-      this.updateTurnStateUI(correctTurn);
-      this.updateGameInfoUI(category, correct);
-    });
-    eventBus.on(GameEvents.READY_LOG_DATA, ({vote, hint}) => {
-      this.showActiveLog(vote, hint)
-    })
-    eventBus.on(GameEvents.ADD_LOG, () => this.clearLogDisplay());
-    eventBus.on(GameEvents.READY_PLAYER_UI, ({player, text}) => this.addLogDisplay(player, text));
-    eventBus.on(GameEvents.VOTE_START, (startPlaySequence) => {
-      this.updateSuspectVoteOptions(startPlaySequence);
-      this.showVoteTurnAlert();
-      this.showVoteInputGroup();
-      this.hideHintInputGroup();
-    });
-    eventBus.on(GameEvents.VOTE_END, ({isSuspect}) => this.showVotingResults(isSuspect));
-    eventBus.on(GameEvents.TIE_OF_VOTES, (tiePlayer) => {
-      this.showTieOfVotesAlert(tiePlayer.join(","));
-      this.updateSuspectVoteOptions(tiePlayer);
-    });
-    eventBus.on(GameEvents.REQUEST_CHANGE_NICKNAME, (nickname) => {
-      this.updateNicknameUI(nickname);
-      this.updateNicknameInfoUI(nickname);
-    });
-    eventBus.on(GameEvents.DEFAULT_GAME_INFO_UPDATED, ({category, correct}) => {
-      this.updateGameInfoUI(category, correct);
-    })
-    eventBus.on(GameEvents.UPDATE_TIME, ({displayMinutes, displaySeconds}) => {
-      this.showTimerUI(displayMinutes, displaySeconds);
-    })
-    eventBus.on(GameEvents.STOP_TIMER, () => this.clearTimerUI());
+
+  changeNicknameUI(nickname){
+    uiHandler.updateNicknameUI(nickname);
+    uiHandler.updateNicknameInfoUI(nickname);
+  }
+
+  initTieOfVotes(tiePlayer){
+    this.showTieOfVotesAlert(tiePlayer.join(","));
+    this.updateSuspectVoteOptions(tiePlayer);
+  }
+
+  readyVoteEnd({isSuspect, selectedSuspect}){
+    this.showVotingResults(isSuspect);
+    eventBus.emit(GameEvents.READY_TO_VOTE_END, selectedSuspect);
+  }
+
+  readyStartVoteUI(startPlaySequence){
+    this.updateSuspectVoteOptions(startPlaySequence);
+    this.showVoteTurnAlert();
+    this.showVoteInputGroup();
+    this.hideHintInputGroup();
+  }
+  
+  readyAddLog(message){
+    this.clearLogDisplay();
+    eventBus.emit(GameEvents.READY_TO_ADD_LOG, message);
+  }
+
+  updateInfosUI({correctTurn, category, correct}){
+    this.updateTurnStateUI(correctTurn);
+    this.updateGameInfoUI(category, correct);
   }
 
   showVotingResults(isSuspect){
@@ -71,6 +47,11 @@ class UiHandler {
     else {
       this.showWeFindSuspectAlert();
     }
+  }
+
+  showStartMyturnHint(category, correct){
+    this.showMyTurnAlert(category, correct);
+    this.showHintInputGroup();
   }
 
   showActiveLog(vote, hint){

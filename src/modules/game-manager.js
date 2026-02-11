@@ -25,8 +25,8 @@ class GameManager {
     }
 
     this.dispatchGameUpdate();
-
-    eventBus.emit(GameEvents.ADD_LOG, newData);
+    
+    eventBus.emit(GameEvents.REQUEST_ADD_LOG, newData);
     eventBus.emit(GameEvents.DRAW_LOG);
   }
 
@@ -43,7 +43,7 @@ class GameManager {
 
     if(this.isVoteEnd){
       const {isSuspect} = gameStore;
-      eventBus.emit(GameEvents.VOTE_END, {
+      eventBus.emit(GameEvents.REQUEST_VOTE_END, {
         isSuspect,
         selectedSuspect : this.newDatabase[TABLE_KEYS.SELECT_CULPRIT]
       });

@@ -8,7 +8,7 @@ class MessageHandler {
   playerHints = [];
 
   constructor(){
-    eventBus.on(GameEvents.ADD_LOG, (message)=>this.setMessages(message));
+    eventBus.on(GameEvents.READY_TO_ADD_LOG, (message)=>this.setMessages(message));
     eventBus.on(GameEvents.DRAW_LOG, ()=>this.logView());
   }
 

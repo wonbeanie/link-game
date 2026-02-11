@@ -15,7 +15,7 @@ class VoteHandler {
 
   constructor(){
     eventBus.on(GameEvents.VOTE_START, ()=>this.init());
-    eventBus.on(GameEvents.VOTE_END, ({selectedSuspect})=>this.votesEnd(selectedSuspect));
+    eventBus.on(GameEvents.READY_TO_VOTE_END, (selectedSuspect)=>this.votesEnd(selectedSuspect));
     eventBus.on(GameEvents.TIE_OF_VOTES, ()=> this.init());
     eventBus.on(GameEvents.VOTE_UPDATE, (newData)=>this.votes(newData));
   }

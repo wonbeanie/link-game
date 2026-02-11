@@ -4,11 +4,13 @@ export const GameEvents = {
   RELOAD_EVENT : "game:reload",
   CHANGE_START : "game:changeStart",
 
-  ADD_LOG : "log:add",
+  REQUEST_ADD_LOG : "log:requestAdd",
+  READY_TO_ADD_LOG : "log:readyAddLog",
   DRAW_LOG : "log:draw",
 
   VOTE_START : "vote:start",
-  VOTE_END : "vote:end",
+  REQUEST_VOTE_END : "vote:requestEnded",
+  READY_TO_VOTE_END : "vote_readyVoteEnd",
   TIE_OF_VOTES : "vote:tie",
   VOTE_UPDATE : "vote:dataUpdate",
 
@@ -38,5 +40,6 @@ export const GameEvents = {
   READY_PLAYER_UI : "log:readyPlayerUI",
   DEFAULT_GAME_INFO_UPDATED : "store:defaultGameInfoUpdated",
   UPDATE_TIME : "timer:update",
-  STOP_TIMER : "timer:stop"
+  STOP_TIMER : "timer:stop",
+  INIT_NICKNAME : "store:initNickname"
 }
