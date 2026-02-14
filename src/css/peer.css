@@ -1,0 +1,124 @@
+/* 상단 접속 정보 스타일 */
+.connection-status {
+  display: inline-flex;
+  align-items: center;
+  background: #f8f9fa;
+  border: 1px solid #e9ecef;
+  padding: 4px 12px;
+  border-radius: 20px;
+  margin-top: 10px;
+  font-size: 0.85rem;
+  color: #6c757d;
+  transition: all 0.2s;
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  background-color: #2ed573; /* 온라인 상태 초록색 */
+  border-radius: 50%;
+  margin-right: 8px;
+  box-shadow: 0 0 5px rgba(46, 213, 115, 0.5);
+}
+
+.connection-label {
+  font-weight: 600;
+  margin-right: 5px;
+}
+
+.connection-id {
+  font-family: 'Monaco', 'Consolas', monospace;
+  background: #eee;
+  padding: 2px 6px;
+  border-radius: 4px;
+  color: var(--primary-color);
+  margin-right: 8px;
+}
+
+.copy-btn {
+  background: transparent !important;
+  color: #adb5bd !important;
+  border: none !important;
+  padding: 0 !important;
+  width: auto !important;
+  margin: 0 !important;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.copy-btn:hover {
+  color: var(--primary-color) !important;
+}
+
+.connection-status-wrapper {
+  margin-top: auto;
+  padding: 15px;
+  background: #f8f9fa;
+  border-radius: var(--border-radius);
+  border: 1px solid #e9ecef;
+  margin-top: 10px;
+}
+
+.my-status-card {
+  margin-bottom: 12px;
+}
+
+.status-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 5px;
+  font-size: 0.75rem;
+  font-weight: bold;
+  color: #495057;
+}
+
+.id-display-group {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+}
+
+#my-id {
+  flex: 1;
+  font-family: 'Consolas', monospace;
+  background: white;
+  border: 1px solid #dee2e6;
+  padding: 6px 10px;
+  border-radius: 6px;
+  color: var(--primary-color);
+  font-weight: bold;
+  font-size: 0.8rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* 상대 ID 입력창 그룹 */
+.connect-input-group {
+  display: flex;
+  gap: 5px;
+}
+
+.connect-input-group input {
+  flex: 1;
+  padding: 8px 10px !important;
+  margin: 0 !important;
+  font-size: 0.8rem !important;
+  border-radius: 6px !important;
+  border: 1px solid #ced4da;
+}
+
+.connect-input-group button {
+  width: auto !important;
+  margin: 0 !important;
+  padding: 0 12px !important;
+  font-size: 0.8rem !important;
+  background-color: var(--primary-color);
+  white-space: nowrap;
+}
+
+.host-guide {
+  font-size: 0.65rem;
+  color: #adb5bd;
+  text-align: center;
+  margin-top: 8px;
+}

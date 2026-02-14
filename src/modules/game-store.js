@@ -24,6 +24,20 @@ class GameStore {
     eventBus.on(GameEvents.SET_LAST_ANSWER, (lastAnswer) => this.lastAnswer = lastAnswer);
     eventBus.on(GameEvents.CHANGE_START, () => this.state = GAME_STATE.PLAYING);
     eventBus.on(GameEvents.INIT_NICKNAME, () => this.initNickname());
+    eventBus.on(GameEvents.INIT_GAME_UI, () => this.initGame());
+  }
+
+  initGame(){
+    this.playerList = [];
+    this.playSequence = [];
+    this.startPlaySequence = [];
+    this.suspect = "";
+    this.nickname = "";
+    this.category = "";
+    this.correct = "";
+    this.state = "";
+    this.lastAnswer = "";
+    this.chatHistory = [];
   }
 
   initHint(playerList){

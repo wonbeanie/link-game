@@ -1,47 +1,94 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
-import { getDatabase, ref, set, onValue, get, child, update} from "https://www.gstatic.com/firebasejs/12.7.0/firebase-database.js";
-import { firebaseConfig } from "../../config.js";
-import { DATABASE_KEYS } from "../modules/modules.js";
+import webRTC from "./webRTC.js";
+import { DATABASE_KEYS, deepCopy } from "../modules/modules.js";
+import gameStore from "../modules/game-store.js";
+import eventBus from "../modules/event-bus.js";
+import { GameEvents } from "../modules/events.js";
 
 class GameDatabase {
-  app = null;
-  db = null;
-  dbRef = null;
+  listener = {};
+  database = {};
 
   constructor(){
-    this.app = initializeApp(firebaseConfig);
-    this.db = getDatabase(this.app);
-    this.dbRef = ref(getDatabase());
+
   }
 
   updateData(data, table = DATABASE_KEYS.GAME_DATA_KEY) {
+    if(gameStore.admin){
+      this.onValue({
+        data,
+        table
+      }, false);
+    }
     if(Object.keys(data).length > 0){
-      update(ref(this.db, table), data);
+      webRTC.send({
+        data,
+        table
+      });
     }
   }
   
-  clearDatabase() {
-    set(ref(this.db, DATABASE_KEYS.ROOT_KEY), null);
-  }
-
-  onValueListener(key, callback){
-    onValue(ref(this.db, key), (snapshot)=>{
-      const data = snapshot.val();
-      if(null === data){
-        return;
-      }
-      callback(data);
+  clearDatabase(uiClear = false) {
+    this.database = {};
+    webRTC.send({
+      data : {},
+      table : "/",
+      uiClear
     });
   }
 
-  async getData(key){
-    const snapshot = await get(child(this.dbRef, key))
+  onValueListener(key, callback){
+    this.listener = {
+      ...this.listener,
+      [key]: (data)=>{
+        if(null === data){
+          return;
+        }
+        callback(data);
+      }
+    }
+  }
 
-    if (snapshot.exists()) {
-      return snapshot.val();
+  onValue({table, data, uiClear = false}, send = true){
+    if(table === "/"){
+      this.database = data;
+      if(uiClear){
+        eventBus.emit(GameEvents.INIT_GAME_UI);
+      }
+      return;
+    }
+    
+    if(!this.listener[table]){
+      return;
+    }
+    let databaseTemp = deepCopy(this.database);
+
+    databaseTemp = {
+      ...databaseTemp,
+      [table]: {
+        ...databaseTemp[table],
+        ...data
+      }
     }
 
-    return {};
+    Object.entries(databaseTemp[table]).forEach(([key, value])=>{
+      if(value === null){
+        delete databaseTemp[table][key];
+      }
+    });
+
+    this.listener[table](databaseTemp[table]);
+    this.database = databaseTemp;
+
+    if(gameStore.admin && send){
+      webRTC.send({
+        data,
+        table
+      });
+    }
+  }
+
+  async getData(key){
+    return this.database[key];
   }
 }
 

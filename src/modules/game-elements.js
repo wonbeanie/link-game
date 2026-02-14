@@ -4,11 +4,11 @@ class ElementWrapper {
   }
 
   show() {
-    this.element.className = "show";
+    this.element.classList.remove("none");
   }
 
   hide() {
-    this.element.className = "none";
+    this.element.classList.add("none");
   }
 
   get value(){
@@ -83,7 +83,10 @@ class GameElements {
     this.admin = {
       display : new ElementWrapper("admin-btn"),
       start : new ElementWrapper("start"),
-      clear : new ElementWrapper("clear")
+      clear : new ElementWrapper("clear"),
+      modal : new ElementWrapper("admin-modal"),
+      open : new ElementWrapper("open-admin-modal"),
+      close : new ElementWrapper("modal-close-btn")
     }
 
     this.nickname = new UIGroup("nickname");
@@ -106,6 +109,13 @@ class GameElements {
 
     this.log = new ElementWrapper("log-display");
     this.timer = new ElementWrapper("timer");
+    
+    this.webrtc = {
+      myId : new ElementWrapper("my-id"),
+      copyBtn : new ElementWrapper("copy-id"),
+      connectBtn : new ElementWrapper("connect-btn"),
+      adminId : new ElementWrapper("target-id-input")
+    }
   }
 }
 

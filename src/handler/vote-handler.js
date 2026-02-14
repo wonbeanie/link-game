@@ -21,6 +21,7 @@ class VoteHandler {
   }
 
   init(){
+    this.playerSelectCheck = {};
     this.sendSuspectCheck = false;
     
     timer.startTimer(this.VOTE_TIME,()=>{

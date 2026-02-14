@@ -1,0 +1,39 @@
+/* 방장 패널 전용 모달 스타일 */
+.admin-modal-content {
+  max-width: 450px !important; /* 일반 알림창보다 넓게 */
+  text-align: left !important;
+  padding: 25px !important;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.modal-close-x {
+  background: none !important;
+  border: none !important;
+  color: #aaa !important;
+  font-size: 1.5rem !important;
+  width: auto !important;
+  margin: 0 !important;
+  cursor: pointer;
+}
+
+.admin-open-btn {
+  background-color: #57606f !important; /* 조금 더 묵직한 관리자 컬러 */
+  font-size: 1rem !important;
+  border-radius: 10px !important;
+}
+
+.btn-start { background-color: #2ed573 !important; }
+.btn-clear { background-color: #ced4da !important; color: #444 !important; }
+
+/* 플레이어 리스트 스크롤 영역 강화 */
+#player-list-items {
+  background: #f1f3f5;
+  border-radius: 8px;
+  min-height: 100px;
+}

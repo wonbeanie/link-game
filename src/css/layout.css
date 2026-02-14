@@ -1,0 +1,76 @@
+/* 전체 레이아웃 설정 */
+.game-layout {
+  display: flex;
+  max-width: 1200px !important; /* 가로폭 확장 */
+  width: 95%;
+  gap: 20px;
+  align-items: flex-start;
+  background: transparent !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+}
+
+/* 중앙 메인 판넬 */
+.main-panel {
+  flex: 1.5; /* 중앙을 더 넓게 */
+  background: white;
+  padding: 25px;
+  border-radius: var(--border-radius);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+  min-width: 350px;
+}
+
+/* 양 옆 사이드 판넬 (로그, 채팅) */
+.side-panel {
+  flex: 1;
+  background: white;
+  padding: 20px;
+  border-radius: var(--border-radius);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+  height: 600px; /* 전체 높이 고정 */
+  display: flex;
+  flex-direction: column;
+}
+
+.area-title {
+  font-size: 1rem;
+  color: var(--primary-color);
+  margin-bottom: 15px;
+  border-bottom: 2px solid #f1f3f5;
+  padding-bottom: 10px;
+  display: block;
+}
+
+/* 스크롤 영역 최적화 */
+#display, #chat-window {
+  flex: 1;
+  overflow-y: auto;
+  background: #f8f9fa;
+  border-radius: 8px;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+/* 채팅 입력란 */
+.chat-input-group {
+  display: flex;
+  gap: 5px;
+}
+.chat-input-group input { margin: 0 !important; flex: 1; }
+.chat-input-group button { margin: 0; width: auto; padding: 0 15px; }
+
+/* 반응형: 태블릿/모바일에서는 세로로 */
+@media (max-width: 1000px) {
+  .game-layout {
+    flex-direction: column;
+    align-items: center;
+  }
+  .side-panel, .main-panel {
+    width: 100%;
+    height: auto;
+    max-width: 500px;
+  }
+  #display, #chat-window {
+    height: 250px;
+  }
+}

@@ -25,6 +25,9 @@ class UiController {
     eventBus.on(GameEvents.DEFAULT_GAME_INFO_UPDATED, (data) => uiHandler.updateGameInfoUI(data))
     eventBus.on(GameEvents.UPDATE_TIME, (data) => uiHandler.showTimerUI(data))
     eventBus.on(GameEvents.STOP_TIMER, () => uiHandler.clearTimerUI());
+    eventBus.on(GameEvents.OPEN_ADMIN_MODAL, () => uiHandler.showAdminModal());
+    eventBus.on(GameEvents.CLOSE_ADMIN_MODAL, () => uiHandler.hideAdminModal());
+    eventBus.on(GameEvents.INIT_GAME_UI, () => uiHandler.initGameUi());
   }
 }
 

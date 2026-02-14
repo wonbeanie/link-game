@@ -4,338 +4,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>링크 게임 (Link Game)</title>
-  <style>
-    :root {
-      --primary-color: #4a90e2;
-      --secondary-color: #f5f7fa;
-      --accent-color: #ff4757;
-      --text-color: #2f3542;
-      --border-radius: 12px;
-    }
-
-    body {
-      font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
-      background-color: #eef2f7;
-      color: var(--text-color);
-      display: flex;
-      justify-content: center;
-      padding: 20px;
-      margin: 0;
-    }
-
-    .container {
-      width: 100%;
-      max-width: 500px;
-      background: white;
-      padding: 25px;
-      border-radius: var(--border-radius);
-      box-shadow: 0 10px 25px rgba(0,0,0,0.05);
-    }
-
-    h3 {
-      text-align: center;
-      color: var(--primary-color);
-      font-size: 1.5rem;
-      margin-bottom: 20px;
-    }
-
-    /* 규칙 섹션 */
-    .rules {
-      background: var(--secondary-color);
-      padding: 15px;
-      border-radius: var(--border-radius);
-      font-size: 0.9rem;
-      line-height: 1.6;
-      margin-bottom: 20px;
-    }
-
-    .rules div { margin-bottom: 5px; }
-
-    /* 입력 및 버튼 공통 */
-    input[type="text"], select {
-      width: calc(100% - 24px);
-      padding: 12px;
-      margin: 10px 0;
-      border: 1px solid #ddd;
-      border-radius: 8px;
-      font-size: 1rem;
-    }
-
-    button {
-      padding: 12px 20px;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: 600;
-      transition: all 0.2s;
-      background-color: var(--primary-color);
-      color: white;
-      width: 100%;
-      margin-top: 5px;
-    }
-
-    button:hover { opacity: 0.9; transform: translateY(-1px); }
-    #clear { background-color: #ced4da; color: #444; margin-top: 5px; font-size: 1.1rem; }
-    #start { background-color: #2ed573; font-size: 1.1rem; }
-
-    /* 게임 정보 표시 칸 */
-    .game-info {
-      display: flex;
-      gap: 10px;
-      margin: 20px 0;
-    }
-
-    .info-box {
-      flex: 1;
-      background: #f1f3f5;
-      padding: 15px;
-      border-radius: 8px;
-      text-align: center;
-      font-weight: bold;
-    }
-
-    .info-box span {
-      display: block;
-      color: var(--primary-color);
-      font-size: 1.1rem;
-      margin-top: 5px;
-    }
-
-    #timer {
-      text-align: center;
-      font-size: 1.5rem;
-      font-weight: bold;
-      color: var(--accent-color);
-      margin: 15px 0;
-    }
-
-    /* 답변 리스트 */
-    .display-area {
-      margin-top: 25px;
-      border-top: 2px solid #eee;
-      padding-top: 15px;
-    }
-
-    #display {
-      margin-top: 10px;
-    }
-
-    .player-hint-item {
-      background: #ffffff;
-      border: 1px solid #edf2f7;
-      padding: 10px 15px;
-      margin-bottom: 8px;
-      border-radius: 10px;
-      display: flex;       /* 가로 배치 */
-      align-items: center; /* 세로 중앙 정렬 */
-      justify-content: flex-start; /* 왼쪽 정렬 */
-      gap: 8px;            /* 이름과 힌트 사이 간격 */
-      box-shadow: 0 2px 4px rgba(0,0,0,0.02);
-    }
-
-    /* 유틸리티 */
-    .none { display: none; }
-    .show { display: block; }
-
-    /* 커스텀 알림창 */
-    .modal-overlay {
-      position: fixed;
-      top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0, 0, 0, 0.6);
-      display: flex; justify-content: center; align-items: center;
-      z-index: 1000;
-      backdrop-filter: blur(3px);
-    }
-
-    .modal-content {
-      background: white;
-      padding: 30px;
-      border-radius: 15px;
-      text-align: center;
-      width: 80%;
-      max-width: 300px;
-    }
-
-    #state-info {
-      font-size: 1rem;
-      font-weight: 500;
-      color: #636e72; /* 기본은 차분한 회색 */
-      background-color: #f1f3f5;
-      padding: 8px 15px;
-      border-radius: 20px;
-      display: inline-block;
-      margin-bottom: 15px;
-      transition: all 0.3s ease;
-    }
-
-    /* 입력 중일 때 강조되는 스타일 */
-    .typing-active {
-      color: var(--primary-color) !important;
-      background-color: #e8f2ff !important;
-      border: 1px solid #d0e3ff;
-      animation: pulse 1.5s infinite;
-    }
-
-    @keyframes pulse {
-      0% { opacity: 1; }
-      50% { opacity: 0.6; }
-      100% { opacity: 1; }
-    }
-
-    .dot-ani {
-      display: inline-block;
-      width: 1em;
-    }
-  </style>
-
-  <style>
-    /* 전체 레이아웃 설정 */
-    .game-layout {
-      display: flex;
-      max-width: 1200px !important; /* 가로폭 확장 */
-      width: 95%;
-      gap: 20px;
-      align-items: flex-start;
-      background: transparent !important;
-      box-shadow: none !important;
-      padding: 0 !important;
-    }
-
-    /* 중앙 메인 판넬 */
-    .main-panel {
-      flex: 1.5; /* 중앙을 더 넓게 */
-      background: white;
-      padding: 25px;
-      border-radius: var(--border-radius);
-      box-shadow: 0 10px 25px rgba(0,0,0,0.05);
-      min-width: 350px;
-    }
-
-    /* 양 옆 사이드 판넬 (로그, 채팅) */
-    .side-panel {
-      flex: 1;
-      background: white;
-      padding: 20px;
-      border-radius: var(--border-radius);
-      box-shadow: 0 10px 25px rgba(0,0,0,0.05);
-      height: 600px; /* 전체 높이 고정 */
-      display: flex;
-      flex-direction: column;
-    }
-
-    .area-title {
-      font-size: 1rem;
-      color: var(--primary-color);
-      margin-bottom: 15px;
-      border-bottom: 2px solid #f1f3f5;
-      padding-bottom: 10px;
-      display: block;
-    }
-
-    /* 스크롤 영역 최적화 */
-    #display, #chat-window {
-      flex: 1;
-      overflow-y: auto;
-      background: #f8f9fa;
-      border-radius: 8px;
-      padding: 10px;
-      margin-bottom: 10px;
-    }
-
-    /* 채팅 입력란 */
-    .chat-input-group {
-      display: flex;
-      gap: 5px;
-    }
-    .chat-input-group input { margin: 0 !important; flex: 1; }
-    .chat-input-group button { margin: 0; width: auto; padding: 0 15px; }
-
-    /* 반응형: 태블릿/모바일에서는 세로로 */
-    @media (max-width: 1000px) {
-      .game-layout {
-        flex-direction: column;
-        align-items: center;
-      }
-      .side-panel, .main-panel {
-        width: 100%;
-        height: auto;
-        max-width: 500px;
-      }
-      #display, #chat-window {
-        height: 250px;
-      }
-    }
-  </style>
-
-  <style>
-    /* 커스텀 알림창 오버레이 */
-    .modal-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(47, 53, 66, 0.6); /* 어두운 네이비톤 투명 배경 */
-      backdrop-filter: blur(4px); /* 배경 흐리게 처리 (고급스러운 효과) */
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      z-index: 9999; /* 최상단 유지 */
-      transition: all 0.3s ease;
-    }
-
-    /* 알림창 본체 */
-    .modal-content {
-      background: white;
-      width: 90%;
-      max-width: 350px;
-      padding: 30px;
-      border-radius: 20px; /* 더 둥글게 */
-      text-align: center;
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
-      transform: translateY(0);
-      animation: modalPop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    }
-
-    /* 팝업 애니메이션 */
-    @keyframes modalPop {
-      from { opacity: 0; transform: scale(0.8); }
-      to { opacity: 1; transform: scale(1); }
-    }
-
-    #alertTitle {
-      margin: 0 0 15px 0;
-      font-size: 1.3rem;
-      color: var(--text-color);
-      font-weight: 800;
-    }
-
-    #alertMessage {
-      font-size: 1rem;
-      color: #57606f;
-      line-height: 1.5;
-      margin-bottom: 25px;
-      word-break: keep-all;
-    }
-
-    /* 알림창 확인 버튼 전용 스타일 */
-    #close-alert {
-      background-color: var(--primary-color);
-      color: white;
-      border: none;
-      padding: 12px 0;
-      width: 100%;
-      border-radius: 10px;
-      font-size: 1rem;
-      font-weight: bold;
-      cursor: pointer;
-      transition: background 0.2s;
-    }
-
-    #close-alert:hover {
-      background-color: #357abd;
-    }
-  </style>
+  <link rel="stylesheet" href="./src/css/main.css">
+  <link rel="stylesheet" href="./src/css/layout.css">
+  <link rel="stylesheet" href="./src/css/modal.css">
+  <link rel="stylesheet" href="./src/css/peer.css">
+  <link rel="stylesheet" href="./src/css/admin.css">
 </head>
 <body>
 
@@ -359,8 +32,7 @@
       </div>
 
       <div id="admin-btn" class="none" style="margin-bottom: 20px;">
-        <button id="start">게임 시작하기</button>
-        <button id="clear">초기화</button>
+        <button id="open-admin-modal" class="admin-open-btn">⚙️ 방장 컨트롤 패널 열기</button>
       </div>
 
       <div class="game-info">
@@ -405,8 +77,65 @@
         <input type="text" id="chat-input" placeholder="메시지...">
         <button id="chat-send">전송</button>
       </div>
+
+      <div class="connection-status-wrapper">
+        <div class="my-status-card">
+          <div class="status-header">
+            <span class="status-dot"></span>
+            <span class="connection-label">나의 접속 ID</span>
+          </div>
+          <div class="id-display-group">
+            <code id="my-id">로드 중...</code>
+            <button id="copy-id" class="copy-btn">복사</button>
+          </div>
+        </div>
+
+        <div class="connect-input-group">
+          <input type="text" id="target-id-input" placeholder="방장의 ID를 입력하세요">
+          <button id="connect-btn">연결하기</button>
+        </div>
+        <p class="host-guide">※ 방장과 연결되어야 게임 참여가 가능합니다.</p>
+      </div>
+      
     </aside>
+
   </div>
+
+  <div id="admin-modal" class="none modal-overlay">
+    <div class="modal-content admin-modal-content">
+      <div class="modal-header">
+        <strong class="admin-label">🎮 방장 컨트롤 패널</strong>
+        <button id="modal-close-btn" class="modal-close-x">×</button>
+      </div>
+
+      <div class="host-input-area none">
+        <div class="input-with-button">
+          <input type="text" id="player-id-input" placeholder="플레이어 ID 붙여넣기">
+          <button id="add-player-btn">추가</button>
+        </div>
+      </div>
+
+      <div class="player-list-section">
+        <div class="list-header">
+          <span>참여 플레이어 현황</span>
+          <span id="player-count-badge">0 / 8</span>
+        </div>
+        <ul id="player-list-items" class="custom-scrollbar">
+          <li class="empty-msg">추가된 플레이어가 없습니다.</li>
+        </ul>
+      </div>
+
+      <div class="admin-action-btns">
+        <button id="start" class="btn-start">게임 시작하기</button>
+        <button id="clear" class="btn-clear">초기화</button>
+      </div>
+
+      <button id="test">
+        객체 전송 테스트
+      </button>
+    </div>
+  </div>
+
 
   <div id="alert" class="modal-overlay" style="display: none;">
     <div class="modal-content">

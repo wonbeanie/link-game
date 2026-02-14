@@ -117,12 +117,17 @@ class UiHandler {
     gameElements.chat.input.value = '';
   }
 
+  showNicknameInputGroup(){
+    gameElements.nickname.show();
+  }
+
   hideNicknameInputGroup(){
     gameElements.nickname.hide();
   }
 
   hideHintInputGroup(){
     gameElements.hint.hide();
+    gameElements.hint.value = "";
   }
 
   showHintInputGroup(){
@@ -187,6 +192,10 @@ class UiHandler {
     gameElements.answer.show();
   }
 
+  hideAnswerInputGroup(){
+    gameElements.answer.hide();
+  }
+
   updateNicknameUI(value){
     gameElements.nickname.value = value;
   }
@@ -217,6 +226,28 @@ class UiHandler {
 
   clearTimerUI(){
     gameElements.timer.textContent = "";
+  }
+
+  showAdminModal(){
+    gameElements.admin.modal.show();
+  }
+
+  hideAdminModal(){
+    gameElements.admin.modal.hide();
+  }
+
+  initGameUi(){
+    gameElements.chat.display.textContent = "";
+    gameElements.log.textContent = "";
+    gameElements.info.category.textContent = "-";
+    gameElements.info.correct.textContent = "-";
+    gameElements.info.state.textContent = "플레이어를 기다리는 중";
+    gameElements.timer.textContent = "00:00";
+    this.showNicknameInputGroup();
+    this.hideHintInputGroup();
+    this.hideVoteInputGroup();
+    this.hideAnswerInputGroup();
+    this.hideAdminModal();
   }
 }
 

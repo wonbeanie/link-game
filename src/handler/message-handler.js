@@ -10,6 +10,12 @@ class MessageHandler {
   constructor(){
     eventBus.on(GameEvents.READY_TO_ADD_LOG, (data)=>this.setMessages(data));
     eventBus.on(GameEvents.DRAW_LOG, ()=>this.logView());
+    eventBus.on(GameEvents.INIT_GAME_UI, () => this.initGame())
+  }
+
+  initGame(){
+    this.votingList = [];
+    this.playerHints = [];
   }
 
   votingLog(){

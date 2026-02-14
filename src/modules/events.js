@@ -41,5 +41,10 @@ export const GameEvents = {
   DEFAULT_GAME_INFO_UPDATED : "store:defaultGameInfoUpdated",
   UPDATE_TIME : "timer:update",
   STOP_TIMER : "timer:stop",
-  INIT_NICKNAME : "store:initNickname"
+  INIT_NICKNAME : "store:initNickname",
+
+  CLOSE_ADMIN_MODAL : "admin:close",
+  OPEN_ADMIN_MODAL : "admin:open",
+
+  INIT_GAME_UI : "ui:initGameUi"
 }
