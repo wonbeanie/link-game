@@ -1,0 +1,52 @@
+/* 규칙 아코디언 스타일 */
+.rules-accordion {
+  background: var(--secondary-color);
+  border-radius: var(--border-radius);
+  margin-bottom: 25px;
+  overflow: hidden;
+  border: 1px solid #e1e8ed;
+}
+
+.rules-accordion summary {
+  padding: 12px 20px;
+  font-weight: 700;
+  cursor: pointer;
+  color: var(--primary-color);
+  list-style: none; /* 기본 화살표 제거 */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: background 0.2s;
+}
+
+.rules-accordion summary:hover {
+  background: #ebf3ff;
+}
+
+.rules-content {
+  padding: 5px 20px 20px;
+  border-top: 1px solid #e1e8ed;
+  font-size: 0.85rem;
+  line-height: 1.6;
+  color: #57606f;
+}
+
+.rules-section {
+  margin-top: 15px;
+}
+
+.rules-section strong {
+  display: block;
+  margin-bottom: 5px;
+  color: var(--text-color);
+  font-size: 0.9rem;
+}
+
+.rules-section ul {
+  margin: 0;
+  padding-left: 18px;
+}
+
+.rules-section li {
+  margin-bottom: 3px;
+}

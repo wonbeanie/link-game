@@ -21,11 +21,6 @@ class GameController {
       navigator.clipboard.writeText(gameElements.webrtc.myId.textContent);
     });
 
-
-    document.getElementById("test").addEventListener("click", () => {
-      webRTC.testSend();
-    })
-
     eventBus.emit(GameEvents.INIT_NICKNAME);
   }
 
