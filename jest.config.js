@@ -2,8 +2,7 @@
 const config = {
   verbose: true,
   moduleNameMapper: {
-    "^https://www\\.gstatic\\.com/firebasejs/12\\.7\\.0/firebase-app\\.js$": "<rootDir>/tests/__mocks__/mock-firebase-app.js",
-    "^https://www\\.gstatic\\.com/firebasejs/12\\.7\\.0/firebase-database\\.js$": "<rootDir>/tests/__mocks__/mock-firebase-database.js"
+    "^https://esm\\.sh/peerjs@1\\.5\\.2$": "<rootDir>/tests/__mocks__/mock-peerjs.js",
   },
   testEnvironment: 'jsdom',
   setupFilesAfterEnv : ['<rootDir>/tests/modules/test-setup.js']

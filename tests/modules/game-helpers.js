@@ -1,11 +1,13 @@
 import { fireEvent, screen, waitFor } from '@testing-library/dom';
-import { mockDatabaseUpdate, nickname, setPlayers, testInit, userNickname } from "../__mocks__/mock-firebase-database";
+// import { testInit } from "../__mocks__/mock-firebase-database";
 import fs from 'fs';
 import path from 'path';
 import { SEQUENCE_END, TABLE_KEYS } from '../../src/modules/modules.js';
+import { setPlayers, mockDatabaseUpdate } from './database-helpers.js';
+import { nickname, userNickname } from '../__mocks__/mock-peerjs.js';
 
 export async function setupGameStart(initUsers = [userNickname]){
-  setPlayers(initUsers);
+  await setPlayers(initUsers);
 
   const nicknameInput = screen.getByPlaceholderText('닉네임을 입력하세요');
   fireEvent.change(nicknameInput, {target : {value : nickname}});
@@ -13,9 +15,12 @@ export async function setupGameStart(initUsers = [userNickname]){
   const confirmButton = screen.getByText("입력 완료");
   confirmButton.click();
 
-  testInit({Sequence : true});
+  // testInit({Sequence : true});
 
-  const gameStartBtn = screen.getByText("게임 시작하기");
+  const adminModalOpenBtn = screen.getByText(/방장 컨트롤 패널 열기/);
+  adminModalOpenBtn.click();
+
+  const gameStartBtn = screen.getByText(/게임 시작하기/);
   gameStartBtn.click();
 
   await screen.findByText(/게임시작|당신 순서입니다./);
@@ -33,13 +38,13 @@ export async function setupSendHint(){
   result[userNickname] = hintWord;
   result[TABLE_KEYS.SEQUENCE] = SEQUENCE_END;
 
-  mockDatabaseUpdate(result, false, true);
+  await mockDatabaseUpdate(result, false, true);
 
   await checkAlert("토론시간");
 }
 
 export async function setupHTMLInit(){
-  const html = fs.readFileSync(path.resolve(__dirname, "../../index.html"), 'utf8');;
+  const html = fs.readFileSync(path.resolve(__dirname, "../../index.html"), 'utf8');
   window.history.pushState({}, '', '?admin=true');
   document.body.innerHTML = html.toString();
   jest.resetModules();
@@ -48,6 +53,8 @@ export async function setupHTMLInit(){
 
 export async function checkAlert(alertTitle = "", level = 3){
   const regx = new RegExp(alertTitle);
+
+  screen.debug(document.getElementById("alert"));
 
   await waitFor(()=>{
     const alert = screen.getByRole('heading', { 

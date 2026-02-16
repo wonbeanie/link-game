@@ -2,7 +2,7 @@ import gameDatabase from "../database/database.js";
 import eventBus from "./event-bus.js";
 import { GameEvents } from "./events.js";
 import gameStore from "./game-store.js";
-import { SEQUENCE_END, TABLE_KEYS } from "./modules.js";
+import { deepCopy, SEQUENCE_END, TABLE_KEYS } from "./modules.js";
 
 class GameManager {
   newDatabase = {};

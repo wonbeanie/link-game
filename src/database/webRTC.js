@@ -38,7 +38,9 @@ class WebRTC {
 
       eventBus.emit(GameEvents.ADD_CHAT_MESSAGE, {
         nickname : "알림",
-        message : !gameStore.admin ? "방장과 연결이 완료되었습니다." : `연결된 플레이어 수 : ${this.connections.length}`
+        message : !gameStore.admin ?
+                  "방장과 연결이 완료되었습니다." :
+                  `연결된 플레이어 수 : ${this.connections.length}`
       });
 
       if(!gameStore.admin){
@@ -52,7 +54,7 @@ class WebRTC {
       });
 
       conn.on('close', () => {
-          connections = this.connections.filter(c => c.peer !== conn.peer);
+        connections = this.connections.filter(c => c.peer !== conn.peer);
       });
     });
   }

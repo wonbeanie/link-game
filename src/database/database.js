@@ -7,9 +7,12 @@ import { GameEvents } from "../modules/events.js";
 class GameDatabase {
   listener = {};
   database = {};
+  i = 0;
+  num = 0;
 
   constructor(){
-
+    let num = Math.random() * 100;
+    this.num = num
   }
 
   updateData(data, table = DATABASE_KEYS.GAME_DATA_KEY) {
@@ -37,6 +40,7 @@ class GameDatabase {
   }
 
   onValueListener(key, callback){
+    this.i += 1;
     this.listener = {
       ...this.listener,
       [key]: (data)=>{
@@ -76,8 +80,8 @@ class GameDatabase {
       }
     });
 
-    this.listener[table](databaseTemp[table]);
     this.database = databaseTemp;
+    this.listener[table](databaseTemp[table]);
 
     if(gameStore.admin && send){
       webRTC.send({

@@ -178,7 +178,7 @@ class UiHandler {
 
   updateSuspectVoteOptions(voteList){
     gameElements.vote.allClearChildren();
-    
+
     deepCopy(voteList).sort().forEach((player)=>{
       const optionElement = document.createElement("option");
       optionElement.value = player;

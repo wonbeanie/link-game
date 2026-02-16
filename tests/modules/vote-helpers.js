@@ -1,5 +1,7 @@
 import { screen, waitFor, within } from "@testing-library/dom";
-import { mockDatabaseUpdate, nickname, secondNickname, thirdNickname, userNickname } from "../__mocks__/mock-firebase-database";
+// import { mockDatabaseUpdate, nickname, secondNickname, thirdNickname, userNickname } from "../__mocks__/mock-firebase-database";
+import { mockDatabaseUpdate } from "../modules/database-helpers.js";
+import { nickname, secondNickname, thirdNickname, userNickname } from "../__mocks__/mock-peerjs.js";
 import { checkAlert } from "./game-helpers";
 import { TABLE_KEYS } from "../../src/modules/modules.js";
 
@@ -100,7 +102,7 @@ async function doneVoteInit({votingList, suspect}){
     result[`${TABLE_KEYS.SUSPECT_LIST}-${player}`] = voting;
   })
 
-  mockDatabaseUpdate(result, false, true);
+  await mockDatabaseUpdate(result, false, true);
 }
 
 async function checkVoting(votingList){

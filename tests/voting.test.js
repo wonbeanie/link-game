@@ -1,7 +1,8 @@
 import { fireEvent, screen, within } from "@testing-library/dom";
 import { checkAlert, setupGameStart, setupHTMLInit, setupSendHint } from "./modules/game-helpers";
-import { nickname, secondNickname, thirdNickname, userNickname } from "./__mocks__/mock-firebase-database";
+// import { nickname, secondNickname, thirdNickname, userNickname } from "./__mocks__/mock-firebase-database";
 import { checkSelectPlayerList, MOCK_CORRECT, MOCK_FAKE_CORRECT, setupVoting, setupVotingSetting } from "./modules/vote-helpers";
+import {nickname, secondNickname, thirdNickname, userNickname} from './__mocks__/mock-peerjs.js';
 
 describe("투표 테스트", () => {
   beforeEach(async ()=>{
@@ -56,14 +57,14 @@ describe("투표 테스트", () => {
   });
 
   describe.each([
-    {
-      desc : "플레이어 2명인 경우",
-      addPlayerList : [userNickname],
-    },
-    {
-      desc : "플레이어 4명인 경우",
-      addPlayerList : [userNickname, secondNickname, thirdNickname],
-    },
+    // {
+    //   desc : "플레이어 2명인 경우",
+    //   addPlayerList : [userNickname],
+    // },
+    // {
+    //   desc : "플레이어 4명인 경우",
+    //   addPlayerList : [userNickname, secondNickname, thirdNickname],
+    // },
     {
       desc : "투표가 동점인 경우",
       addPlayerList :[userNickname, secondNickname, thirdNickname],

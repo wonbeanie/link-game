@@ -1,4 +1,4 @@
 import '@testing-library/jest-dom';
+import '../../src/database/database.js'
 
-jest.mock('https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js');
-jest.mock("https://www.gstatic.com/firebasejs/12.7.0/firebase-database.js");
+jest.mock('https://esm.sh/peerjs@1.5.2');
