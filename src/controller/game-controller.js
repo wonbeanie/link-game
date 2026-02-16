@@ -17,9 +17,8 @@ class GameController {
     gameElements.admin.close.addEventListener("click", adminHandler.modalClose);
     gameElements.admin.open.addEventListener("click", adminHandler.modalOpen);
     gameElements.admin.close.addEventListener("click", adminHandler.modalClose);
-    gameElements.webrtc.copyBtn.addEventListener("click", () => {
-      navigator.clipboard.writeText(gameElements.webrtc.myId.textContent);
-    });
+    gameElements.webrtc.copyBtn.addEventListener("click", adminHandler.copyRoomId);
+    gameElements.admin.create.addEventListener("click", adminHandler.createRoom);
 
     eventBus.emit(GameEvents.INIT_NICKNAME);
   }

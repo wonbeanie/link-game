@@ -7,7 +7,6 @@ class UiController {
     eventBus.on(GameEvents.CHANGE_START, (data) => uiHandler.showGameStartAlert(data));
     eventBus.on(GameEvents.PLAYER_OUT, () => uiHandler.showGameOutAlert());
     eventBus.on(GameEvents.GAME_OVER, ({gameInfo, data : lastAnswer, findSuspect}) => uiHandler.showGameOverAlert(gameInfo, lastAnswer, findSuspect));
-    eventBus.on(GameEvents.INIT_ADMIN, () => uiHandler.showAdminBtns());
     eventBus.on(GameEvents.ADD_CHAT_MESSAGE, (data) => uiHandler.addChatMessageToDisplay(data));
     eventBus.on(GameEvents.CLEAR_CHAT_DISPLAY, () => uiHandler.clearChatMessageToDisplay());
     eventBus.on(GameEvents.SET_CHAT_HISTORY, () => uiHandler.clearChatInput());
@@ -28,6 +27,8 @@ class UiController {
     eventBus.on(GameEvents.OPEN_ADMIN_MODAL, () => uiHandler.showAdminModal());
     eventBus.on(GameEvents.CLOSE_ADMIN_MODAL, () => uiHandler.hideAdminModal());
     eventBus.on(GameEvents.INIT_GAME_UI, () => uiHandler.initGameUi());
+    eventBus.on(GameEvents.CREATE_ROOM, () => uiHandler.showAdminPanel());
+    eventBus.on(GameEvents.RELESE_ROOM, () => uiHandler.releseRoom());
   }
 }
 

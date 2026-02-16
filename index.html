@@ -10,6 +10,7 @@
   <link rel="stylesheet" href="./src/css/peer.css">
   <link rel="stylesheet" href="./src/css/admin.css">
   <link rel="stylesheet" href="./src/css/rules.css">
+  <link rel="stylesheet" href="./src/css/admin-modal.css">
 </head>
 <body>
 
@@ -111,31 +112,36 @@
         <button id="modal-close-btn" class="modal-close-x">×</button>
       </div>
 
-      <div class="my-status-card">
-        <div class="status-header">
-          <span class="status-dot"></span>
-          <span class="connection-label">방장 접속 ID</span>
-        </div>
-        <div class="id-display-group">
-          <code id="my-id">로드 중...</code>
-          <button id="copy-id" class="copy-btn">복사</button>
-        </div>
+      <div id="create-room-area" class="room-setup-section">
+        <p class="setup-guide-text">
+          새로운 게임 방을 생성하고 플레이어들에게 방 ID를 공유해 초대하세요.
+        </p>
+        <button id="create-room-btn" class="btn-start btn-create-room">🏠 방 만들기 (ID 생성)</button>
       </div>
 
-      <div class="host-input-area none">
-        <div class="input-with-button">
-          <input type="text" id="player-id-input" placeholder="플레이어 ID 붙여넣기">
-          <button id="add-player-btn">추가</button>
+      <div id="room-info-area" class="none">
+        <div class="my-status-card">
+          <div class="status-header">
+            <span class="status-dot"></span>
+            <span class="connection-label">방장 접속 ID</span>
+          </div>
+          <div class="id-display-group">
+            <code id="my-id">생성 중...</code>
+            <button id="copy-id" class="copy-btn">복사</button>
+          </div>
         </div>
-      </div>
+        
+        <p class="host-guide-text">
+          위 ID를 플레이어들에게 공유하여 연결을 기다리세요.
+        </p>
 
-      <div class="admin-action-btns">
-        <button id="start" class="btn-start">게임 시작하기</button>
-        <button id="clear" class="btn-clear">초기화</button>
+        <div class="admin-action-btns">
+          <button id="start" class="btn-start">게임 시작하기</button>
+          <button id="clear" class="btn-clear">초기화</button>
+        </div>
       </div>
     </div>
   </div>
-
 
   <div id="alert" class="modal-overlay" style="display: none;">
     <div class="modal-content">
