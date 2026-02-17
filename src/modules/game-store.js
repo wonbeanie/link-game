@@ -25,6 +25,8 @@ class GameStore {
     eventBus.on(GameEvents.CHANGE_START, () => this.state = GAME_STATE.PLAYING);
     eventBus.on(GameEvents.INIT_NICKNAME, () => this.initNickname());
     eventBus.on(GameEvents.INIT_GAME_UI, () => this.initGame());
+    eventBus.on(GameEvents.CREATE_ROOM, () => this.admin = true);
+    eventBus.on(GameEvents.RELESE_ROOM, () => this.admin = false);
   }
 
   initGame(){
@@ -53,19 +55,6 @@ class GameStore {
   initNickname = () => {
     this.nickname = localStorage.getItem('userNickname') || "";
     eventBus.emit(GameEvents.REQUEST_CHANGE_NICKNAME, this.nickname);
-
-    this.setAdmin();
-  }
-
-  setAdmin() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const admin = Boolean(urlParams.get('admin')) || false;
-
-    if(admin){
-      eventBus.emit(GameEvents.INIT_ADMIN);
-    }
-
-    this.admin = admin;
   }
 
   changeNickname(nickname){

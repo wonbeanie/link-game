@@ -9,6 +9,8 @@
   <link rel="stylesheet" href="./src/css/modal.css">
   <link rel="stylesheet" href="./src/css/peer.css">
   <link rel="stylesheet" href="./src/css/admin.css">
+  <link rel="stylesheet" href="./src/css/rules.css">
+  <link rel="stylesheet" href="./src/css/admin-modal.css">
 </head>
 <body>
 
@@ -20,18 +22,32 @@
 
     <main class="main-panel">
       <h3>🔗 LINK GAME</h3>
-      <div class="rules">
-        <div>1. 닉네임 입력 후 대기</div>
-        <div>2. 방장이 <b>시작</b> 버튼 클릭</div>
-        <div>3. <b>제시어</b> 확인</div>
-        <div>4. 30초 내에 연관된 <b>힌트</b> 한 단어 입력</div>
-        <div>5. 다른 플레이어들의 힌트를 보며 <b>제시어가 다른 플레이어</b>를 찾기</div>
-        <div>5-1. 본인이 다른 제시어인것 같다면 <b>시민의 제시어를 유추</b></div>
-        <div>6. 토론 후 <b>제시어가 다른 플레이어</b>을 투표로 지목</div>
-        <div>7. 범인을 찾았다면 범인은 <b>시민의 제시어</b>를 입력 </div>
-      </div>
 
-      <div id="admin-btn" class="none" style="margin-bottom: 20px;">
+      <details class="rules-accordion">
+        <summary>🎮 게임 방법 및 규칙 보기 (클릭)</summary>
+        <div class="rules-content">
+          <div class="rules-section">
+            <strong>🚀 시작 가이드</strong>
+            <ul>
+              <li>방장은 <b>컨트롤 패널</b>에서 ID를 복사해 배포하세요.</li>
+              <li>플레이어는 방장 ID를 입력 후 <b>연결하기</b>를 누르세요.</li>
+              <li>모두 닉네임 입력 후 <b>준비 완료</b>를 누르고 대기하세요.</li>
+              <li>방장은 <b>컨트롤 패널</b>에서 시작버튼을 눌러 게임을 시작하세요.</li>
+              <li><b>게임을 재시작</b>하려면 방장은 <b>컨트롤 패널</b>에서 초기화 버튼을 누르세요.</li>
+            </ul>
+          </div>
+          <div class="rules-section">
+            <strong>⚖️ 게임 룰</strong>
+            <ul>
+              <li>제시어가 다른 단 한 명의 <b>범인</b>을 찾는 게임입니다.</li>
+              <li>30초 내에 힌트를 제시하며 서로의 정체를 유추하세요.</li>
+              <li>범인은 시민의 제시어를 맞춰 역전 승리할 수 있습니다.</li>
+            </ul>
+          </div>
+        </div>
+      </details>
+
+      <div id="admin-btn" style="margin-bottom: 20px;">
         <button id="open-admin-modal" class="admin-open-btn">⚙️ 방장 컨트롤 패널 열기</button>
       </div>
 
@@ -48,7 +64,7 @@
 
       <div id="nickname">
         <input type="text" id="nickname-input" placeholder="닉네임을 입력하세요">
-        <button id="nickname-btn">입력 완료</button>
+        <button id="nickname-btn">준비 완료</button>
       </div>
 
       <div id="hint" class="none">
@@ -79,17 +95,6 @@
       </div>
 
       <div class="connection-status-wrapper">
-        <div class="my-status-card">
-          <div class="status-header">
-            <span class="status-dot"></span>
-            <span class="connection-label">나의 접속 ID</span>
-          </div>
-          <div class="id-display-group">
-            <code id="my-id">로드 중...</code>
-            <button id="copy-id" class="copy-btn">복사</button>
-          </div>
-        </div>
-
         <div class="connect-input-group">
           <input type="text" id="target-id-input" placeholder="방장의 ID를 입력하세요">
           <button id="connect-btn">연결하기</button>
@@ -108,34 +113,36 @@
         <button id="modal-close-btn" class="modal-close-x">×</button>
       </div>
 
-      <div class="host-input-area none">
-        <div class="input-with-button">
-          <input type="text" id="player-id-input" placeholder="플레이어 ID 붙여넣기">
-          <button id="add-player-btn">추가</button>
+      <div id="create-room-area" class="room-setup-section">
+        <p class="setup-guide-text">
+          새로운 게임 방을 생성하고 플레이어들에게 방 ID를 공유해 초대하세요.
+        </p>
+        <button id="create-room-btn" class="btn-start btn-create-room">🏠 방 만들기 (ID 생성)</button>
+      </div>
+
+      <div id="room-info-area" class="none">
+        <div class="my-status-card">
+          <div class="status-header">
+            <span class="status-dot"></span>
+            <span class="connection-label">방장 접속 ID</span>
+          </div>
+          <div class="id-display-group">
+            <code id="my-id">생성 중...</code>
+            <button id="copy-id" class="copy-btn">복사</button>
+          </div>
+        </div>
+        
+        <p class="host-guide-text">
+          위 ID를 플레이어들에게 공유하여 연결을 기다리세요.
+        </p>
+
+        <div class="admin-action-btns">
+          <button id="start" class="btn-start">게임 시작하기</button>
+          <button id="clear" class="btn-clear">초기화</button>
         </div>
       </div>
-
-      <div class="player-list-section">
-        <div class="list-header">
-          <span>참여 플레이어 현황</span>
-          <span id="player-count-badge">0 / 8</span>
-        </div>
-        <ul id="player-list-items" class="custom-scrollbar">
-          <li class="empty-msg">추가된 플레이어가 없습니다.</li>
-        </ul>
-      </div>
-
-      <div class="admin-action-btns">
-        <button id="start" class="btn-start">게임 시작하기</button>
-        <button id="clear" class="btn-clear">초기화</button>
-      </div>
-
-      <button id="test">
-        객체 전송 테스트
-      </button>
     </div>
   </div>
-
 
   <div id="alert" class="modal-overlay" style="display: none;">
     <div class="modal-content">

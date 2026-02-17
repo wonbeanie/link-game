@@ -96,10 +96,6 @@ class UiHandler {
     gameElements.info.nickname.textContent = nickname;
   }
 
-  showAdminBtns(){
-    gameElements.admin.display.show();
-  }
-
   addChatMessageToDisplay({nickname, message}){
     const msgDiv = document.createElement('div');
     msgDiv.className = 'chat-msg';
@@ -248,6 +244,25 @@ class UiHandler {
     this.hideVoteInputGroup();
     this.hideAnswerInputGroup();
     this.hideAdminModal();
+  }
+
+  showAdminPanel(){
+    gameElements.admin.adminPanel.show();
+    gameElements.admin.createDisplay.hide();
+  }
+
+  releseRoom(){
+    this.clearConnectInput();
+    this.hideAdminPanel();
+  }
+
+  clearConnectInput(){
+    gameElements.webrtc.adminId.value = "";
+  }
+
+  hideAdminPanel(){
+    gameElements.admin.adminPanel.hide();
+    gameElements.admin.createDisplay.show();
   }
 }
 

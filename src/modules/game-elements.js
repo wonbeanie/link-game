@@ -86,7 +86,10 @@ class GameElements {
       clear : new ElementWrapper("clear"),
       modal : new ElementWrapper("admin-modal"),
       open : new ElementWrapper("open-admin-modal"),
-      close : new ElementWrapper("modal-close-btn")
+      close : new ElementWrapper("modal-close-btn"),
+      create : new ElementWrapper("create-room-btn"),
+      adminPanel : new ElementWrapper("room-info-area"),
+      createDisplay : new ElementWrapper("create-room-area")
     }
 
     this.nickname = new UIGroup("nickname");

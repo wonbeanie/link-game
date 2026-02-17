@@ -31,7 +31,6 @@ export const GameEvents = {
   ADD_CHAT_MESSAGE : "chat:addMessage",
   CHAT_SEND_COMPLETE : "chat:sendComplete",
 
-  INIT_ADMIN : "admin:init",
   INIT_HINT : "hint:init",
   TURN_END_HINT : "hint:turnEndHint",
   TURN_START_HINT : "hint:turnStartHint",
@@ -46,5 +45,8 @@ export const GameEvents = {
   CLOSE_ADMIN_MODAL : "admin:close",
   OPEN_ADMIN_MODAL : "admin:open",
 
-  INIT_GAME_UI : "ui:initGameUi"
+  INIT_GAME_UI : "ui:initGameUi",
+
+  CREATE_ROOM : "admin:createRoom",
+  RELESE_ROOM : "admin:releaseRoom"
 }

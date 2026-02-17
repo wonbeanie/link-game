@@ -1,6 +1,7 @@
 import gameDatabase from "../database/database.js";
 import eventBus from "../modules/event-bus.js";
 import { GameEvents } from "../modules/events.js";
+import gameElements from "../modules/game-elements.js";
 import { TABLE_KEYS } from "../modules/modules.js";
 import gameSetupService from "../service/game-setup-service.js";
 
@@ -30,6 +31,14 @@ class AdminHandler {
 
   modalClose = () => {
     eventBus.emit(GameEvents.CLOSE_ADMIN_MODAL);
+  }
+
+  createRoom = () => {
+    eventBus.emit(GameEvents.CREATE_ROOM);
+  }
+
+  copyRoomId = () => {
+    navigator.clipboard.writeText(gameElements.webrtc.myId.textContent);
   }
 }
 
