@@ -1,29 +1,51 @@
 import { fireEvent, screen, waitFor } from '@testing-library/dom';
-// import { testInit } from "../__mocks__/mock-firebase-database";
 import fs from 'fs';
 import path from 'path';
-import { SEQUENCE_END, TABLE_KEYS } from '../../src/modules/modules.js';
-import { setPlayers, mockDatabaseUpdate } from './database-helpers.js';
+import { DATABASE_KEYS, SEQUENCE_END, TABLE_KEYS } from '../../src/modules/modules.js';
+import { setPlayers, mockDatabaseUpdate, getPlayers, getDatabase } from './database-helpers.js';
 import { nickname, userNickname } from '../__mocks__/mock-peerjs.js';
 
 export async function setupGameStart(initUsers = [userNickname]){
+  const gameDatabase = await getDatabase();
+  setupAdmin();
   await setPlayers(initUsers);
 
   const nicknameInput = screen.getByPlaceholderText('닉네임을 입력하세요');
   fireEvent.change(nicknameInput, {target : {value : nickname}});
 
-  const confirmButton = screen.getByText("입력 완료");
+  const confirmButton = nicknameInput.nextElementSibling;
   confirmButton.click();
-
-  // testInit({Sequence : true});
 
   const adminModalOpenBtn = screen.getByText(/방장 컨트롤 패널 열기/);
   adminModalOpenBtn.click();
 
   const gameStartBtn = screen.getByText(/게임 시작하기/);
+
+  const spy = jest.spyOn(gameDatabase, 'updateData').mockImplementation((data, table = DATABASE_KEYS.GAME_DATA_KEY) => {
+    const modifiedData = {
+      ...data,
+      [TABLE_KEYS.SEQUENCE] : [nickname, ...getPlayers()]
+    };
+
+    gameDatabase.onValue({ data: modifiedData, table }, false);
+  });
+
   gameStartBtn.click();
 
   await screen.findByText(/게임시작|당신 순서입니다./);
+
+  spy.mockRestore();
+}
+
+export function setupAdmin(){
+  const adminModalOpenBtn = screen.getByText(/방장 컨트롤 패널 열기/);
+  adminModalOpenBtn.click();
+
+  const createRoomBtn = screen.getByText(/방 만들기/);
+  createRoomBtn.click();
+
+  const adminModalExitBtn = screen.getByText("×");
+  adminModalExitBtn.click();
 }
 
 export async function setupSendHint(){
@@ -45,7 +67,6 @@ export async function setupSendHint(){
 
 export async function setupHTMLInit(){
   const html = fs.readFileSync(path.resolve(__dirname, "../../index.html"), 'utf8');
-  window.history.pushState({}, '', '?admin=true');
   document.body.innerHTML = html.toString();
   jest.resetModules();
   await import("../../src/bootstrap.js");
@@ -53,8 +74,6 @@ export async function setupHTMLInit(){
 
 export async function checkAlert(alertTitle = "", level = 3){
   const regx = new RegExp(alertTitle);
-
-  screen.debug(document.getElementById("alert"));
 
   await waitFor(()=>{
     const alert = screen.getByRole('heading', { 

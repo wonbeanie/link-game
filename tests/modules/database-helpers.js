@@ -1,9 +1,14 @@
-import { gameDataTable } from "../__mocks__/mock-firebase-database";
+import { TABLE_KEYS } from "../../src/modules/modules.js";
+import { gameDataTable, nickname } from "../__mocks__/mock-peerjs.js";
 
 let playerList = [];
 
+export async function getDatabase(){
+  return (await import("../../src/database/database.js")).default;
+}
+
 export const setPlayers = jest.fn(async (addPlayers) => {
-  const gameDatabase = (await import("../../src/database/database.js")).default;
+  const gameDatabase = await getDatabase();
 
   playerList = [];
   let newDatabase = {};
@@ -18,7 +23,7 @@ export const setPlayers = jest.fn(async (addPlayers) => {
 });
 
 export const mockDatabaseUpdate = jest.fn(async (newData, init = true, update = false) => {
-  const gameDatabase = (await import("../../src/database/database.js")).default;
+  const gameDatabase = await getDatabase();
 
   if(init){
     gameDatabase.database = newData;
@@ -41,6 +46,11 @@ export const mockDatabaseUpdate = jest.fn(async (newData, init = true, update = 
   });
 
   if(update){
+    gameDatabase.database = databaseTemp;
     gameDatabase.listener[gameDataTable](databaseTemp[gameDataTable]);
   }
+});
+
+export const getPlayers = jest.fn(() => {
+  return playerList;
 });

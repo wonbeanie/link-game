@@ -3,7 +3,7 @@
  */
 
 import { fireEvent, screen, waitFor } from '@testing-library/dom';
-import { checkAlert, setupHTMLInit } from './modules/game-helpers.js';
+import { checkAlert, setupAdmin, setupHTMLInit } from './modules/game-helpers.js';
 import { mockDatabaseUpdate, setPlayers } from './modules/database-helpers.js';
 import { gameDataTable, nickname, userNickname } from './__mocks__/mock-peerjs.js';
 
@@ -12,6 +12,7 @@ describe('테스트', () => {
 
   beforeEach(async ()=> {
     await setupHTMLInit();
+    setupAdmin();
 
     initDatabase = {};
     initDatabase[gameDataTable] = {};
@@ -33,7 +34,7 @@ describe('테스트', () => {
     const nicknameInput = screen.getByPlaceholderText('닉네임을 입력하세요');
     fireEvent.change(nicknameInput, {target : {value : nickname}});
 
-    const confirmButton = screen.getByText("입력 완료");
+    const confirmButton = nicknameInput.nextElementSibling;
     confirmButton.click();
 
     const items = await screen.findAllByText(nickname);
