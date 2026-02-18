@@ -189,6 +189,7 @@ class UiHandler {
   }
 
   hideAnswerInputGroup(){
+    gameElements.answer.value = "";
     gameElements.answer.hide();
   }
 
