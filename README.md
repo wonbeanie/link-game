@@ -3,6 +3,9 @@
 - 이 게임을 참고하여 제작하였습니다. (https://store.steampowered.com/app/3555700/Liar_Game/?l=koreana)
 - 게임 UI Style은 GEMINI를 이용하여 적용하였습니다.
 
+## 배포 주소
+- https://wonbeanie.github.io/link-game/
+
 ## 게임 사진
 <img width="777" height="777" alt="게임사진" src="https://github.com/user-attachments/assets/b2da2d74-d18e-4b0a-a94f-ffc55f285b11" />
 
