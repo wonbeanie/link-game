@@ -18,6 +18,7 @@ class VoteHandler {
     eventBus.on(GameEvents.READY_TO_VOTE_END, (data)=>this.votesEnd(data));
     eventBus.on(GameEvents.TIE_OF_VOTES, ()=> this.init());
     eventBus.on(GameEvents.VOTE_UPDATE, (data)=>this.votes(data));
+    eventBus.on(GameEvents.INIT_GAME_UI, ()=>timer.stopTimer());
   }
 
   init(){

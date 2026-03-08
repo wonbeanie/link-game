@@ -8,6 +8,7 @@ import { GameEvents } from "../modules/events.js";
 class HintHandler {
   constructor(){
     eventBus.on(GameEvents.NEXT_TURN, (data)=>this.turnProcessor(data));
+    eventBus.on(GameEvents.INIT_GAME_UI, ()=>timer.stopTimer());
   }
 
   initHintTurn(data){
