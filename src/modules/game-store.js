@@ -25,7 +25,7 @@ class GameStore {
     eventBus.on(GameEvents.CHANGE_START, () => this.state = GAME_STATE.PLAYING);
     eventBus.on(GameEvents.INIT_NICKNAME, () => this.initNickname());
     eventBus.on(GameEvents.INIT_GAME_UI, () => this.initGame());
-    eventBus.on(GameEvents.CREATE_ROOM, () => this.admin = true);
+    eventBus.on(GameEvents.CREATE_ROOM, () => this.setAdmin());
     eventBus.on(GameEvents.RELESE_ROOM, () => this.admin = false);
   }
 
@@ -34,12 +34,16 @@ class GameStore {
     this.playSequence = [];
     this.startPlaySequence = [];
     this.suspect = "";
-    this.nickname = "";
     this.category = "";
     this.correct = "";
     this.state = "";
     this.lastAnswer = "";
     this.chatHistory = [];
+  }
+
+  setAdmin() {
+    this.admin = true;
+    eventBus.emit(GameEvents.DONE_SET_ADMIN);
   }
 
   initHint(playerList){

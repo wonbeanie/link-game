@@ -1,4 +1,3 @@
-import webRTC from "../database/webRTC.js";
 import { adminHandler, gameHandler, hintHandler, voteHandler } from "../handler/index.js";
 import eventBus from "../modules/event-bus.js";
 import { GameEvents } from "../modules/events.js";
@@ -16,9 +15,9 @@ class GameController {
     gameElements.webrtc.connectBtn.addEventListener("click", webRtcService.newConnectPlayer);
     gameElements.admin.close.addEventListener("click", adminHandler.modalClose);
     gameElements.admin.open.addEventListener("click", adminHandler.modalOpen);
-    gameElements.admin.close.addEventListener("click", adminHandler.modalClose);
     gameElements.webrtc.copyBtn.addEventListener("click", adminHandler.copyRoomId);
     gameElements.admin.create.addEventListener("click", adminHandler.createRoom);
+    gameElements.ready.btn.addEventListener("click", gameHandler.setReady);
 
     eventBus.emit(GameEvents.INIT_NICKNAME);
   }

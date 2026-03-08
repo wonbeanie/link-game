@@ -10,7 +10,7 @@ class UiController {
     eventBus.on(GameEvents.ADD_CHAT_MESSAGE, (data) => uiHandler.addChatMessageToDisplay(data));
     eventBus.on(GameEvents.CLEAR_CHAT_DISPLAY, () => uiHandler.clearChatMessageToDisplay());
     eventBus.on(GameEvents.SET_CHAT_HISTORY, () => uiHandler.clearChatInput());
-    eventBus.on(GameEvents.INIT_HINT, () => uiHandler.hideNicknameInputGroup());
+    eventBus.on(GameEvents.INIT_HINT, () => uiHandler.hideReadyBtn());
     eventBus.on(GameEvents.TURN_END_HINT, () => uiHandler.hideHintInputGroup());
     eventBus.on(GameEvents.TURN_START_HINT, (data) => uiHandler.showStartMyturnHint(data));
     eventBus.on(GameEvents.UPDATE_TURN_UI, (data) => uiHandler.updateInfosUI(data));
@@ -29,6 +29,8 @@ class UiController {
     eventBus.on(GameEvents.INIT_GAME_UI, () => uiHandler.initGameUi());
     eventBus.on(GameEvents.CREATE_ROOM, () => uiHandler.showAdminPanel());
     eventBus.on(GameEvents.RELESE_ROOM, () => uiHandler.releseRoom());
+    eventBus.on(GameEvents.NOT_SETTING_NICKNAME, () => uiHandler.showNotSettingNicknameAlert());
+    eventBus.on(GameEvents.NOT_READY_PLAYER, (data) => uiHandler.showNotReadyPlayersAlert(data));
   }
 }
 

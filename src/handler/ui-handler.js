@@ -240,21 +240,24 @@ class UiHandler {
     gameElements.info.correct.textContent = "-";
     gameElements.info.state.textContent = "플레이어를 기다리는 중";
     gameElements.timer.textContent = "00:00";
-    this.showNicknameInputGroup();
+    this.showReadyBtn();
     this.hideHintInputGroup();
     this.hideVoteInputGroup();
     this.hideAnswerInputGroup();
     this.hideAdminModal();
+    eventBus.emit(GameEvents.DONE_INIT_GAME_UI);
   }
 
   showAdminPanel(){
     gameElements.admin.adminPanel.show();
     gameElements.admin.createDisplay.hide();
+    this.hideNicknameInputGroup();
   }
 
   releseRoom(){
     this.clearConnectInput();
     this.hideAdminPanel();
+    this.hideNicknameInputGroup();
   }
 
   clearConnectInput(){
@@ -264,6 +267,22 @@ class UiHandler {
   hideAdminPanel(){
     gameElements.admin.adminPanel.hide();
     gameElements.admin.createDisplay.show();
+  }
+
+  showReadyBtn(){
+    gameElements.ready.display.show();
+  }
+
+  hideReadyBtn() {
+    gameElements.ready.display.hide();
+  }
+
+  showNotSettingNicknameAlert(){
+    alert.show("알림","닉네임을 설정해주세요.");
+  }
+
+  showNotReadyPlayersAlert(names){
+    alert.show("알림",`${names}이 준비 완료를 하지 않았습니다.`)
   }
 }
 

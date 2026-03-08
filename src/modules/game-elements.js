@@ -96,6 +96,10 @@ class GameElements {
     this.hint = new UIGroup("hint");
     this.answer = new UIGroup("answer");
     this.vote = new UIGroup("vote");
+    this.ready = {
+      display : new ElementWrapper("ready"),
+      btn : new ElementWrapper("ready-btn")
+    }
 
     this.info = {
       category : new ElementWrapper("category"),

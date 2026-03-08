@@ -94,6 +94,10 @@ class GameDatabase {
   async getData(key){
     return this.database[key];
   }
+
+  get wattingRoomPlayerList(){
+    return this.database[DATABASE_KEYS.GAME_DATA_KEY];
+  }
 }
 
 const gameDatabase = new GameDatabase();

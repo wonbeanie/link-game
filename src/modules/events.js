@@ -48,5 +48,10 @@ export const GameEvents = {
   INIT_GAME_UI : "ui:initGameUi",
 
   CREATE_ROOM : "admin:createRoom",
-  RELESE_ROOM : "admin:releaseRoom"
+  RELESE_ROOM : "admin:releaseRoom",
+  NOT_SETTING_NICKNAME : "admin:notSettingNickname",
+  SET_INIT_PLAYER_LIST : "admin:setInitPlayerList",
+  NOT_READY_PLAYER : "admin:notReadyPlayer",
+  DONE_INIT_GAME_UI : "admin:doneInitGameUi",
+  DONE_SET_ADMIN : "admin:doneSetAdmin"
 }

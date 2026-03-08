@@ -54,6 +54,11 @@ class WebRTC {
       }
 
       conn.on('data', (data) => {
+        if(data.peerID && gameStore.admin){
+          this.connections[data.peerID].nickname = data.nickname;
+          eventBus.emit(GameEvents.SET_INIT_PLAYER_LIST, data);
+          return;
+        }
         gameDatabase.onValue(data);
       });
 

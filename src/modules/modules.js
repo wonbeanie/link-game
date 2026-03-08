@@ -177,3 +177,8 @@ export const GAME_STATE = {
   PLAYING : "Playing",
   END : "End"
 }
+
+export const WATTING_ROOM_STATE = {
+  STANDBY : "대기",
+  READY : "준비 완료"
+}
