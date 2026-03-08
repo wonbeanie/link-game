@@ -7,7 +7,7 @@ import { GameEvents } from '../modules/events.js';
 
 class WebRTC {
   peer = null;
-  connections = [];
+  connections = {};
   myIdElement = null;
   peer_id = "";
   request_count = 0;
@@ -32,19 +32,23 @@ class WebRTC {
 
   handleConnection = (conn) => {
     conn.on('open', () => {
-      if (this.connections.find(c => c.peer === conn.peer)) return;
+      if (this.connections[conn.peer]) return;
 
-      this.connections.push(conn);
+      this.connections[conn.peer] = {
+        nickname : "",
+        conn
+      };
 
       eventBus.emit(GameEvents.ADD_CHAT_MESSAGE, {
         nickname : "알림",
         message : !gameStore.admin ?
                   "방장과 연결이 완료되었습니다." :
-                  `연결된 플레이어 수 : ${this.connections.length}`
+                  `연결된 플레이어 수 : ${Object.keys(this.connections).length}`
       });
 
       if(!gameStore.admin){
         this.send({
+          nickname : gameStore.nickname,
           peerID : this.peer_id
         });
       }
@@ -54,7 +58,7 @@ class WebRTC {
       });
 
       conn.on('close', () => {
-        connections = this.connections.filter(c => c.peer !== conn.peer);
+        delete this.connections[conn.peer];
       });
     });
   }
@@ -74,10 +78,12 @@ class WebRTC {
       ...data,
       timestamp: Date.now()
     };
-    
-    this.connections.forEach(conn => {
-        if (conn.open) conn.send(dataToSend);
-    });
+
+    for(const {conn} of Object.values(this.connections)){
+      if(conn.open) {
+        conn.send(dataToSend);
+      }
+    }
   }
 }
 
