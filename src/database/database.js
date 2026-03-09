@@ -64,6 +64,7 @@ class GameDatabase {
     if(!this.listener[table]){
       return;
     }
+
     let databaseTemp = deepCopy(this.database);
 
     databaseTemp = {

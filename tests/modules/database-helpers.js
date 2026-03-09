@@ -1,4 +1,4 @@
-import { TABLE_KEYS } from "../../src/modules/modules.js";
+import { deepCopy, TABLE_KEYS, WATTING_ROOM_STATE } from "../../src/modules/modules.js";
 import { gameDataTable, nickname } from "../__mocks__/mock-peerjs.js";
 
 let playerList = [];
@@ -14,7 +14,7 @@ export const setPlayers = jest.fn(async (addPlayers) => {
   let newDatabase = {};
 
   addPlayers.forEach((player) => {
-    newDatabase[player] = "Ready";
+    newDatabase[player] = WATTING_ROOM_STATE.READY;
     playerList.push(player);
   })
 

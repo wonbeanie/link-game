@@ -1,4 +1,4 @@
-import { TABLE_KEYS } from "../../src/modules/modules.js";
+import { TABLE_KEYS, WATTING_ROOM_STATE } from "../../src/modules/modules.js";
 
 let onValueCallback = {};
 let database = {};
@@ -153,7 +153,7 @@ export const setPlayers = jest.fn((addPlayers)=>{
       let result = {};
 
       addPlayers.forEach((player)=>{
-        result[player] = "Ready";
+        result[player] = WATTING_ROOM_STATE.READY;
         playerList.push(player);
       });
 

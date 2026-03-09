@@ -37,7 +37,16 @@ export async function setupGameStart(initUsers = [userNickname]){
   spy.mockRestore();
 }
 
+export function setupNikcname(){
+  const nicknameInput = screen.getByPlaceholderText('닉네임을 입력하세요');
+  fireEvent.change(nicknameInput, {target : {value : nickname}});
+
+  const confirmButton = nicknameInput.nextElementSibling;
+  confirmButton.click();
+}
+
 export function setupAdmin(){
+  setupNikcname();
   const adminModalOpenBtn = screen.getByText(/방장 컨트롤 패널 열기/);
   adminModalOpenBtn.click();
 
@@ -47,6 +56,8 @@ export function setupAdmin(){
   const adminModalExitBtn = screen.getByText("×");
   adminModalExitBtn.click();
 }
+
+
 
 export async function setupSendHint(){
   const hintInput = screen.getByPlaceholderText('힌트 단어를 입력하세요');

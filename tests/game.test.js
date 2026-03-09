@@ -2,21 +2,23 @@
  * @jest-environment jsdom
  */
 
-import { fireEvent, screen, waitFor } from '@testing-library/dom';
+import { screen } from '@testing-library/dom';
 import { checkAlert, setupAdmin, setupHTMLInit } from './modules/game-helpers.js';
 import { mockDatabaseUpdate, setPlayers } from './modules/database-helpers.js';
 import { gameDataTable, nickname, userNickname } from './__mocks__/mock-peerjs.js';
+import { WATTING_ROOM_STATE } from '../src/modules/modules.js';
 
 describe('테스트', () => {
   let initDatabase = {};
 
   beforeEach(async ()=> {
     await setupHTMLInit();
-    setupAdmin();
 
     initDatabase = {};
     initDatabase[gameDataTable] = {};
-    mockDatabaseUpdate(initDatabase);
+    await mockDatabaseUpdate(initDatabase);
+
+    setupAdmin();
   });
 
   test("게임 시작과 초기화 버튼 확인", () => {
@@ -28,14 +30,8 @@ describe('테스트', () => {
   });
 
   test("1명의 유저가 존재할때 닉네임 설정 확인", async () => {
-    initDatabase[gameDataTable][userNickname] = "Ready";
-    await mockDatabaseUpdate(initDatabase);
-
-    const nicknameInput = screen.getByPlaceholderText('닉네임을 입력하세요');
-    fireEvent.change(nicknameInput, {target : {value : nickname}});
-
-    const confirmButton = nicknameInput.nextElementSibling;
-    confirmButton.click();
+    const newPlayer = {[userNickname] :WATTING_ROOM_STATE.STANDBY};
+    await mockDatabaseUpdate(newPlayer, false, true);
 
     const items = await screen.findAllByText(nickname);
     expect(items).toHaveLength(2);
@@ -43,7 +39,7 @@ describe('테스트', () => {
     const userItems = await screen.findAllByText(userNickname);
     expect(userItems).toHaveLength(1);
 
-    const readyItems = await screen.findAllByText("Ready");
+    const readyItems = await screen.findAllByText(WATTING_ROOM_STATE.STANDBY);
     expect(readyItems).toHaveLength(2);
   });
 
