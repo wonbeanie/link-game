@@ -282,8 +282,7 @@ class UiHandler {
   }
 
   hideAdminPanel(){
-    gameElements.admin.adminPanel.hide();
-    gameElements.admin.createDisplay.show();
+    gameElements.admin.display.hide();
   }
 
   showReadyBtn(){
