@@ -87,6 +87,11 @@ class UiHandler {
     alert.show("범인이 아닙니다.", `범인은 ${suspect}였습니다.`);
   }
 
+  updateGameOverUI(gameInfo, lastAnswer = "", findSusepct = false){
+    this.showGameOverAlert(gameInfo, lastAnswer, findSusepct);
+    this.updateGameEndStateUI(gameInfo.correct, gameInfo.fakeCorrect);
+  }
+
   updateGameInfoUI({category, correct}){
     gameElements.info.category.textContent = category;
     gameElements.info.correct.textContent = correct;
@@ -132,6 +137,18 @@ class UiHandler {
 
   updateTurnStateUI(player){
     gameElements.info.state.textContent = `${player}님이 입력하고 있습니다.`;
+  }
+
+  updateVoteStateUI(){
+    gameElements.info.state.textContent = `투표 진행중`;
+  }
+
+  updateLastAnswerStateUI(){
+    gameElements.info.state.textContent = `범인이 플레이어들의 제시어를 입력하고 있습니다.`;
+  }
+
+  updateGameEndStateUI(correct, fakeCorrect){
+    gameElements.info.state.textContent = `게임 종료 (제시어 : '${correct}', 가짜 제시어, '${fakeCorrect}') `;
   }
 
   addLogDisplay({player, text}){

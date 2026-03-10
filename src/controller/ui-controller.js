@@ -6,7 +6,7 @@ class UiController {
   init(){
     eventBus.on(GameEvents.CHANGE_START, (data) => uiHandler.showGameStartAlert(data));
     eventBus.on(GameEvents.PLAYER_OUT, () => uiHandler.showGameOutAlert());
-    eventBus.on(GameEvents.GAME_OVER, ({gameInfo, data : lastAnswer, findSuspect}) => uiHandler.showGameOverAlert(gameInfo, lastAnswer, findSuspect));
+    eventBus.on(GameEvents.GAME_OVER, ({gameInfo, data : lastAnswer, findSuspect}) => uiHandler.updateGameOverUI(gameInfo, lastAnswer, findSuspect));
     eventBus.on(GameEvents.ADD_CHAT_MESSAGE, (data) => uiHandler.addChatMessageToDisplay(data));
     eventBus.on(GameEvents.CLEAR_CHAT_DISPLAY, () => uiHandler.clearChatMessageToDisplay());
     eventBus.on(GameEvents.SET_CHAT_HISTORY, () => uiHandler.clearChatInput());
@@ -31,6 +31,8 @@ class UiController {
     eventBus.on(GameEvents.RELESE_ROOM, () => uiHandler.releseRoom());
     eventBus.on(GameEvents.NOT_SETTING_NICKNAME, () => uiHandler.showNotSettingNicknameAlert());
     eventBus.on(GameEvents.NOT_READY_PLAYER, (data) => uiHandler.showNotReadyPlayersAlert(data));
+    eventBus.on(GameEvents.TURN_START_VOTE, () => uiHandler.updateVoteStateUI());
+    eventBus.on(GameEvents.TURN_END_VOTE, () => uiHandler.updateLastAnswerStateUI());
   }
 }
 

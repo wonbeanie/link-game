@@ -32,6 +32,7 @@ class VoteHandler {
   
     this.selectTimeout = false;
     this.getVoteTransitionData();
+    eventBus.emit(GameEvents.TURN_START_VOTE);
   }
 
   getVoteTransitionData(){
@@ -124,6 +125,8 @@ class VoteHandler {
     }
 
     timer.stopTimer();
+
+    eventBus.emit(GameEvents.TURN_END_VOTE);
 
     if(isSuspect){
       eventBus.emit(GameEvents.SET_LAST_ANSWER, selectedSuspect);

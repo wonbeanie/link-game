@@ -53,5 +53,7 @@ export const GameEvents = {
   SET_INIT_PLAYER_LIST : "admin:setInitPlayerList",
   NOT_READY_PLAYER : "admin:notReadyPlayer",
   DONE_INIT_GAME_UI : "admin:doneInitGameUi",
-  DONE_SET_ADMIN : "admin:doneSetAdmin"
+  DONE_SET_ADMIN : "admin:doneSetAdmin",
+  TURN_START_VOTE : "vote:turnStartVote",
+  TURN_END_VOTE : "vote:turnEndVote"
 }
