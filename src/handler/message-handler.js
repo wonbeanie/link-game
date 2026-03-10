@@ -1,5 +1,6 @@
 import eventBus from "../modules/event-bus.js";
 import { GameEvents } from "../modules/events.js";
+import gameElements from "../modules/game-elements.js";
 import gameStore from "../modules/game-store.js";
 import { TABLE_KEYS } from "../modules/modules.js";
 
@@ -9,7 +10,6 @@ class MessageHandler {
 
   constructor(){
     eventBus.on(GameEvents.READY_TO_ADD_LOG, (data)=>this.setMessages(data));
-    eventBus.on(GameEvents.DRAW_LOG, ()=>this.logView());
     eventBus.on(GameEvents.INIT_GAME_UI, () => this.initGame())
   }
 
@@ -80,16 +80,26 @@ class MessageHandler {
 
     this.votingList = Object.entries(votingList);
     this.playerHints = playerHints;
+
+    this.logView();
   }
 
   logView(){
-    const voteLogData = this.votingLog();
-    const hintLogData = this.hintLog();
-
-    eventBus.emit(GameEvents.READY_LOG_DATA, {
-      vote : voteLogData,
-      hint : hintLogData
+    let logData = {};
+    this.votingList.forEach(([player, vote])=>{
+      logData[player] = {
+        vote
+      }
     });
+
+    gameStore.startPlaySequence.forEach((player)=>{
+      logData[player] = {
+        ...logData[player],
+        hint : this.playerHints[player]
+      }
+    });
+
+    eventBus.emit(GameEvents.READY_LOG_DATA, logData);
   }
 }
 

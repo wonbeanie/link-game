@@ -54,13 +54,9 @@ class UiHandler {
     this.showHintInputGroup();
   }
 
-  showActiveLog({vote, hint}){
-    vote.forEach(([player, text]) => {
-      this.addLogDisplay({player, text});
-    });
-
-    hint.forEach(([player, text]) => {
-      this.addLogDisplay({player, text});
+  showActiveLog(logData){
+    Object.entries(logData).forEach(([player, {hint, vote}])=>{
+      this.createLogElement(player, {hint, vote});
     });
   }
 
@@ -299,6 +295,45 @@ class UiHandler {
 
   showNotReadyPlayersAlert(names){
     alert.show("알림",`${names}이 준비 완료를 하지 않았습니다.`)
+  }
+
+  createLogElement(player, {hint = "", vote = ""}) {
+    const playerCard = document.createElement("div")
+    playerCard.className = "mini-card";
+
+    const name = document.createElement("h3");
+    name.className = "name";
+    name.textContent = player;
+
+    const hintElement = document.createElement("div");
+    hintElement.className = "row";
+    const hintBadge = document.createElement("span");
+    hintBadge.className = "badge blue";
+    hintBadge.textContent = "힌트";
+    const hintText = document.createElement("span");
+    hintText.className = "text";
+    hintText.textContent = hint;
+    hintElement.appendChild(hintBadge);
+    hintElement.appendChild(hintText);
+
+    const voteElement = document.createElement("div");
+    voteElement.className = "row";
+    const voteBadge = document.createElement("span");
+    voteBadge.className = "badge purple";
+    voteBadge.textContent = "투표";
+    const voteText = document.createElement("span");
+    voteText.className = "text bold";
+    voteText.textContent = vote;
+
+    voteElement.appendChild(voteBadge);
+    voteElement.appendChild(voteText);
+
+    playerCard.appendChild(name);
+    playerCard.appendChild(hintElement);
+    playerCard.appendChild(voteElement);
+
+    gameElements.log.appendChild(playerCard);
+    gameElements.log.scrollTop = gameElements.log.scrollHeight;
   }
 }
 
