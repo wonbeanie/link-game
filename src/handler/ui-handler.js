@@ -55,8 +55,8 @@ class UiHandler {
   }
 
   showActiveLog(logData){
-    Object.entries(logData).forEach(([player, {hint, vote}])=>{
-      this.createLogElement(player, {hint, vote});
+    Object.entries(logData).forEach(([player, info])=>{
+      this.createLogElement(player, info);
     });
   }
 
@@ -297,7 +297,7 @@ class UiHandler {
     alert.show("알림",`${names}이 준비 완료를 하지 않았습니다.`)
   }
 
-  createLogElement(player, {hint = "", vote = ""}) {
+  createLogElement(player, {hint = "", vote = "", skip = false}) {
     const playerCard = document.createElement("div")
     playerCard.className = "mini-card";
 
@@ -323,7 +323,7 @@ class UiHandler {
     voteBadge.textContent = "투표";
     const voteText = document.createElement("span");
     voteText.className = "text bold";
-    voteText.textContent = vote;
+    voteText.textContent = `${vote}${skip ? ' (스킵 동의)' : ''}`;
 
     voteElement.appendChild(voteBadge);
     voteElement.appendChild(voteText);
@@ -334,6 +334,10 @@ class UiHandler {
 
     gameElements.log.appendChild(playerCard);
     gameElements.log.scrollTop = gameElements.log.scrollHeight;
+  }
+
+  showNotSkipAlert(){
+    alert.show("알림","투표 후 스킵이 가능합니다.");
   }
 }
 

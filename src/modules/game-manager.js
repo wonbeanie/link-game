@@ -2,7 +2,7 @@ import gameDatabase from "../database/database.js";
 import eventBus from "./event-bus.js";
 import { GameEvents } from "./events.js";
 import gameStore from "./game-store.js";
-import { deepCopy, SEQUENCE_END, TABLE_KEYS } from "./modules.js";
+import { SEQUENCE_END, TABLE_KEYS } from "./modules.js";
 
 class GameManager {
   newDatabase = {};
@@ -51,6 +51,11 @@ class GameManager {
 
     if(this.isTieOfVotes){
       eventBus.emit(GameEvents.TIE_OF_VOTES, this.newDatabase[TABLE_KEYS.RE_SELECT_CULPRIT]);
+      return;
+    }
+
+    if(this.isVoteSkip){
+      eventBus.emit(GameEvents.VOTE_SKIP);
       return;
     }
 
@@ -105,6 +110,21 @@ class GameManager {
 
   get isPlayerOut(){
     return TABLE_KEYS.OUT_GAME in this.newDatabase;
+  }
+
+  get isVoteSkip(){
+    if(gameStore.startPlaySequence.length === 0){
+      return false;
+    }
+
+    const skipList = [];
+    Object.keys(this.newDatabase).forEach((key) => {
+      if(key.includes(TABLE_KEYS.VOTE_SKIP)){
+        skipList.push(key);
+      }
+    });
+
+    return skipList.length === gameStore.startPlaySequence.length;
   }
 }
 

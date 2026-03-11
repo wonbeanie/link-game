@@ -18,6 +18,7 @@ class GameController {
     gameElements.webrtc.copyBtn.addEventListener("click", adminHandler.copyRoomId);
     gameElements.admin.create.addEventListener("click", adminHandler.createRoom);
     gameElements.ready.btn.addEventListener("click", gameHandler.setReady);
+    gameElements.vote.skip.btn.addEventListener("click", voteHandler.skip);
 
     eventBus.emit(GameEvents.INIT_NICKNAME);
   }

@@ -12,6 +12,7 @@ class VoteHandler {
   sendSuspectCheck = false;
   VOTE_TIME = 60;
   SUSEPCT_ANSWER_TIME = 60;
+  sendCheck = false;
 
   constructor(){
     eventBus.on(GameEvents.VOTE_START, ()=>this.init());
@@ -19,6 +20,7 @@ class VoteHandler {
     eventBus.on(GameEvents.TIE_OF_VOTES, ()=> this.init());
     eventBus.on(GameEvents.VOTE_UPDATE, (data)=>this.votes(data));
     eventBus.on(GameEvents.INIT_GAME_UI, ()=>timer.stopTimer());
+    eventBus.on(GameEvents.VOTE_SKIP, () => this.processVoteSkip());
   }
 
   init(){
@@ -45,7 +47,7 @@ class VoteHandler {
     gameDatabase.updateData(newDatabase);
   }
 
-  send(){
+  send = () => {
     const {nickname, myVotingKey} = gameStore;
     const {selectTimeout, sendSuspectCheck, playerSelectCheck} = this;
 
@@ -57,6 +59,7 @@ class VoteHandler {
     }
 
     if(Object.keys(newDatabase).length > 0){
+      this.sendCheck = true;
       gameDatabase.updateData(newDatabase);
 
       if(isPossibleVote){
@@ -146,10 +149,31 @@ class VoteHandler {
     });
 
     if(TABLE_KEYS.SELECT_TIMEOUT in newData){
-      if(Object.keys(this.playerSelectCheck).length === gameStore.playerList.length && gameStore.admin){
+      if(Object.keys(this.playerSelectCheck).length === gameStore.plyerList.length && gameStore.admin){
         this.calculateResult();
       }
     }
+  }
+
+  processVoteSkip = () => {
+    timer.stopTimer();
+    
+    if(gameStore.admin){
+      this.calculateResult();
+    }
+  }
+
+  skip = () => {
+    if(!this.sendCheck){
+      eventBus.emit(GameEvents.NOT_VOTE_SKIP);
+      return;
+    }
+    const {nickname} = gameStore;
+    const newDatabase = {
+      [`${TABLE_KEYS.VOTE_SKIP}-${nickname}`] : true
+    }
+
+    gameDatabase.updateData(newDatabase);
   }
 }
 

@@ -55,5 +55,7 @@ export const GameEvents = {
   DONE_INIT_GAME_UI : "admin:doneInitGameUi",
   DONE_SET_ADMIN : "admin:doneSetAdmin",
   TURN_START_VOTE : "vote:turnStartVote",
-  TURN_END_VOTE : "vote:turnEndVote"
+  TURN_END_VOTE : "vote:turnEndVote",
+  NOT_VOTE_SKIP : "vote:notVoteSkip",
+  VOTE_SKIP : "vote:skip"
 }

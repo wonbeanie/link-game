@@ -33,6 +33,7 @@ class UiController {
     eventBus.on(GameEvents.NOT_READY_PLAYER, (data) => uiHandler.showNotReadyPlayersAlert(data));
     eventBus.on(GameEvents.TURN_START_VOTE, () => uiHandler.updateVoteStateUI());
     eventBus.on(GameEvents.TURN_END_VOTE, () => uiHandler.updateLastAnswerStateUI());
+    eventBus.on(GameEvents.NOT_VOTE_SKIP, () => uiHandler.showNotSkipAlert());
   }
 }
 

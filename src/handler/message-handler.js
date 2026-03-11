@@ -68,7 +68,11 @@ class MessageHandler {
       }
 
       if(key.includes(TABLE_KEYS.SUSPECT_LIST)){
-        votingList[key.split("-")[1]] = value;
+        const nickname = key.split("-")[1];
+        votingList[nickname] = {
+          vote : value,
+          skip : newData[`${TABLE_KEYS.VOTE_SKIP}-${nickname}`]
+        };
         return;
       }
 
@@ -86,9 +90,10 @@ class MessageHandler {
 
   logView(){
     let logData = {};
-    this.votingList.forEach(([player, vote])=>{
+    this.votingList.forEach(([player, {vote, skip}])=>{
       logData[player] = {
-        vote
+        vote,
+        skip
       }
     });
 

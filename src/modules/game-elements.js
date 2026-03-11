@@ -76,6 +76,16 @@ class UIGroup {
   }
 }
 
+class VoteUIGroup extends UIGroup {
+  constructor(id) {
+    super(id);
+    this.skip = {
+      display : new ElementWrapper(`${id}-skip`),
+      btn : new ElementWrapper(`${id}-skip-btn`)
+    };
+  }
+}
+
 class GameElements {
   constructor(){
     if(GameElements.instance) return GameElements.instance;
@@ -95,7 +105,7 @@ class GameElements {
     this.nickname = new UIGroup("nickname");
     this.hint = new UIGroup("hint");
     this.answer = new UIGroup("answer");
-    this.vote = new UIGroup("vote");
+    this.vote = new VoteUIGroup("vote");
     this.ready = {
       display : new ElementWrapper("ready"),
       btn : new ElementWrapper("ready-btn")

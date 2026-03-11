@@ -161,7 +161,8 @@ export const TABLE_KEYS = Object.freeze({
   SUSPECT_LIST : "SuspectList",
   SELECT_CULPRIT : "SelectCulprit",
   RE_SELECT_CULPRIT : "ReSelectCulprit",
-  SELECT_TIMEOUT : "SelectTimeout"
+  SELECT_TIMEOUT : "SelectTimeout",
+  VOTE_SKIP : "VoteSkip"
 });
 
 export const DATABASE_KEYS = Object.freeze({
