@@ -265,12 +265,14 @@ class UiHandler {
     gameElements.admin.adminPanel.show();
     gameElements.admin.createDisplay.hide();
     this.hideNicknameInputGroup();
+    this.showReadyBtn();
   }
 
   releseRoom(){
     this.clearConnectInput();
     this.hideAdminPanel();
     this.hideNicknameInputGroup();
+    this.showReadyBtn();
   }
 
   clearConnectInput(){
