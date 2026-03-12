@@ -1,6 +1,5 @@
 import eventBus from "../modules/event-bus.js";
 import { GameEvents } from "../modules/events.js";
-import gameElements from "../modules/game-elements.js";
 import gameStore from "../modules/game-store.js";
 import { TABLE_KEYS } from "../modules/modules.js";
 
@@ -16,36 +15,6 @@ class MessageHandler {
   initGame(){
     this.votingList = [];
     this.playerHints = [];
-  }
-
-  votingLog(){
-    let log = [];
-    if(gameStore.state !== ""){
-      log.push(['투표', '---------------'])
-    }
-
-    this.votingList.forEach(([player, vote])=>{
-      log.push([`${player}`, `${vote}님을 투표하였습니다.`])
-    });
-
-    return log;
-  }
-
-  hintLog(){
-    let log = [];
-    if(gameStore.state !== ""){
-      log.push(['힌트', '---------------'])
-    }
-
-    gameStore.startPlaySequence.forEach((player)=>{
-      if(!this.playerHints[player]){
-        return;
-      }
-      
-      log.push([`${player}`, this.playerHints[player]])
-    });
-
-    return log;
   }
 
   setMessages(newData){

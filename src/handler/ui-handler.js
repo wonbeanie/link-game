@@ -148,28 +148,28 @@ class UiHandler {
   }
 
   addLogDisplay({player, text}){
-    const playerElement = document.createElement("div");
-    playerElement.className = "player-hint-item"; 
+    const playerCard = document.createElement("div")
+    playerCard.className = "mini-card";
 
-    const playerNameElement = document.createElement("span");
-    playerNameElement.style.fontWeight = "bold";
-    playerNameElement.style.color = "var(--primary-color)";
-    playerNameElement.textContent = player;
+    const name = document.createElement("h3");
+    name.className = "name";
+    name.textContent = player;
 
-    const separator = document.createElement("span");
-    separator.textContent = " : ";
-    separator.style.color = "#a0aec0";
+    const readyElement = document.createElement("div");
+    readyElement.className = "row";
+    const readyBadge = document.createElement("span");
+    readyBadge.className = "badge blue";
+    readyBadge.textContent = "상태";
+    const readyText = document.createElement("span");
+    readyText.className = "text";
+    readyText.textContent = text;
+    readyElement.appendChild(readyBadge);
+    readyElement.appendChild(readyText);
 
-    const hintElement = document.createElement("span");
-    hintElement.style.color = "var(--text-color)";
-    hintElement.textContent = text;
+    playerCard.appendChild(name);
+    playerCard.appendChild(readyElement);
 
-    playerElement.appendChild(playerNameElement);
-    playerElement.appendChild(separator);
-    playerElement.appendChild(hintElement);
-
-    gameElements.log.appendChild(playerElement);
-
+    gameElements.log.appendChild(playerCard);
     gameElements.log.scrollTop = gameElements.log.scrollHeight;
   }
 

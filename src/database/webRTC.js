@@ -63,7 +63,30 @@ class WebRTC {
       });
 
       conn.on('close', () => {
+        if(!gameStore.admin){
+          eventBus.emit(GameEvents.ADD_CHAT_MESSAGE, {
+            nickname : "알림",
+            message : `방장과의 연결이 끊겼습니다.`
+          });
+          return;
+        }
+        const nickname = this.connections[conn.peer].nickname;
+        const newDatabase = {
+          [nickname] : null
+        };
+        gameDatabase.updateData(newDatabase);
+
         delete this.connections[conn.peer];
+
+        eventBus.emit(GameEvents.ADD_CHAT_MESSAGE, {
+          nickname : "알림",
+          message : `플레이어(${nickname})가 나갔습니다.`
+        });
+
+        eventBus.emit(GameEvents.ADD_CHAT_MESSAGE, {
+          nickname : "알림",
+          message : `연결된 플레이어 수 : ${Object.keys(this.connections).length}`
+        });
       });
     });
   }
