@@ -85,7 +85,7 @@ class UiHandler {
 
   updateGameOverUI(gameInfo, lastAnswer = "", findSusepct = false){
     this.showGameOverAlert(gameInfo, lastAnswer, findSusepct);
-    this.updateGameEndStateUI(gameInfo.correct, gameInfo.fakeCorrect);
+    this.updateGameEndStateUI(gameInfo, lastAnswer, findSusepct);
   }
 
   updateGameInfoUI({category, correct}){
@@ -143,8 +143,19 @@ class UiHandler {
     gameElements.info.state.textContent = `범인이 플레이어들의 제시어를 입력하고 있습니다.`;
   }
 
-  updateGameEndStateUI(correct, fakeCorrect){
-    gameElements.info.state.textContent = `게임 종료 (제시어 : '${correct}', 가짜 제시어, '${fakeCorrect}') `;
+  updateGameEndStateUI({correct, fakeCorrect, suspect}, lastAnswer, findSusepct){
+    const gameResult = `(범인 : '${suspect}', 제시어 : '${correct}', 가짜 제시어, '${fakeCorrect}')`;
+    if(findSusepct){
+      if(correct === lastAnswer){
+        gameElements.info.state.textContent = `범인 승리 ${gameResult}`;
+      }
+      else {
+        gameElements.info.state.textContent = `시민 승리 ${gameResult}`;
+      }
+      return;
+    }
+
+    gameElements.info.state.textContent = `게임 종료 ${gameResult}`;
   }
 
   addLogDisplay({player, text}){
