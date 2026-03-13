@@ -47,12 +47,10 @@ describe("투표 테스트", () => {
 
     expect(logDisplay).toHaveAttribute('id', 'log-display');
 
-    const { findByText, findAllByText } = within(logDisplay);
-    const nicknameLog = await findAllByText(nickname);
-    expect(nicknameLog).toHaveLength(2);
+    const { findAllByText } = within(logDisplay);
 
-    const votingLog = await findByText(`${userNickname}님을 투표하였습니다.`);
-    expect(votingLog).toBeVisible();
+    const votingLog = await findAllByText(`${userNickname}`);
+    expect(votingLog).toHaveLength(2);
   });
 
   describe.each([

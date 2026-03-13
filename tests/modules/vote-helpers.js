@@ -118,15 +118,20 @@ async function checkVoting(votingList){
   const activityLog = screen.getByText(/활동 로그/);
   const logDisplay = activityLog.nextElementSibling;
 
-  const { findAllByText } = within(logDisplay);
+  const { findAllByText, findAllByRole } = within(logDisplay);
   
   for( const voteNickname of Object.keys(voteCount)){
-    const votingLog = await findAllByText(`${voteNickname}님을 투표하였습니다.`);
+    const nicknameElements = await findAllByText(voteNickname);
+
+    const votingLog = nicknameElements.filter((nicknameElement) => {
+      const className = nicknameElement.getAttribute("class");
+      return className !== "name";
+    });
 
     expect(votingLog.length).toBe(voteCount[voteNickname]);
 
     votingLog.forEach((votingElement)=>{
-      const userElement = votingElement.closest('.player-hint-item').querySelector(':first-child');
+      const userElement = votingElement.closest('.mini-card').querySelector(':first-child');
 
       const userNickname = userElement.textContent;
 
