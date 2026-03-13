@@ -54,6 +54,10 @@ class AdminHandler {
   }
 
   createRoom = () => {
+    if(gameStore.nickname === ""){
+      eventBus.emit(GameEvents.NOT_SETTING_NICKNAME);
+      return;
+    }
     eventBus.emit(GameEvents.CREATE_ROOM);
   }
 
