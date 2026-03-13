@@ -149,7 +149,7 @@ class VoteHandler {
     });
 
     if(TABLE_KEYS.SELECT_TIMEOUT in newData){
-      if(Object.keys(this.playerSelectCheck).length === gameStore.plyerList.length && gameStore.admin){
+      if(Object.keys(this.playerSelectCheck).length === gameStore.playerList.length && gameStore.admin){
         this.calculateResult();
       }
     }
