@@ -7,7 +7,7 @@
 - https://wonbeanie.github.io/link-game/
 
 ## 게임 사진
-<img width="777" height="777" alt="게임사진" src="https://github.com/user-attachments/assets/b2da2d74-d18e-4b0a-a94f-ffc55f285b11" />
+<img width="777" height="777" alt="Image" src="https://github.com/user-attachments/assets/7ba55824-1988-4f5c-b5ca-b7000c7dd3df" />
 
 
 ## 시작 가이드
