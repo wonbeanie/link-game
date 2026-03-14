@@ -1,11 +1,10 @@
-import { screen, waitFor, within } from "@testing-library/dom";
-// import { mockDatabaseUpdate, nickname, secondNickname, thirdNickname, userNickname } from "../__mocks__/mock-firebase-database";
+import { fireEvent, screen, waitFor, within } from "@testing-library/dom";
 import { mockDatabaseUpdate } from "../modules/database-helpers.js";
-import { nickname, secondNickname, thirdNickname, userNickname } from "../__mocks__/mock-peerjs.js";
+import { nickname, userNickname } from "../__mocks__/mock-peerjs.js";
 import { checkAlert } from "./game-helpers";
 import { TABLE_KEYS } from "../../src/modules/modules.js";
 
-export async function setupVoting(stateSetting, addPlayerList = []) {
+export async function setupVoting(stateSetting, addPlayerList = [], skip = false) {
   const playerList = [nickname, ...addPlayerList];
 
   await waitFor(()=>{
@@ -18,41 +17,50 @@ export async function setupVoting(stateSetting, addPlayerList = []) {
       await suspectExposed(playerList);
       break;
     case setupVotingSetting.FOUND_SUSPECT:
-      await foundSuspect(playerList);
+      await foundSuspect(playerList, skip);
       break;
     case setupVotingSetting.TIE_VOTES:
       await tieVotes(playerList);
       break;
     case setupVotingSetting.NOTFOUND_SUSPECT:
-      await notfoundsuspect(playerList);
+      await notfoundsuspect(playerList, skip);
       break;
     default:
       fail("올바르지 않는 상황입니다.");
   }
 
+  if(skip){
+    return;
+  }
+
   jest.advanceTimersByTime(60000);
   await checkAlert(stateSetting);
 }
-
-async function notfoundsuspect(playerList){
+async function notfoundsuspect(playerList, skip = false){
   const votingList = playerList.map((player)=>{
     return [player, nickname]
   });
 
+  setupVoteSelectOption(nickname);
+
   await voteTestFlow({
     votingList : votingList,
-    suspect : userNickname
+    suspect : userNickname,
+    skip
   })
 }
 
-async function foundSuspect(playerList){
+async function foundSuspect(playerList, skip = false){
   const votingList = playerList.map((player)=>{
     return [player, userNickname]
   });
 
+  setupVoteSelectOption(userNickname);
+
   await voteTestFlow({
     votingList,
-    suspect : userNickname
+    suspect : userNickname,
+    skip
   })
 }
 
@@ -87,7 +95,7 @@ async function voteTestFlow(voteSetting){
   await checkVoting(voteSetting.votingList);
 }
 
-async function doneVoteInit({votingList, suspect}){
+async function doneVoteInit({votingList, suspect, skip = false}){
   const gameStoreModule = await import('../../src/modules/game-store.js');
   const gameStore = gameStoreModule.default;
 
@@ -100,6 +108,10 @@ async function doneVoteInit({votingList, suspect}){
 
   votingList.forEach(([player, voting])=> {
     result[`${TABLE_KEYS.SUSPECT_LIST}-${player}`] = voting;
+
+    if(skip && nickname !== player){
+      result[`${TABLE_KEYS.VOTE_SKIP}-${player}`] = true;
+    }
   })
 
   await mockDatabaseUpdate(result, false, true);
@@ -121,7 +133,8 @@ async function checkVoting(votingList){
   const { findAllByText, findAllByRole } = within(logDisplay);
   
   for( const voteNickname of Object.keys(voteCount)){
-    const nicknameElements = await findAllByText(voteNickname);
+    const regex = new RegExp(voteNickname, "");
+    const nicknameElements = await findAllByText(regex);
 
     const votingLog = nicknameElements.filter((nicknameElement) => {
       const className = nicknameElement.getAttribute("class");
@@ -140,6 +153,15 @@ async function checkVoting(votingList){
   }
 }
 
+export const setupVoteSelectOption = (nickname) => {
+  const suspectSelectLabel = screen.getByText(/범인 지목 투표/);
+  const votingSelect = suspectSelectLabel.nextElementSibling;
+
+  fireEvent.change(votingSelect, {
+    target : { value: nickname }
+  });
+}
+
 export function checkSelectPlayerList(playerCount = 2){
   const suspectSelectLabel = screen.getByText(/범인 지목 투표/);
   const votingSelect = suspectSelectLabel.nextElementSibling;
@@ -152,6 +174,7 @@ export const setupVotingSetting = {
   FOUND_SUSPECT : "범인을 찾았습니다.",
   TIE_VOTES : "투표 동점",
   SUSPECT_EXPOSED : "범인인것을 걸렸습니다.",
+  SKIP : "투표 스킵",
 };
 
 

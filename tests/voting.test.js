@@ -85,6 +85,31 @@ describe("투표 테스트", () => {
       checkSelectPlayerList(playerCount);
     });
 
+    describe("투표 스킵 테스트", () => {
+      test.each([
+        {
+          desc: "범인을 못찾았을 때", 
+          state : setupVotingSetting.NOTFOUND_SUSPECT,
+          expectedAlertText: "범인이 아닙니다."
+        },
+        {
+          desc: "범인을 찾았을 때", 
+          state : setupVotingSetting.FOUND_SUSPECT,
+          expectedAlertText: "범인을 찾았습니다."
+        }
+      ])("$desc", async ({ state, expectedAlertText }) => {
+        await setupVoting(state, addPlayerList, true);
+
+        const votingBtn = screen.getByText("투표 완료");
+        votingBtn.click();
+
+        const skipBtn = screen.getByText("투표 스킵");
+        skipBtn.click();
+
+        await checkAlert(expectedAlertText);
+      });
+    })
+
     describe("범인인것을 들킨 경우", () => {
       test.each([
         { 
