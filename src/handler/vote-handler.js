@@ -5,6 +5,7 @@ import { TABLE_KEYS, timer } from "../modules/modules.js";
 import gameHandler from "./game-handler.js";
 import eventBus from "../modules/event-bus.js";
 import { GameEvents } from "../modules/events.js";
+import gameManager from "../modules/game-manager.js";
 
 class VoteHandler {
   playerSelectCheck = {};
@@ -96,18 +97,19 @@ class VoteHandler {
         sameList.push(suspect);
       }
     }
-
+    
     const isReVote = sameList.length > 1;
     const resetVoteData = isReVote ? {
       [TABLE_KEYS.RE_SELECT_CULPRIT] : sameList,
       ...Object.fromEntries(
-        gameStore.playerList.map(player => [
-          [`${TABLE_KEYS.SUSPECT_LIST}-${player}`], null
-        ])
+        gameStore.playerList.map(player => ([
+          [`${TABLE_KEYS.SUSPECT_LIST}-${player}`, null],
+          [`${TABLE_KEYS.VOTE_SKIP}-${player}`, null]
+        ])).flat()
       )
     }
     : {};
-                            
+
     const newDatabase = isReVote
       ? resetVoteData
       : { [TABLE_KEYS.SELECT_CULPRIT] : maxSuspect.suspect }
@@ -168,12 +170,18 @@ class VoteHandler {
       eventBus.emit(GameEvents.NOT_VOTE_SKIP);
       return;
     }
+
     const {nickname} = gameStore;
     const newDatabase = {
       [`${TABLE_KEYS.VOTE_SKIP}-${nickname}`] : true
     }
 
-    gameDatabase.updateData(newDatabase);
+    let resend = true;
+    if(gameManager.countVoteSkip + 1 === gameStore.startPlaySequence.length){
+      resend = false;
+    }
+
+    gameDatabase.updateData(newDatabase, "GameData/", resend);
   }
 }
 

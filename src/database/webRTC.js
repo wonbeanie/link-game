@@ -59,7 +59,7 @@ class WebRTC {
           eventBus.emit(GameEvents.SET_INIT_PLAYER_LIST, data);
           return;
         }
-        gameDatabase.onValue(data);
+        gameDatabase.onValue(data, data.resend);
       });
 
       conn.on('close', () => {

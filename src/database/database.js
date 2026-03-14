@@ -15,17 +15,21 @@ class GameDatabase {
     this.num = num
   }
 
-  updateData(data, table = DATABASE_KEYS.GAME_DATA_KEY) {
+  updateData(data, table = DATABASE_KEYS.GAME_DATA_KEY, resend = true) {
     if(gameStore.admin){
       this.onValue({
         data,
         table
       }, false);
+      if(!resend){
+        return;
+      }
     }
     if(Object.keys(data).length > 0){
       webRTC.send({
         data,
-        table
+        table,
+        resend
       });
     }
   }

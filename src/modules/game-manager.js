@@ -117,14 +117,18 @@ class GameManager {
       return false;
     }
 
-    const skipList = [];
+    return this.countVoteSkip === gameStore.startPlaySequence.length;
+  }
+
+  get countVoteSkip(){
+    let skipList = 0;
     Object.keys(this.newDatabase).forEach((key) => {
       if(key.includes(TABLE_KEYS.VOTE_SKIP)){
-        skipList.push(key);
+        skipList += 1;
       }
     });
 
-    return skipList.length === gameStore.startPlaySequence.length;
+    return skipList;
   }
 }
 
