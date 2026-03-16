@@ -26,7 +26,9 @@ class HintHandler {
 
       const newDatabase = {
         [TABLE_KEYS.SEQUENCE] : newSequence,
-        [nickname] : gameElements.hint.value
+        [TABLE_KEYS.HINT_LIST] : {
+          [nickname] : gameElements.hint.value
+        }
       }
 
       gameDatabase.updateData(newDatabase);

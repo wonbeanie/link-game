@@ -24,15 +24,11 @@ class MessageHandler {
     const startPlaySequenceString = startPlaySequence.join(",");
 
     Object.entries(newData).forEach(([key, value]) => {
-      if(startPlaySequenceString.includes(key) || gameStore.state === ""){
-        playerHints[key] = value;
-
-        if(startPlaySequence.length === 0){
-          eventBus.emit(GameEvents.READY_PLAYER_UI, {
-            player : key,
-            text : value
-          });
-        }
+      if((startPlaySequenceString.includes(key) || gameStore.state === "") && startPlaySequence.length === 0){
+        eventBus.emit(GameEvents.READY_PLAYER_UI, {
+          player : key,
+          text : value
+        });
         return;
       }
 
@@ -52,7 +48,7 @@ class MessageHandler {
     });
 
     this.votingList = Object.entries(votingList);
-    this.playerHints = playerHints;
+    this.playerHints = newData[TABLE_KEYS.HINT_LIST] || [];
 
     this.logView();
   }
