@@ -71,19 +71,40 @@ class GameDatabase {
 
     let databaseTemp = deepCopy(this.database);
 
-    databaseTemp = {
-      ...databaseTemp,
-      [table]: {
-        ...databaseTemp[table],
-        ...data
-      }
-    }
-
-    Object.entries(databaseTemp[table]).forEach(([key, value])=>{
+    for (const [key, value] of Object.entries(data)){
       if(value === null){
         delete databaseTemp[table][key];
+        continue;
       }
-    });
+
+      if(Object.getPrototypeOf(value) === Object.prototype){
+        Object.entries(value).forEach(([subKey, subValue]) => {
+          if(subValue === null){
+            delete databaseTemp[table][key][subKey];
+            return;
+          }
+        });
+        databaseTemp = {
+          ...databaseTemp,
+          [table] : {
+            ...databaseTemp[table],
+            [key] : {
+              ...databaseTemp[table][key],
+              ...value
+            }
+          }
+        }
+      }
+      else {
+        databaseTemp = {
+          ...databaseTemp,
+          [table] : {
+            ...databaseTemp[table],
+            [key] : value
+          }
+        }
+      }
+    }
 
     this.database = databaseTemp;
     this.listener[table](databaseTemp[table]);
