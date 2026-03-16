@@ -1,3 +1,4 @@
+import { updateTable } from "../../src/modules/database-utils.js";
 import { deepCopy, TABLE_KEYS, WATTING_ROOM_STATE } from "../../src/modules/modules.js";
 import { gameDataTable, nickname } from "../__mocks__/mock-peerjs.js";
 
@@ -30,20 +31,10 @@ export const mockDatabaseUpdate = jest.fn(async (newData, init = true, update = 
     return;
   }
 
-  let databaseTemp = {
-    ...gameDatabase.database
+  const databaseTemp = {
+    ...gameDatabase.database,
+    [gameDataTable] : updateTable(gameDatabase.database[gameDataTable], newData)
   }
-
-  databaseTemp[gameDataTable] = {
-    ...databaseTemp[gameDataTable],
-    ...newData
-  }
-
-  Object.entries(databaseTemp[gameDataTable]).forEach(([key, value])=>{
-    if(value === null){
-      delete databaseTemp[gameDataTable][key];
-    }
-  });
 
   if(update){
     gameDatabase.database = databaseTemp;

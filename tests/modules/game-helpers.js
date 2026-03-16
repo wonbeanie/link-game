@@ -66,10 +66,12 @@ export async function setupSendHint(){
   const hintBtn = screen.getByText("힌트 제출");
   hintBtn.click();
 
-  let result = {};
-
-  result[userNickname] = hintWord;
-  result[TABLE_KEYS.SEQUENCE] = SEQUENCE_END;
+  let result = {
+    [TABLE_KEYS.SEQUENCE] : SEQUENCE_END,
+    [TABLE_KEYS.HINT_LIST] : {
+      [userNickname] : hintWord
+    }
+  };
 
   await mockDatabaseUpdate(result, false, true);
 
