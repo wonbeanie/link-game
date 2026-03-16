@@ -3,6 +3,7 @@ import { DATABASE_KEYS, deepCopy } from "../modules/modules.js";
 import gameStore from "../modules/game-store.js";
 import eventBus from "../modules/event-bus.js";
 import { GameEvents } from "../modules/events.js";
+import { updateTable } from "../modules/database-utils.js";
 
 class GameDatabase {
   listener = {};
@@ -69,45 +70,13 @@ class GameDatabase {
       return;
     }
 
-    let databaseTemp = deepCopy(this.database);
+    const newDatabase = {
+      ...this.database,
+      [table] : updateTable(this.database[table], data)
+    };
 
-    for (const [key, value] of Object.entries(data)){
-      if(value === null){
-        delete databaseTemp[table][key];
-        continue;
-      }
-
-      if(Object.getPrototypeOf(value) === Object.prototype){
-        Object.entries(value).forEach(([subKey, subValue]) => {
-          if(subValue === null){
-            delete databaseTemp[table][key][subKey];
-            return;
-          }
-        });
-        databaseTemp = {
-          ...databaseTemp,
-          [table] : {
-            ...databaseTemp[table],
-            [key] : {
-              ...databaseTemp[table][key],
-              ...value
-            }
-          }
-        }
-      }
-      else {
-        databaseTemp = {
-          ...databaseTemp,
-          [table] : {
-            ...databaseTemp[table],
-            [key] : value
-          }
-        }
-      }
-    }
-
-    this.database = databaseTemp;
-    this.listener[table](databaseTemp[table]);
+    this.database = newDatabase;
+    this.listener[table](newDatabase[table]);
 
     if(gameStore.admin && send){
       webRTC.send({
