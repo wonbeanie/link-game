@@ -103,11 +103,12 @@ async function doneVoteInit({votingList, suspect, skip = false}){
   gameStore.correct = MOCK_CORRECT;
   gameStore.fakeCorrect = MOCK_FAKE_CORRECT;
 
-  let result = {};
-  result[TABLE_KEYS.SEQUENCE] = null;
+  let result = {
+    [TABLE_KEYS.SEQUENCE] : null,
+    [TABLE_KEYS.VOTE_LIST] : Object.fromEntries(votingList),
+  };
 
-  votingList.forEach(([player, voting])=> {
-    result[`${TABLE_KEYS.SUSPECT_LIST}-${player}`] = voting;
+  votingList.forEach(([player])=> {
 
     if(skip && nickname !== player){
       result[`${TABLE_KEYS.VOTE_SKIP}-${player}`] = true;
