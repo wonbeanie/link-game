@@ -49,13 +49,15 @@ class VoteHandler {
   }
 
   send = () => {
-    const {nickname, myVotingKey} = gameStore;
+    const {nickname} = gameStore;
     const {selectTimeout, sendSuspectCheck, playerSelectCheck} = this;
 
     const isPossibleVote = !selectTimeout || (!sendSuspectCheck && !playerSelectCheck[nickname]);
-
+    
     const newDatabase = {
-      ...(isPossibleVote && { [myVotingKey] : gameElements.vote.value }),
+      [TABLE_KEYS.VOTE_LIST] : {
+        ...(isPossibleVote && { [nickname] : gameElements.vote.value })
+      },
       ...(selectTimeout && { [TABLE_KEYS.SELECT_TIMEOUT] : true }),
     }
 
@@ -101,9 +103,9 @@ class VoteHandler {
     const isReVote = sameList.length > 1;
     const resetVoteData = isReVote ? {
       [TABLE_KEYS.RE_SELECT_CULPRIT] : sameList,
+      [TABLE_KEYS.VOTE_LIST] : null,
       ...Object.fromEntries(
         gameStore.playerList.map(player => ([
-          [`${TABLE_KEYS.SUSPECT_LIST}-${player}`, null],
           [`${TABLE_KEYS.VOTE_SKIP}-${player}`, null]
         ])).flat()
       )
@@ -143,12 +145,7 @@ class VoteHandler {
   }
 
   votes(newData){
-    this.playerSelectCheck = {};
-    Object.keys(newData).forEach((key)=>{
-      if(key.includes(TABLE_KEYS.SUSPECT_LIST)){
-        this.playerSelectCheck[key.split("-")[1]] = newData[key];
-      }
-    });
+    this.playerSelectCheck = newData[TABLE_KEYS.VOTE_LIST];
 
     if(TABLE_KEYS.SELECT_TIMEOUT in newData){
       if(Object.keys(this.playerSelectCheck).length === gameStore.playerList.length && gameStore.admin){

@@ -91,10 +91,6 @@ class GameStore {
     return isSuspect ? fakeCorrect : correct;
   }
 
-  get myVotingKey(){
-    return `${TABLE_KEYS.SUSPECT_LIST}-${this.nickname}`;
-  }
-
   get isDefaultGameInfo(){
     return this.correct && this.fakeCorrect && this.category && this.suspect;
   }

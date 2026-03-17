@@ -19,7 +19,6 @@ class MessageHandler {
 
   setMessages(newData){
     let votingList = {};
-    let playerHints = {};
     const { startPlaySequence } = gameStore;
     const startPlaySequenceString = startPlaySequence.join(",");
 
@@ -32,12 +31,13 @@ class MessageHandler {
         return;
       }
 
-      if(key.includes(TABLE_KEYS.SUSPECT_LIST)){
-        const nickname = key.split("-")[1];
-        votingList[nickname] = {
-          vote : value,
-          skip : newData[`${TABLE_KEYS.VOTE_SKIP}-${nickname}`]
-        };
+      if(key.includes(TABLE_KEYS.VOTE_LIST)){
+        votingList = Object.fromEntries(
+          Object.entries(value).map(([nickname, vote])=>{
+            const skip = newData[`${TABLE_KEYS.VOTE_SKIP}-${nickname}`] || false;
+            return [nickname, {vote, skip}]
+          })
+        )
         return;
       }
 

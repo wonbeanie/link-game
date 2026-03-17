@@ -158,7 +158,7 @@ export const TABLE_KEYS = Object.freeze({
   START : "Start",
   SEQUENCE : "Sequence",
   SUSPECT : "Suspect",
-  SUSPECT_LIST : "SuspectList",
+  VOTE_LIST : "VoteList",
   SELECT_CULPRIT : "SelectCulprit",
   RE_SELECT_CULPRIT : "ReSelectCulprit",
   SELECT_TIMEOUT : "SelectTimeout",
