@@ -1,7 +1,7 @@
 import gameDatabase from "../database/database.js";
 import gameStore from "../modules/game-store.js";
 import gameElements from "../modules/game-elements.js";
-import { DATABASE_KEYS, TABLE_KEYS, WATTING_ROOM_STATE } from "../modules/modules.js";
+import { TABLE_KEYS, WATTING_ROOM_STATE } from "../modules/modules.js";
 import eventBus from "../modules/event-bus.js";
 import { GameEvents } from "../modules/events.js";
 

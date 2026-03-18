@@ -1,5 +1,5 @@
 import webRTC from "./webRTC.js";
-import { DATABASE_KEYS, deepCopy } from "../modules/modules.js";
+import { DATABASE_KEYS } from "../modules/modules.js";
 import gameStore from "../modules/game-store.js";
 import eventBus from "../modules/event-bus.js";
 import { GameEvents } from "../modules/events.js";
@@ -8,13 +8,6 @@ import { updateTable } from "../modules/database-utils.js";
 class GameDatabase {
   listener = {};
   database = {};
-  i = 0;
-  num = 0;
-
-  constructor(){
-    let num = Math.random() * 100;
-    this.num = num
-  }
 
   updateData(data, table = DATABASE_KEYS.GAME_DATA_KEY, resend = true) {
     if(gameStore.admin){
@@ -45,7 +38,6 @@ class GameDatabase {
   }
 
   onValueListener(key, callback){
-    this.i += 1;
     this.listener = {
       ...this.listener,
       [key]: (data)=>{
