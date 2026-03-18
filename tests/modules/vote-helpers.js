@@ -106,14 +106,10 @@ async function doneVoteInit({votingList, suspect, skip = false}){
   let result = {
     [TABLE_KEYS.SEQUENCE] : null,
     [TABLE_KEYS.VOTE_LIST] : Object.fromEntries(votingList),
+    [TABLE_KEYS.VOTE_SKIP_LIST] : Object.fromEntries(
+      votingList.map(([player])=>[player, player !== nickname])
+    )
   };
-
-  votingList.forEach(([player])=> {
-
-    if(skip && nickname !== player){
-      result[`${TABLE_KEYS.VOTE_SKIP}-${player}`] = true;
-    }
-  })
 
   await mockDatabaseUpdate(result, false, true);
 }
