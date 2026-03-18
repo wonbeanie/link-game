@@ -121,14 +121,9 @@ class GameManager {
   }
 
   get countVoteSkip(){
-    let skipList = 0;
-    Object.keys(this.newDatabase).forEach((key) => {
-      if(key.includes(TABLE_KEYS.VOTE_SKIP)){
-        skipList += 1;
-      }
-    });
+    const skipList = this.newDatabase[TABLE_KEYS.VOTE_SKIP_LIST] || {};
 
-    return skipList;
+    return Object.values(skipList).filter((value) => value).length;
   }
 }
 

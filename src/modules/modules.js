@@ -162,7 +162,7 @@ export const TABLE_KEYS = Object.freeze({
   SELECT_CULPRIT : "SelectCulprit",
   RE_SELECT_CULPRIT : "ReSelectCulprit",
   SELECT_TIMEOUT : "SelectTimeout",
-  VOTE_SKIP : "VoteSkip",
+  VOTE_SKIP_LIST : "VoteSkipList",
   HINT_LIST : "HintList"
 });
 

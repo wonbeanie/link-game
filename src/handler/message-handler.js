@@ -32,9 +32,10 @@ class MessageHandler {
       }
 
       if(key.includes(TABLE_KEYS.VOTE_LIST)){
+        const skipList = newData[TABLE_KEYS.VOTE_SKIP_LIST] || {};
         votingList = Object.fromEntries(
           Object.entries(value).map(([nickname, vote])=>{
-            const skip = newData[`${TABLE_KEYS.VOTE_SKIP}-${nickname}`] || false;
+            const skip = skipList[nickname] || false;
             return [nickname, {vote, skip}]
           })
         )

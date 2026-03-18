@@ -104,11 +104,7 @@ class VoteHandler {
     const resetVoteData = isReVote ? {
       [TABLE_KEYS.RE_SELECT_CULPRIT] : sameList,
       [TABLE_KEYS.VOTE_LIST] : null,
-      ...Object.fromEntries(
-        gameStore.playerList.map(player => ([
-          [`${TABLE_KEYS.VOTE_SKIP}-${player}`, null]
-        ])).flat()
-      )
+      [TABLE_KEYS.VOTE_SKIP_LIST] : null,
     }
     : {};
 
@@ -170,7 +166,9 @@ class VoteHandler {
 
     const {nickname} = gameStore;
     const newDatabase = {
-      [`${TABLE_KEYS.VOTE_SKIP}-${nickname}`] : true
+      [TABLE_KEYS.VOTE_SKIP_LIST] : {
+        [nickname] : true
+      }
     }
 
     let resend = true;
