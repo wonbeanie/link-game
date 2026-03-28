@@ -15,8 +15,9 @@ class ChatHandler {
   }
 
   chatUpdate(newChatData){
-    this.chatClear();
-    this.settingChatHistory(newChatData);
+    const newChatHistory = newChatData[TABLE_KEYS.CHAT_HISTORY];
+    const lastChat = newChatHistory[newChatHistory.length-1];
+    this.addChatMessage(lastChat.nickname, lastChat.message);
   }
 
   addChatMessage(nickname, message) {
@@ -24,14 +25,6 @@ class ChatHandler {
       return;
     }
     eventBus.emit(GameEvents.ADD_CHAT_MESSAGE, {nickname, message});
-  }
-
-  chatClear(){
-    eventBus.emit(GameEvents.CLEAR_CHAT_DISPLAY);
-    if(this.startChat){
-      this.addChatMessage("서버", "채팅에 접속하였습니다.");
-      return;
-    }
   }
 
   chatStart(){
@@ -73,14 +66,6 @@ class ChatHandler {
 
       gameDatabase.updateData(newDatabase, DATABASE_KEYS.CHAT_DATA_KEY);
     }
-  }
-
-  settingChatHistory(newChatData){
-    const newChatHistory = newChatData[TABLE_KEYS.CHAT_HISTORY];
-    eventBus.emit(GameEvents.SET_CHAT_HISTORY, newChatHistory);
-    newChatHistory.forEach((chat)=>{
-      this.addChatMessage(chat.nickname, chat.message);
-    });
   }
 
   onEnterPress = (e) => {
