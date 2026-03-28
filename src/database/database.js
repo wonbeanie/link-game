@@ -1,9 +1,9 @@
 import webRTC from "./webRTC.js";
-import { DATABASE_KEYS } from "../modules/modules.js";
-import gameStore from "../modules/game-store.js";
-import eventBus from "../modules/event-bus.js";
-import { GameEvents } from "../modules/events.js";
-import { updateTable } from "../modules/database-utils.js";
+import { DATABASE_KEYS } from "../lib/modules.js";
+import gameStore from "../lib/game-store.js";
+import eventBus from "../lib/event-bus.js";
+import { GameEvents } from "../lib/events.js";
+import { updateTable } from "../lib/database-utils.js";
 
 class GameDatabase {
   listener = {};

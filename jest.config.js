@@ -5,7 +5,7 @@ const config = {
     "^https://esm\\.sh/peerjs@1\\.5\\.2$": "<rootDir>/tests/__mocks__/mock-peerjs.js",
   },
   testEnvironment: 'jsdom',
-  setupFilesAfterEnv : ['<rootDir>/tests/modules/test-setup.js']
+  setupFilesAfterEnv : ['<rootDir>/tests/lib/test-setup.js']
 };
 
 module.exports = config;

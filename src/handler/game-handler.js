@@ -1,9 +1,9 @@
 import gameDatabase from "../database/database.js";
-import gameStore from "../modules/game-store.js";
-import gameElements from "../modules/game-elements.js";
-import { TABLE_KEYS, WATTING_ROOM_STATE } from "../modules/modules.js";
-import eventBus from "../modules/event-bus.js";
-import { GameEvents } from "../modules/events.js";
+import gameStore from "../lib/game-store.js";
+import gameElements from "../lib/game-elements.js";
+import { TABLE_KEYS, WATTING_ROOM_STATE } from "../lib/modules.js";
+import eventBus from "../lib/event-bus.js";
+import { GameEvents } from "../lib/events.js";
 
 class GameHandler {
   sendLastAnswer(){

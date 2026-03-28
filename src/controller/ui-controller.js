@@ -1,6 +1,6 @@
 import uiHandler from "../handler/ui-handler.js";
-import eventBus from "../modules/event-bus.js";
-import { GameEvents } from "../modules/events.js";
+import eventBus from "../lib/event-bus.js";
+import { GameEvents } from "../lib/events.js";
 
 class UiController {
   init(){

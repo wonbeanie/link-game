@@ -1,11 +1,11 @@
 import gameDatabase from "../database/database.js";
-import gameStore from "../modules/game-store.js";
-import gameElements from "../modules/game-elements.js";
-import { TABLE_KEYS, timer } from "../modules/modules.js";
+import gameStore from "../lib/game-store.js";
+import gameElements from "../lib/game-elements.js";
+import { TABLE_KEYS, timer } from "../lib/modules.js";
 import gameHandler from "./game-handler.js";
-import eventBus from "../modules/event-bus.js";
-import { GameEvents } from "../modules/events.js";
-import gameManager from "../modules/game-manager.js";
+import eventBus from "../lib/event-bus.js";
+import { GameEvents } from "../lib/events.js";
+import gameManager from "../lib/game-manager.js";
 
 class VoteHandler {
   playerSelectCheck = {};

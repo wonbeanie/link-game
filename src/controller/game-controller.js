@@ -1,7 +1,7 @@
 import { adminHandler, gameHandler, hintHandler, voteHandler } from "../handler/index.js";
-import eventBus from "../modules/event-bus.js";
-import { GameEvents } from "../modules/events.js";
-import gameElements from "../modules/game-elements.js";
+import eventBus from "../lib/event-bus.js";
+import { GameEvents } from "../lib/events.js";
+import gameElements from "../lib/game-elements.js";
 import webRtcService from "../service/webrtc-service.js";
 
 class GameController {

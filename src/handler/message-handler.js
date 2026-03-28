@@ -1,7 +1,7 @@
-import eventBus from "../modules/event-bus.js";
-import { GameEvents } from "../modules/events.js";
-import gameStore from "../modules/game-store.js";
-import { TABLE_KEYS } from "../modules/modules.js";
+import eventBus from "../lib/event-bus.js";
+import { GameEvents } from "../lib/events.js";
+import gameStore from "../lib/game-store.js";
+import { TABLE_KEYS } from "../lib/modules.js";
 
 class MessageHandler {
   votingList = {};

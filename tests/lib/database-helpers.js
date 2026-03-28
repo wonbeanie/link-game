@@ -1,5 +1,5 @@
-import { updateTable } from "../../src/modules/database-utils.js";
-import { deepCopy, TABLE_KEYS, WATTING_ROOM_STATE } from "../../src/modules/modules.js";
+import { updateTable } from "../../src/lib/database-utils.js";
+import { deepCopy, TABLE_KEYS, WATTING_ROOM_STATE } from "../../src/lib/modules.js";
 import { gameDataTable, nickname } from "../__mocks__/mock-peerjs.js";
 
 let playerList = [];

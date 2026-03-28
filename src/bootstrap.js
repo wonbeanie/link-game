@@ -3,8 +3,8 @@ import "./service/game-state-manager.js";
 import "./handler/index.js"
 import gameController from "./controller/game-controller.js";
 import gameDatabase from "./database/database.js";
-import gameManager from "./modules/game-manager.js";
-import { DATABASE_KEYS } from "./modules/modules.js";
+import gameManager from "./lib/game-manager.js";
+import { DATABASE_KEYS } from "./lib/modules.js";
 import webRTC from "./database/webRTC.js";
 
 uiController.init();

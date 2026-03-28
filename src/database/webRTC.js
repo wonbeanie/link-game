@@ -1,9 +1,9 @@
 import { Peer } from 'https://esm.sh/peerjs@1.5.2';
-import gameElements from '../modules/game-elements.js';
-import gameStore from '../modules/game-store.js';
+import gameElements from '../lib/game-elements.js';
+import gameStore from '../lib/game-store.js';
 import gameDatabase from './database.js';
-import eventBus from '../modules/event-bus.js';
-import { GameEvents } from '../modules/events.js';
+import eventBus from '../lib/event-bus.js';
+import { GameEvents } from '../lib/events.js';
 
 class WebRTC {
   peer = null;

@@ -1,5 +1,5 @@
 import { fireEvent, screen, waitFor, within } from "@testing-library/dom";
-import { checkAlert, hintWord, setupGameStart, setupHTMLInit } from "./modules/game-helpers";
+import { checkAlert, hintWord, setupGameStart, setupHTMLInit } from "./lib/game-helpers";
 import { nickname, userNickname } from "./__mocks__/mock-peerjs";
 
 describe("힌트 입력 테스트", () => {

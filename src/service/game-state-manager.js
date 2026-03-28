@@ -1,8 +1,8 @@
 import gameDatabase from "../database/database.js";
-import gameStore from "../modules/game-store.js";
-import { alert, TABLE_KEYS, timer } from "../modules/modules.js";
-import eventBus from "../modules/event-bus.js";
-import {GameEvents} from "../modules/events.js";
+import gameStore from "../lib/game-store.js";
+import { alert, TABLE_KEYS, timer } from "../lib/modules.js";
+import eventBus from "../lib/event-bus.js";
+import {GameEvents} from "../lib/events.js";
 
 class GameStateManager {
   constructor(){

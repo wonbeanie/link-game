@@ -1,7 +1,7 @@
-import eventBus from "../modules/event-bus.js";
-import { GameEvents } from "../modules/events.js";
-import gameElements from "../modules/game-elements.js";
-import { alert, deepCopy } from "../modules/modules.js";
+import eventBus from "../lib/event-bus.js";
+import { GameEvents } from "../lib/events.js";
+import gameElements from "../lib/game-elements.js";
+import { alert, deepCopy } from "../lib/modules.js";
 
 class UiHandler {
 

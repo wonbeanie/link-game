@@ -1,8 +1,8 @@
 import { fireEvent, screen, waitFor, within } from "@testing-library/dom";
-import { mockDatabaseUpdate } from "../modules/database-helpers.js";
+import { mockDatabaseUpdate } from "../lib/database-helpers.js";
 import { nickname, userNickname } from "../__mocks__/mock-peerjs.js";
 import { checkAlert } from "./game-helpers";
-import { TABLE_KEYS } from "../../src/modules/modules.js";
+import { TABLE_KEYS } from "../../src/lib/modules.js";
 
 export async function setupVoting(stateSetting, addPlayerList = [], skip = false) {
   const playerList = [nickname, ...addPlayerList];
@@ -96,7 +96,7 @@ async function voteTestFlow(voteSetting){
 }
 
 async function doneVoteInit({votingList, suspect, skip = false}){
-  const gameStoreModule = await import('../../src/modules/game-store.js');
+  const gameStoreModule = await import('../../src/lib/game-store.js');
   const gameStore = gameStoreModule.default;
 
   gameStore.suspect = suspect;

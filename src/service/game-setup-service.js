@@ -1,8 +1,8 @@
 import gameDatabase from "../database/database.js";
-import { correctList } from "../modules/keywords.js";
-import { DATABASE_KEYS, pickRandom, shuffleStrings, TABLE_KEYS } from "../modules/modules.js";
-import eventBus from "../modules/event-bus.js";
-import { GameEvents } from "../modules/events.js";
+import { correctList } from "../lib/keywords.js";
+import { DATABASE_KEYS, pickRandom, shuffleStrings, TABLE_KEYS } from "../lib/modules.js";
+import eventBus from "../lib/event-bus.js";
+import { GameEvents } from "../lib/events.js";
 
 class GameSetupService {
   createDefaultData = async () => {

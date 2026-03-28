@@ -3,10 +3,10 @@
  */
 
 import { screen } from '@testing-library/dom';
-import { checkAlert, setupAdmin, setupHTMLInit } from './modules/game-helpers.js';
-import { mockDatabaseUpdate, setPlayers } from './modules/database-helpers.js';
+import { checkAlert, setupAdmin, setupHTMLInit } from './lib/game-helpers.js';
+import { mockDatabaseUpdate, setPlayers } from './lib/database-helpers.js';
 import { gameDataTable, nickname, userNickname } from './__mocks__/mock-peerjs.js';
-import { WATTING_ROOM_STATE } from '../src/modules/modules.js';
+import { WATTING_ROOM_STATE } from '../src/lib/modules.js';
 
 describe('테스트', () => {
   let initDatabase = {};

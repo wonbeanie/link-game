@@ -1,8 +1,8 @@
-import gameElements from "../modules/game-elements.js";
+import gameElements from "../lib/game-elements.js";
 import webRTC from "../database/webRTC.js";
-import eventBus from "../modules/event-bus.js";
-import { GameEvents } from "../modules/events.js";
-import gameStore from "../modules/game-store.js";
+import eventBus from "../lib/event-bus.js";
+import { GameEvents } from "../lib/events.js";
+import gameStore from "../lib/game-store.js";
 
 class WebRtcService {
   newConnectPlayer(){

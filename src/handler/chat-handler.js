@@ -1,9 +1,9 @@
-import gameStore from "../modules/game-store.js";
+import gameStore from "../lib/game-store.js";
 import gameDatabase from "../database/database.js";
-import { DATABASE_KEYS, deepCopy, TABLE_KEYS } from "../modules/modules.js";
-import gameElements from "../modules/game-elements.js";
-import eventBus from "../modules/event-bus.js";
-import { GameEvents } from "../modules/events.js";
+import { DATABASE_KEYS, deepCopy, TABLE_KEYS } from "../lib/modules.js";
+import gameElements from "../lib/game-elements.js";
+import eventBus from "../lib/event-bus.js";
+import { GameEvents } from "../lib/events.js";
 
 class ChatHandler {
   startChat = false;

@@ -1,5 +1,5 @@
 import { fireEvent, screen, within } from "@testing-library/dom";
-import { setupGameStart, setupHTMLInit } from "./modules/game-helpers";
+import { setupGameStart, setupHTMLInit } from "./lib/game-helpers";
 
 describe("채팅 테스트", () => {
   beforeEach(async ()=>{

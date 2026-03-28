@@ -1,6 +1,6 @@
 import { fireEvent, screen, within } from "@testing-library/dom";
-import { checkAlert, setupGameStart, setupHTMLInit, setupSendHint } from "./modules/game-helpers";
-import { checkSelectPlayerList, MOCK_CORRECT, MOCK_FAKE_CORRECT, setupVoting, setupVotingSetting } from "./modules/vote-helpers";
+import { checkAlert, setupGameStart, setupHTMLInit, setupSendHint } from "./lib/game-helpers";
+import { checkSelectPlayerList, MOCK_CORRECT, MOCK_FAKE_CORRECT, setupVoting, setupVotingSetting } from "./lib/vote-helpers";
 import {nickname, secondNickname, thirdNickname, userNickname} from './__mocks__/mock-peerjs.js';
 
 describe("투표 테스트", () => {
