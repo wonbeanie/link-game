@@ -4,8 +4,8 @@ import gameStore from "../modules/game-store.js";
 import { TABLE_KEYS } from "../modules/modules.js";
 
 class MessageHandler {
-  votingList = [];
-  playerHints = [];
+  votingList = {};
+  playerHints = {};
 
   constructor(){
     eventBus.on(GameEvents.READY_TO_ADD_LOG, (data)=>this.setMessages(data));
@@ -13,8 +13,8 @@ class MessageHandler {
   }
 
   initGame(){
-    this.votingList = [];
-    this.playerHints = [];
+    this.votingList = {};
+    this.playerHints = {};
   }
 
   setMessages(newData){
@@ -48,25 +48,19 @@ class MessageHandler {
       }
     });
 
-    this.votingList = Object.entries(votingList);
-    this.playerHints = newData[TABLE_KEYS.HINT_LIST] || [];
+    this.votingList = votingList;
+    this.playerHints = newData[TABLE_KEYS.HINT_LIST] || {};
 
     this.logView();
   }
 
   logView(){
-    let logData = {};
-    this.votingList.forEach(([player, {vote, skip}])=>{
-      logData[player] = {
-        vote,
-        skip
-      }
-    });
+    let logData = {...this.votingList};
 
     gameStore.startPlaySequence.forEach((player)=>{
       logData[player] = {
         ...logData[player],
-        hint : this.playerHints[player]
+        hint : this.playerHints[player] ? this.playerHints[player] : ""
       }
     });
 
