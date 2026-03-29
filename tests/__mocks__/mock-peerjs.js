@@ -1,61 +1,42 @@
 export class Peer {
-  peer = "TEST-PEER-ID";
-  connection = null;
-  callbacks = {
-    open : () => {},
-    connect : () => {},
-    data : () => {},
-    close : () => {}
-  };
-
-  constructor(peer, connection = null){
-    this.peer = peer;
-    this.connection = connection;
-    this.open();
+  constructor(id){
+    this.peer = id || "TEST-PEER-ID";
+    this.callbacks = {};
+    this.connections = [];
   }
 
   on(event, callback){
-    switch(event){
-      case 'open':
-        callbacks.open = callback;
-        break;
-      case 'connection':
-        callbacks.connect = callback;
-        break;
-      case 'data':
-        callbacks.data = callback;
-        break;
-      case 'close':
-        callbacks.close = callback;
-        break;
+    this.callbacks[event] = callback;
+    if(event === "open"){
+      this.callbacks.open(this.peer);
+    }
+
+    if(event === "connection"){
+      const conn = this.connect("TEST-PEER-ID-2");
+      this.callbacks.connection(conn);
     }
   }
 
-  open(){
-    this.callbacks.open(this.peer);
+  connect(targetId){
+    const conn = new DataConnection(targetId, this);
+    this.connections.push(conn);
+    return conn;
+  }
+}
+
+class DataConnection {
+  constructor(peerId, remotePeer = null){
+    this.peer = peerId;
+    this.remotePeer = remotePeer;
+    this.callbacks = {};
   }
 
-  connect(){
-    const newConnection = new Peer("TEST-PEER-ID-2", this);
-    this.connection = newConnection;
-    this.callbacks.connect(newConnection);
-  }
+  on(event, callback){
+    this.callbacks[event] = callback;
 
-  send(data){
-    this.connection.data(data);
-  }
-
-  data(data){
-    this.callbacks.data(data);
-  }
-
-  close(){
-    this.connection = null;
-    if(this.connection.connection !== null){
-      this.connection.close();
+    if(event === "open"){
+      this.callbacks.open();
     }
-
-    this.callbacks.close();
   }
 }
 
