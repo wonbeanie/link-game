@@ -6,12 +6,11 @@ import eventBus from "../lib/event-bus.js";
 import { GameEvents } from "../lib/events.js";
 
 class ChatHandler {
-  startChat = false;
-
   constructor(){
     eventBus.on(GameEvents.CHAT_START, ()=>this.chatStart());
     eventBus.on(GameEvents.GAME_OVER, ()=>this.chatClose());
     eventBus.on(GameEvents.CHAT_UPDATE, (data)=>this.chatUpdate(data));
+    eventBus.on(GameEvents.DONE_INIT_GAME_UI, ()=>this.chatStart());
   }
 
   chatUpdate(newChatData){
@@ -21,16 +20,19 @@ class ChatHandler {
   }
 
   addChatMessage(nickname, message) {
-    if(!this.startChat){
+    if(!gameStore.startChat){
       return;
     }
     eventBus.emit(GameEvents.ADD_CHAT_MESSAGE, {nickname, message});
   }
 
   chatStart(){
+    if(gameStore.startChat){
+      return;
+    }
     gameElements.chat.btn.addEventListener('click', this.sendClick);
     gameElements.chat.input.addEventListener('keypress', this.onEnterPress);
-    this.startChat = true;
+    gameStore.startChat = true;
     this.addChatMessage("서버", "채팅에 접속하였습니다.");
   }
 
@@ -43,7 +45,7 @@ class ChatHandler {
     gameElements.chat.btn.removeEventListener('click', this.sendClick);
     gameElements.chat.input.removeEventListener('keypress', this.onEnterPress);
     this.addChatMessage("서버", "채팅이 종료되었습니다.");
-    this.startChat = false;
+    gameStore.startChat = false;
   }
 
   onSendClick = (msg) => {

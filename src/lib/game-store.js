@@ -14,6 +14,7 @@ class GameStore {
   lastAnswer = "";
   admin = false;
   chatHistory = [];
+  startChat = false;
 
   constructor(){
     eventBus.on(GameEvents.GAME_INFOS_UPDATE, (data) => this.updateGameInfos(data));
@@ -39,6 +40,7 @@ class GameStore {
     this.state = "";
     this.lastAnswer = "";
     this.chatHistory = [];
+    this.startChat = false;
   }
 
   setAdmin() {

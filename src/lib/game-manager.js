@@ -64,8 +64,8 @@ class GameManager {
 
   activateGameStart(){
     eventBus.emit(GameEvents.GAME_INFOS_UPDATE, this.newDatabase);
-    eventBus.emit(GameEvents.CHAT_START);
     eventBus.emit(GameEvents.RELOAD_EVENT);
+    eventBus.emit(GameEvents.CLEAR_CHAT_DISPLAY);
 
     const result = {};
     result[TABLE_KEYS.START] = null;

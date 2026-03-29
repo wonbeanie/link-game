@@ -45,6 +45,7 @@ class WebRTC {
                   "방장과 연결이 완료되었습니다." :
                   `연결된 플레이어 수 : ${Object.keys(this.connections).length}`
       });
+      eventBus.emit(GameEvents.CHAT_START);
 
       if(!gameStore.admin){
         this.send({

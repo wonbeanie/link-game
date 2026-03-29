@@ -57,5 +57,5 @@ export const GameEvents = {
   TURN_START_VOTE : "vote:turnStartVote",
   TURN_END_VOTE : "vote:turnEndVote",
   NOT_VOTE_SKIP : "vote:notVoteSkip",
-  VOTE_SKIP : "vote:skip"
+  VOTE_SKIP : "vote:skip",
 }
