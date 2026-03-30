@@ -69,6 +69,7 @@ class WebRTC {
             nickname : "알림",
             message : `방장과의 연결이 끊겼습니다.`
           });
+          eventBus.emit(GameEvents.CHAT_CLOSE);
           return;
         }
         const nickname = this.connections[conn.peer].nickname;

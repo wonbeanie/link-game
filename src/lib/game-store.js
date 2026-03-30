@@ -39,8 +39,6 @@ class GameStore {
     this.correct = "";
     this.state = "";
     this.lastAnswer = "";
-    this.chatHistory = [];
-    this.startChat = false;
   }
 
   setAdmin() {

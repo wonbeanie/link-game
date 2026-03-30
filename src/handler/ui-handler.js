@@ -86,6 +86,14 @@ class UiHandler {
   updateGameOverUI(gameInfo, lastAnswer = "", findSusepct = false){
     this.showGameOverAlert(gameInfo, lastAnswer, findSusepct);
     this.updateGameEndStateUI(gameInfo, lastAnswer, findSusepct);
+    this.addGameOverChat();
+  }
+
+  addGameOverChat(){
+    this.addChatMessageToDisplay({
+      nickname : "알림",
+      message : "게임이 종료되었습니다."
+    });
   }
 
   updateGameInfoUI({category, correct}){

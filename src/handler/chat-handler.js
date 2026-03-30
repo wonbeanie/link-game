@@ -8,7 +8,7 @@ import { GameEvents } from "../lib/events.js";
 class ChatHandler {
   constructor(){
     eventBus.on(GameEvents.CHAT_START, ()=>this.chatStart());
-    eventBus.on(GameEvents.GAME_OVER, ()=>this.chatClose());
+    eventBus.on(GameEvents.CHAT_CLOSE, ()=>this.chatClose());
     eventBus.on(GameEvents.CHAT_UPDATE, (data)=>this.chatUpdate(data));
     eventBus.on(GameEvents.DONE_INIT_GAME_UI, ()=>this.chatStart());
   }
