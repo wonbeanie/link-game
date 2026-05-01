@@ -1,3 +1,4 @@
+import lightDB from "../database/lightDB.js";
 import eventBus from "./event-bus.js";
 import { GameEvents } from "./events.js";
 import { GAME_STATE, TABLE_KEYS } from "./modules.js";
@@ -27,7 +28,7 @@ class GameStore {
     eventBus.on(GameEvents.INIT_NICKNAME, () => this.initNickname());
     eventBus.on(GameEvents.INIT_GAME_UI, () => this.initGame());
     eventBus.on(GameEvents.CREATE_ROOM, () => this.setAdmin());
-    eventBus.on(GameEvents.RELESE_ROOM, () => this.admin = false);
+    eventBus.on(GameEvents.RELESE_ROOM, () => false);
   }
 
   initGame(){
@@ -42,7 +43,6 @@ class GameStore {
   }
 
   setAdmin() {
-    this.admin = true;
     eventBus.emit(GameEvents.DONE_SET_ADMIN);
   }
 
@@ -76,6 +76,10 @@ class GameStore {
       category : this.category,
       correct : this.myCorrect
     })
+  }
+
+  get admin() {
+    return lightDB.roomChief;
   }
 
   get myTurn() {

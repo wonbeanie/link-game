@@ -1,10 +1,11 @@
 import gameDatabase from "../database/database.js";
+import lightDB from "../database/lightDB.js";
 import webRTC from "../database/webRTC.js";
 import eventBus from "../lib/event-bus.js";
 import { GameEvents } from "../lib/events.js";
 import gameElements from "../lib/game-elements.js";
 import gameStore from "../lib/game-store.js";
-import { TABLE_KEYS, WATTING_ROOM_STATE } from "../lib/modules.js";
+import { DATABASE_KEYS, TABLE_KEYS, WATTING_ROOM_STATE } from "../lib/modules.js";
 import gameSetupService from "../service/game-setup-service.js";
 
 class AdminHandler {
@@ -61,13 +62,20 @@ class AdminHandler {
     eventBus.emit(GameEvents.CREATE_ROOM);
   }
 
-  setUpdateMyNickname = () => {
+  setUpdateMyNickname = async () => {
     const nickname = gameStore.nickname;
     const newDatabase = {
       [nickname] : WATTING_ROOM_STATE.STANDBY
     };
 
-    gameDatabase.updateData(newDatabase);
+    const roomID = await lightDB.createRoom({
+      clear: true
+    });
+    gameElements.webrtc.myId.textContent = roomID;
+    await lightDB.update(DATABASE_KEYS.GAME_DATA_KEY, newDatabase);
+    console.log("request setUpdateMyNickname");
+    console.log(lightDB.updateTimestamp);
+    console.log(lightDB.test);
   }
 
   copyRoomId = () => {

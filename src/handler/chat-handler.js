@@ -15,6 +15,9 @@ class ChatHandler {
 
   chatUpdate(newChatData){
     const newChatHistory = newChatData[TABLE_KEYS.CHAT_HISTORY];
+    if(!newChatHistory){
+      return;
+    }
     const lastChat = newChatHistory[newChatHistory.length-1];
     this.addChatMessage(lastChat.nickname, lastChat.message);
   }

@@ -3,16 +3,24 @@ import webRTC from "../database/webRTC.js";
 import eventBus from "../lib/event-bus.js";
 import { GameEvents } from "../lib/events.js";
 import gameStore from "../lib/game-store.js";
+import lightDB from "../database/lightDB.js";
+import { DATABASE_KEYS, WATTING_ROOM_STATE } from "../lib/modules.js";
 
 class WebRtcService {
-  newConnectPlayer(){
+  async newConnectPlayer(){
     if(gameStore.nickname === ""){
       eventBus.emit(GameEvents.NOT_SETTING_NICKNAME);
       return;
     }
     const targetId = gameElements.webrtc.adminId.value;
-    const conn = webRTC.peer.connect(targetId);
-    webRTC.handleConnection(conn);
+    const database = await lightDB.joinRoom(targetId, true);
+    console.log(database);
+    const nickname = gameStore.nickname;
+    const newDatabase = {
+      [nickname] : WATTING_ROOM_STATE.STANDBY
+    };
+
+    await lightDB.update(DATABASE_KEYS.GAME_DATA_KEY, newDatabase);
     eventBus.emit(GameEvents.RELESE_ROOM);
   }
 }

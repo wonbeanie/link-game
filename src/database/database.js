@@ -4,28 +4,30 @@ import gameStore from "../lib/game-store.js";
 import eventBus from "../lib/event-bus.js";
 import { GameEvents } from "../lib/events.js";
 import { updateTable } from "../lib/database-utils.js";
+import lightDB from "./lightDB.js";
 
 class GameDatabase {
   listener = {};
   database = {};
 
   updateData(data, table = DATABASE_KEYS.GAME_DATA_KEY, resend = true) {
-    if(gameStore.admin){
-      this.onValue({
-        data,
-        table
-      }, false);
-      if(!resend){
-        return;
-      }
-    }
-    if(Object.keys(data).length > 0){
-      webRTC.send({
-        data,
-        table,
-        resend
-      });
-    }
+    return;
+    // if(gameStore.admin){
+    //   this.onValue({
+    //     data,
+    //     table
+    //   }, false);
+    //   if(!resend){
+    //     return;
+    //   }
+    // }
+    // if(Object.keys(data).length > 0){
+    //   webRTC.send({
+    //     data,
+    //     table,
+    //     resend
+    //   });
+    // }
   }
   
   clearDatabase(uiClear = false) {
