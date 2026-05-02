@@ -1,8 +1,9 @@
 import gameDatabase from "../database/database.js";
+import lightDB from "../database/lightDB.js";
 import eventBus from "./event-bus.js";
 import { GameEvents } from "./events.js";
 import gameStore from "./game-store.js";
-import { SEQUENCE_END, TABLE_KEYS } from "./modules.js";
+import { DATABASE_KEYS, SEQUENCE_END, TABLE_KEYS } from "./modules.js";
 
 class GameManager {
   newDatabase = {};
@@ -62,14 +63,17 @@ class GameManager {
     eventBus.emit(GameEvents.VOTE_UPDATE, this.newDatabase);
   }
 
-  activateGameStart(){
+  async activateGameStart(){
     eventBus.emit(GameEvents.GAME_INFOS_UPDATE, this.newDatabase);
     eventBus.emit(GameEvents.RELOAD_EVENT);
     eventBus.emit(GameEvents.CLEAR_CHAT_DISPLAY);
 
     const result = {};
     result[TABLE_KEYS.START] = null;
-    gameDatabase.updateData(result); 
+
+    if(lightDB.roomChief){
+      await lightDB.update(DATABASE_KEYS.GAME_DATA_KEY,result);
+    }
   }
 
   routeGameFlow(){

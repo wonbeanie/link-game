@@ -28,16 +28,16 @@ class AdminHandler {
       return;
     }
 
-    const defaultData = await gameSetupService.createDefaultData();
+    const defaultData = gameSetupService.createDefaultData();
 
-    gameDatabase.clearDatabase();
+    await lightDB.clear();
 
     const newDatabase = {
       ...defaultData,
       [TABLE_KEYS.START] : `Start Game(${new Date().getTime()})`
     };
 
-    gameDatabase.updateData(newDatabase);
+    await lightDB.update(DATABASE_KEYS.GAME_DATA_KEY, newDatabase);
     eventBus.emit(GameEvents.CLOSE_ADMIN_MODAL);
   }
 
@@ -69,13 +69,10 @@ class AdminHandler {
     };
 
     const roomID = await lightDB.createRoom({
-      clear: true
+      resetStorage: true
     });
     gameElements.webrtc.myId.textContent = roomID;
     await lightDB.update(DATABASE_KEYS.GAME_DATA_KEY, newDatabase);
-    console.log("request setUpdateMyNickname");
-    console.log(lightDB.updateTimestamp);
-    console.log(lightDB.test);
   }
 
   copyRoomId = () => {

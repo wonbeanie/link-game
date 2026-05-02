@@ -13,8 +13,9 @@ class WebRtcService {
       return;
     }
     const targetId = gameElements.webrtc.adminId.value;
-    const database = await lightDB.joinRoom(targetId, true);
-    console.log(database);
+    const database = await lightDB.joinRoom(targetId, {
+      resetStorage : true
+    });
     const nickname = gameStore.nickname;
     const newDatabase = {
       [nickname] : WATTING_ROOM_STATE.STANDBY

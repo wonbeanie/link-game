@@ -3,10 +3,11 @@ import { correctList } from "../lib/keywords.js";
 import { DATABASE_KEYS, pickRandom, shuffleStrings, TABLE_KEYS } from "../lib/modules.js";
 import eventBus from "../lib/event-bus.js";
 import { GameEvents } from "../lib/events.js";
+import lightDB from "../database/lightDB.js";
 
 class GameSetupService {
-  createDefaultData = async () => {
-    const data = await gameDatabase.getData(DATABASE_KEYS.GAME_DATA_KEY);
+  createDefaultData = () => {
+    const data = lightDB.database[DATABASE_KEYS.GAME_DATA_KEY];
 
     let list = [];
 

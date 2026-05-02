@@ -85,7 +85,7 @@ class GameDatabase {
   }
 
   get wattingRoomPlayerList(){
-    return this.database[DATABASE_KEYS.GAME_DATA_KEY];
+    return lightDB.database[DATABASE_KEYS.GAME_DATA_KEY];
   }
 }
 
