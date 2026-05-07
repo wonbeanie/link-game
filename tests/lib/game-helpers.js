@@ -7,7 +7,7 @@ import { nickname, userNickname } from '../__mocks__/mock-peerjs.js';
 
 export async function setupGameStart(initUsers = [userNickname]){
   const gameDatabase = await getDatabase();
-  setupAdmin();
+  await setupAdmin();
   await setPlayers(initUsers);
 
   const nicknameInput = screen.getByPlaceholderText('닉네임을 입력하세요');
@@ -21,13 +21,16 @@ export async function setupGameStart(initUsers = [userNickname]){
 
   const gameStartBtn = screen.getByText(/게임 시작하기/);
 
-  const spy = jest.spyOn(gameDatabase, 'updateData').mockImplementation((data, table = DATABASE_KEYS.GAME_DATA_KEY) => {
-    const modifiedData = {
-      ...data,
-      [TABLE_KEYS.SEQUENCE] : [nickname, ...getPlayers()]
-    };
+  const update = gameDatabase.update.bind(gameDatabase);
+  const spy = jest.spyOn(gameDatabase, 'update').mockImplementation((table = DATABASE_KEYS.GAME_DATA_KEY, data) => {
+    const modifiedData = data && table === DATABASE_KEYS.GAME_DATA_KEY && TABLE_KEYS.START in data
+      ? {
+          ...data,
+          [TABLE_KEYS.SEQUENCE] : [nickname, ...getPlayers()]
+        }
+      : data;
 
-    gameDatabase.onValue({ data: modifiedData, table }, false);
+    return update(table, modifiedData);
   });
 
   gameStartBtn.click();
@@ -45,13 +48,20 @@ export function setupNikcname(){
   confirmButton.click();
 }
 
-export function setupAdmin(){
+export async function setupAdmin(){
   setupNikcname();
   const adminModalOpenBtn = screen.getByText(/방장 컨트롤 패널 열기/);
   adminModalOpenBtn.click();
 
   const createRoomBtn = screen.getByText(/방 만들기/);
   createRoomBtn.click();
+
+  const lightDB = await getDatabase();
+  await waitFor(() => {
+    expect(lightDB.database[DATABASE_KEYS.GAME_DATA_KEY]).toMatchObject({
+      [nickname]: expect.any(String)
+    });
+  });
 
   const adminModalExitBtn = screen.getByText("×");
   adminModalExitBtn.click();

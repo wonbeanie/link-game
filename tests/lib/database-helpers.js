@@ -1,11 +1,9 @@
-import { updateTable } from "../../src/lib/database-utils.js";
-import { deepCopy, TABLE_KEYS, WATTING_ROOM_STATE } from "../../src/lib/modules.js";
-import { gameDataTable, nickname } from "../__mocks__/mock-peerjs.js";
+import { DATABASE_KEYS, WATTING_ROOM_STATE } from "../../src/lib/modules.js";
 
 let playerList = [];
 
 export async function getDatabase(){
-  return (await import("../../src/database/database.js")).default;
+  return (await import("../../src/database/lightDB.js")).default;
 }
 
 export const setPlayers = jest.fn(async (addPlayers) => {
@@ -19,8 +17,8 @@ export const setPlayers = jest.fn(async (addPlayers) => {
     playerList.push(player);
   })
 
-  gameDatabase.database[gameDataTable] = newDatabase;
-  gameDatabase.listener[gameDataTable](newDatabase);
+  gameDatabase.database[DATABASE_KEYS.GAME_DATA_KEY] = newDatabase;
+  gameDatabase.notify(DATABASE_KEYS.GAME_DATA_KEY, newDatabase);
 });
 
 export const mockDatabaseUpdate = jest.fn(async (newData, init = true, update = false) => {
@@ -31,14 +29,8 @@ export const mockDatabaseUpdate = jest.fn(async (newData, init = true, update = 
     return;
   }
 
-  const databaseTemp = {
-    ...gameDatabase.database,
-    [gameDataTable] : updateTable(gameDatabase.database[gameDataTable], newData)
-  }
-
   if(update){
-    gameDatabase.database = databaseTemp;
-    gameDatabase.listener[gameDataTable](databaseTemp[gameDataTable]);
+    await gameDatabase.update(DATABASE_KEYS.GAME_DATA_KEY, newData);
   }
 });
 

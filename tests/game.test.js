@@ -5,8 +5,8 @@
 import { screen } from '@testing-library/dom';
 import { checkAlert, setupAdmin, setupHTMLInit } from './lib/game-helpers.js';
 import { mockDatabaseUpdate, setPlayers } from './lib/database-helpers.js';
-import { gameDataTable, nickname, userNickname } from './__mocks__/mock-peerjs.js';
-import { WATTING_ROOM_STATE } from '../src/lib/modules.js';
+import { nickname, userNickname } from './__mocks__/mock-peerjs.js';
+import { DATABASE_KEYS, WATTING_ROOM_STATE } from '../src/lib/modules.js';
 
 describe('테스트', () => {
   let initDatabase = {};
@@ -15,10 +15,10 @@ describe('테스트', () => {
     await setupHTMLInit();
 
     initDatabase = {};
-    initDatabase[gameDataTable] = {};
+    initDatabase[DATABASE_KEYS.GAME_DATA_KEY] = {};
     await mockDatabaseUpdate(initDatabase);
 
-    setupAdmin();
+    await setupAdmin();
   });
 
   test("게임 시작과 초기화 버튼 확인", () => {
