@@ -4,9 +4,9 @@
 
 import { fireEvent, screen } from '@testing-library/dom';
 import { checkAlert, setupAdmin, setupHTMLInit } from './lib/game-helpers.js';
-import { mockLightDBUpdate, setPlayers } from './lib/database-helpers.js';
+import { getDatabase, mockLightDBUpdate, setPlayers } from './lib/database-helpers.js';
 import { nickname, userNickname } from './__mocks__/mock-peerjs.js';
-import { DATABASE_KEYS, WATTING_ROOM_STATE } from '../src/lib/modules.js';
+import { DATABASE_KEYS, TABLE_KEYS, WATTING_ROOM_STATE } from '../src/lib/modules.js';
 
 describe('테스트', () => {
   let initDatabase = {};
@@ -53,5 +53,26 @@ describe('테스트', () => {
     fireEvent.click(gameStartBtn);
 
     await checkAlert("게임시작|당신 순서입니다.");
+  });
+
+  test("준비하지 않은 플레이어가 있으면 게임 시작을 막는다", async () => {
+    await mockLightDBUpdate({
+      [nickname]: WATTING_ROOM_STATE.READY,
+      [userNickname]: WATTING_ROOM_STATE.STANDBY
+    }, false, true);
+
+    const adminModalOpenBtn = screen.getByText(/방장 컨트롤 패널 열기/);
+    fireEvent.click(adminModalOpenBtn);
+
+    const gameStartBtn = screen.getByText(/게임 시작하기/);
+    fireEvent.click(gameStartBtn);
+
+    await screen.findByText(/준비 완료를 하지 않았습니다/);
+
+    const lightDB = await getDatabase();
+    const gameData = lightDB.database[DATABASE_KEYS.GAME_DATA_KEY];
+
+    expect(gameData[TABLE_KEYS.START]).toBeUndefined();
+    expect(gameData[TABLE_KEYS.SEQUENCE]).toBeUndefined();
   });
 });
