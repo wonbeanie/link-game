@@ -141,6 +141,10 @@ class VoteHandler {
   }
 
   votes(newData){
+    if(!(TABLE_KEYS.VOTE_LIST in newData)){
+      return;
+    }
+
     this.playerSelectCheck = newData[TABLE_KEYS.VOTE_LIST];
 
     if(TABLE_KEYS.SELECT_TIMEOUT in newData){

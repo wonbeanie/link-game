@@ -14,17 +14,21 @@ export function updateTable(table, newData){
     }
 
     if(Object.getPrototypeOf(value) === Object.prototype){
+      const nextValue = {};
+
       Object.entries(value).forEach(([subKey, subValue]) => {
         if(subValue === null){
           delete newTableData[key][subKey];
           return;
         }
+
+        nextValue[subKey] = subValue;
       });
       newTableData = {
         ...newTableData,
         [key] : {
           ...newTableData[key],
-          ...value
+          ...nextValue
         }
       }
     }
