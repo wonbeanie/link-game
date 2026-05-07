@@ -1,5 +1,4 @@
 import lightDB from "../database/lightDB.js";
-import webRTC from "../database/webRTC.js";
 import eventBus from "../lib/event-bus.js";
 import { GameEvents } from "../lib/events.js";
 import gameElements from "../lib/game-elements.js";
@@ -10,8 +9,6 @@ import gameSetupService from "../service/game-setup-service.js";
 class AdminHandler {
 
   constructor(){
-    eventBus.on(GameEvents.SET_INIT_PLAYER_LIST, (data)=>this.setInitPlayerList(data));
-    eventBus.on(GameEvents.DONE_INIT_GAME_UI, ()=>this.setInitPlayerList());
     eventBus.on(GameEvents.DONE_SET_ADMIN, () => this.setUpdateMyNickname())
   }
 
@@ -76,26 +73,6 @@ class AdminHandler {
 
   copyRoomId = () => {
     navigator.clipboard.writeText(gameElements.webrtc.myId.textContent);
-  }
-
-  setInitPlayerList = async (data) => {
-    let playerList = {};
-    if(!data && gameStore.admin){
-      playerList = Object.fromEntries([
-        [gameStore.nickname, WATTING_ROOM_STATE.STANDBY],
-        ...Object.values(webRTC.connections).map(({nickname})=>{
-          return [nickname, WATTING_ROOM_STATE.STANDBY]
-        })
-      ]);
-    }
-    else {
-      playerList = {
-        ...gameStore.wattingRoomPlayerList,
-        [data.nickname] : WATTING_ROOM_STATE.STANDBY
-      };
-    }
-
-    await lightDB.update(DATABASE_KEYS.GAME_DATA_KEY, playerList);
   }
 }
 
