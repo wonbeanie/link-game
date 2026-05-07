@@ -74,9 +74,9 @@ export async function setupSendHint(){
   fireEvent.change(hintInput, {target : {value : hintWord}});
 
   const hintBtn = screen.getByText("힌트 제출");
-  hintBtn.click();
+  fireEvent.click(hintBtn);
 
-  let result = {
+  const result = {
     [TABLE_KEYS.SEQUENCE] : SEQUENCE_END,
     [TABLE_KEYS.HINT_LIST] : {
       [userNickname] : hintWord
@@ -84,6 +84,12 @@ export async function setupSendHint(){
   };
 
   await mockDatabaseUpdate(result, false, true);
+  const lightDB = await getDatabase();
+  await waitFor(() => {
+    expect(lightDB.database[DATABASE_KEYS.GAME_DATA_KEY]).toMatchObject({
+      [TABLE_KEYS.HINT_LIST] : result[TABLE_KEYS.HINT_LIST]
+    });
+  });
 
   await checkAlert("토론시간");
 }
