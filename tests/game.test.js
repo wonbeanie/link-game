@@ -2,7 +2,7 @@
  * @jest-environment jsdom
  */
 
-import { fireEvent, screen } from '@testing-library/dom';
+import { fireEvent, screen, waitFor } from '@testing-library/dom';
 import { checkAlert, setupAdmin, setupHTMLInit } from './lib/game-helpers.js';
 import { getDatabase, mockLightDBUpdate, setPlayers } from './lib/database-helpers.js';
 import { nickname, userNickname } from './__mocks__/mock-peerjs.js';
@@ -53,6 +53,19 @@ describe('테스트', () => {
     fireEvent.click(gameStartBtn);
 
     await checkAlert("게임시작|당신 순서입니다.");
+
+    const lightDB = await getDatabase();
+
+    await waitFor(() => {
+      const gameData = lightDB.database[DATABASE_KEYS.GAME_DATA_KEY];
+
+      expect(gameData[TABLE_KEYS.SEQUENCE]).toEqual(expect.arrayContaining([nickname, userNickname]));
+      expect(gameData[TABLE_KEYS.SUSPECT]).toEqual(expect.any(String));
+      expect(gameData[TABLE_KEYS.CATEGORY]).toEqual(expect.any(String));
+      expect(gameData[TABLE_KEYS.CORRECT]).toEqual(expect.any(String));
+      expect(gameData[TABLE_KEYS.FAKE_CORRECT]).toEqual(expect.any(String));
+      expect(gameData[TABLE_KEYS.START]).toBeUndefined();
+    });
   });
 
   test("준비하지 않은 플레이어가 있으면 게임 시작을 막는다", async () => {
