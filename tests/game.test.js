@@ -2,9 +2,9 @@
  * @jest-environment jsdom
  */
 
-import { screen } from '@testing-library/dom';
+import { fireEvent, screen } from '@testing-library/dom';
 import { checkAlert, setupAdmin, setupHTMLInit } from './lib/game-helpers.js';
-import { mockDatabaseUpdate, setPlayers } from './lib/database-helpers.js';
+import { mockLightDBUpdate, setPlayers } from './lib/database-helpers.js';
 import { nickname, userNickname } from './__mocks__/mock-peerjs.js';
 import { DATABASE_KEYS, WATTING_ROOM_STATE } from '../src/lib/modules.js';
 
@@ -16,7 +16,7 @@ describe('테스트', () => {
 
     initDatabase = {};
     initDatabase[DATABASE_KEYS.GAME_DATA_KEY] = {};
-    await mockDatabaseUpdate(initDatabase);
+    await mockLightDBUpdate(initDatabase);
 
     await setupAdmin();
   });
@@ -31,7 +31,7 @@ describe('테스트', () => {
 
   test("1명의 유저가 존재할때 닉네임 설정 확인", async () => {
     const newPlayer = {[userNickname] :WATTING_ROOM_STATE.STANDBY};
-    await mockDatabaseUpdate(newPlayer, false, true);
+    await mockLightDBUpdate(newPlayer, false, true);
 
     const items = await screen.findAllByText(nickname);
     expect(items).toHaveLength(2);
@@ -47,10 +47,10 @@ describe('테스트', () => {
     await setPlayers([userNickname, nickname]);
 
     const adminModalOpenBtn = screen.getByText(/방장 컨트롤 패널 열기/);
-    adminModalOpenBtn.click();
+    fireEvent.click(adminModalOpenBtn);
 
     const gameStartBtn = screen.getByText(/게임 시작하기/);
-    gameStartBtn.click();
+    fireEvent.click(gameStartBtn);
 
     await checkAlert("게임시작|당신 순서입니다.");
   });

@@ -26,18 +26,22 @@ function updateTable(table, newData) {
 
     if (isPlainObject(value)) {
       const currentValue = newTableData[key] || {};
+      const nextValue = {};
 
       for (const [subKey, subValue] of Object.entries(value)) {
         if (subValue === null) {
           delete currentValue[subKey];
+          continue;
         }
+
+        nextValue[subKey] = subValue;
       }
 
       newTableData = {
         ...newTableData,
         [key]: {
           ...currentValue,
-          ...value
+          ...nextValue
         }
       };
     }

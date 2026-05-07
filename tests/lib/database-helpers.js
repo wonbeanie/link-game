@@ -17,11 +17,18 @@ export const setPlayers = jest.fn(async (addPlayers) => {
     playerList.push(player);
   })
 
-  gameDatabase.database[DATABASE_KEYS.GAME_DATA_KEY] = newDatabase;
-  gameDatabase.notify(DATABASE_KEYS.GAME_DATA_KEY, newDatabase);
+  const resetDatabase = Object.fromEntries(
+    Object.keys(gameDatabase.database[DATABASE_KEYS.GAME_DATA_KEY] || {})
+      .map((player) => [player, null])
+  );
+
+  await gameDatabase.update(DATABASE_KEYS.GAME_DATA_KEY, {
+    ...resetDatabase,
+    ...newDatabase
+  });
 });
 
-export const mockDatabaseUpdate = jest.fn(async (newData, init = true, update = false) => {
+export const mockLightDBUpdate = jest.fn(async (newData, init = true, update = false) => {
   const gameDatabase = await getDatabase();
 
   if(init){
