@@ -3,6 +3,7 @@ import { DATABASE_KEYS, deepCopy, TABLE_KEYS } from "../lib/modules.js";
 import gameElements from "../lib/game-elements.js";
 import eventBus from "../lib/event-bus.js";
 import { GameEvents } from "../lib/events.js";
+import lightDB from "../database/lightDB.js";
 
 class ChatHandler {
   constructor(){
