@@ -43,6 +43,53 @@ describe('테스트', () => {
     expect(readyItems).toHaveLength(2);
   });
 
+  test("참가자가 방 ID로 입장하면 대기 플레이어로 등록된다", async () => {
+    await setupHTMLInit();
+    await mockLightDBUpdate({
+      [DATABASE_KEYS.GAME_DATA_KEY]: {}
+    });
+
+    const lightDB = await getDatabase();
+    const roomId = "TEST-LIGHTDB-ROOM-ID";
+    const roomDatabase = {
+      [DATABASE_KEYS.GAME_DATA_KEY]: {
+        [nickname]: WATTING_ROOM_STATE.READY
+      }
+    };
+    const joinRoomSpy = jest.spyOn(lightDB, "joinRoom").mockImplementationOnce(async () => {
+      lightDB.database = roomDatabase;
+      return roomDatabase;
+    });
+
+    const nicknameInput = screen.getByPlaceholderText("닉네임을 입력하세요");
+    fireEvent.change(nicknameInput, {target: {value: userNickname}});
+    fireEvent.click(nicknameInput.nextElementSibling);
+
+    const roomIdInput = screen.getByPlaceholderText("방장의 ID를 입력하세요");
+    fireEvent.change(roomIdInput, {target: {value: roomId}});
+
+    const connectBtn = screen.getByRole("button", {name: "연결하기"});
+    fireEvent.click(connectBtn);
+
+    await waitFor(() => {
+      expect(joinRoomSpy).toHaveBeenCalledWith(roomId, {
+        resetStorage: true
+      });
+    });
+
+    await waitFor(() => {
+      expect(lightDB.database[DATABASE_KEYS.GAME_DATA_KEY]).toMatchObject({
+        [nickname]: WATTING_ROOM_STATE.READY,
+        [userNickname]: WATTING_ROOM_STATE.STANDBY
+      });
+    });
+    expect(roomIdInput).toHaveValue("");
+    expect(document.getElementById("admin-btn")).toHaveClass("none");
+    expect(screen.getByRole("button", {name: "준비 완료"})).toBeVisible();
+
+    joinRoomSpy.mockRestore();
+  });
+
   test("게임 시작 팝업 확인", async () => {
     await setPlayers([userNickname, nickname]);
 
