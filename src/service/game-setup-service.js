@@ -1,4 +1,3 @@
-import gameDatabase from "../database/database.js";
 import { correctList } from "../lib/keywords.js";
 import { DATABASE_KEYS, pickRandom, shuffleStrings, TABLE_KEYS } from "../lib/modules.js";
 import eventBus from "../lib/event-bus.js";

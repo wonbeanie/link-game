@@ -1,5 +1,4 @@
 import gameStore from "../lib/game-store.js";
-import gameDatabase from "../database/database.js";
 import { DATABASE_KEYS, deepCopy, TABLE_KEYS } from "../lib/modules.js";
 import gameElements from "../lib/game-elements.js";
 import eventBus from "../lib/event-bus.js";

@@ -1,6 +1,5 @@
-import gameDatabase from "../database/database.js";
 import gameStore from "../lib/game-store.js";
-import { alert, TABLE_KEYS, timer } from "../lib/modules.js";
+import { alert, DATABASE_KEYS, TABLE_KEYS, timer } from "../lib/modules.js";
 import eventBus from "../lib/event-bus.js";
 import {GameEvents} from "../lib/events.js";
 import lightDB from "../database/lightDB.js";
@@ -30,8 +29,8 @@ class GameStateManager {
     }
   }
 
-  outGame(){
-    gameDatabase.clearDatabase();
+  async outGame(){
+    await lightDB.clear();
     this.removeReloadEvent();
     alert.restart = true;
   }

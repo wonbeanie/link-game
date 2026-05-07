@@ -1,4 +1,3 @@
-import gameDatabase from "../database/database.js";
 import gameStore from "../lib/game-store.js";
 import gameElements from "../lib/game-elements.js";
 import { DATABASE_KEYS, TABLE_KEYS, WATTING_ROOM_STATE } from "../lib/modules.js";

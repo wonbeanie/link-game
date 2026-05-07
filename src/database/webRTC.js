@@ -1,7 +1,6 @@
 import { Peer } from 'https://esm.sh/peerjs@1.5.2';
 import gameElements from '../lib/game-elements.js';
 import gameStore from '../lib/game-store.js';
-import gameDatabase from './database.js';
 import eventBus from '../lib/event-bus.js';
 import { GameEvents } from '../lib/events.js';
 import lightDB from './lightDB.js';
@@ -73,7 +72,6 @@ class WebRTC {
     //       eventBus.emit(GameEvents.SET_INIT_PLAYER_LIST, data);
     //       return;
     //     }
-    //     gameDatabase.onValue(data, data.resend);
     //   });
 
     //   conn.on('close', () => {
@@ -89,7 +87,6 @@ class WebRTC {
     //     const newDatabase = {
     //       [nickname] : null
     //     };
-    //     gameDatabase.updateData(newDatabase);
 
     //     delete this.connections[conn.peer];
 

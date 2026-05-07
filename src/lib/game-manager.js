@@ -1,4 +1,3 @@
-import gameDatabase from "../database/database.js";
 import lightDB from "../database/lightDB.js";
 import eventBus from "./event-bus.js";
 import { GameEvents } from "./events.js";

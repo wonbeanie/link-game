@@ -1,4 +1,3 @@
-import gameDatabase from "../database/database.js";
 import lightDB from "../database/lightDB.js";
 import webRTC from "../database/webRTC.js";
 import eventBus from "../lib/event-bus.js";
@@ -18,7 +17,7 @@ class AdminHandler {
 
   start = async () => {
     const notReadyPlayerList = Object.fromEntries(
-      Object.entries(gameDatabase.wattingRoomPlayerList)
+      Object.entries(gameStore.wattingRoomPlayerList)
       .filter(([player, state]) => state === WATTING_ROOM_STATE.STANDBY)
     );
 
@@ -41,8 +40,8 @@ class AdminHandler {
     eventBus.emit(GameEvents.CLOSE_ADMIN_MODAL);
   }
 
-  clear = () => {
-    gameDatabase.clearDatabase(true);
+  clear = async () => {
+    await lightDB.clear();
     eventBus.emit(GameEvents.INIT_GAME_UI);
   }
 
@@ -91,7 +90,7 @@ class AdminHandler {
     }
     else {
       playerList = {
-        ...gameDatabase.wattingRoomPlayerList,
+        ...gameStore.wattingRoomPlayerList,
         [data.nickname] : WATTING_ROOM_STATE.STANDBY
       };
     }

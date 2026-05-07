@@ -1,7 +1,7 @@
 import lightDB from "../database/lightDB.js";
 import eventBus from "./event-bus.js";
 import { GameEvents } from "./events.js";
-import { GAME_STATE, TABLE_KEYS } from "./modules.js";
+import { DATABASE_KEYS, GAME_STATE, TABLE_KEYS } from "./modules.js";
 
 class GameStore {
   playerList = [];
@@ -108,6 +108,10 @@ class GameStore {
       fakeCorrect : this.fakeCorrect,
       suspect : this.suspect
     };
+  }
+
+  get wattingRoomPlayerList(){
+    return lightDB.database[DATABASE_KEYS.GAME_DATA_KEY];
   }
 }
 
