@@ -1,5 +1,5 @@
 import { fireEvent, screen, waitFor, within } from "@testing-library/dom";
-import { mockDatabaseUpdate } from "../lib/database-helpers.js";
+import { mockDatabaseUpdate as mockLightDBUpdate } from "../lib/database-helpers.js";
 import { nickname, userNickname } from "../__mocks__/mock-peerjs.js";
 import { checkAlert } from "./game-helpers";
 import { TABLE_KEYS } from "../../src/lib/modules.js";
@@ -111,7 +111,7 @@ async function doneVoteInit({votingList, suspect, skip = false}){
     )
   };
 
-  await mockDatabaseUpdate(result, false, true);
+  await mockLightDBUpdate(result, false, true);
 }
 
 async function checkVoting(votingList){
@@ -127,7 +127,7 @@ async function checkVoting(votingList){
   const activityLog = screen.getByText(/활동 로그/);
   const logDisplay = activityLog.nextElementSibling;
 
-  const { findAllByText, findAllByRole } = within(logDisplay);
+  const { findAllByText } = within(logDisplay);
   
   for( const voteNickname of Object.keys(voteCount)){
     const regex = new RegExp(voteNickname, "");

@@ -1,7 +1,9 @@
 import { fireEvent, screen, within } from "@testing-library/dom";
 import { checkAlert, setupGameStart, setupHTMLInit, setupSendHint } from "./lib/game-helpers";
+import { getDatabase } from "./lib/database-helpers";
 import { checkSelectPlayerList, MOCK_CORRECT, MOCK_FAKE_CORRECT, setupVoting, setupVotingSetting } from "./lib/vote-helpers";
 import {nickname, secondNickname, thirdNickname, userNickname} from './__mocks__/mock-peerjs.js';
+import { DATABASE_KEYS, TABLE_KEYS } from "../src/lib/modules";
 
 describe("투표 테스트", () => {
   beforeEach(async ()=>{
@@ -40,7 +42,12 @@ describe("투표 테스트", () => {
 
     const votingBtn = screen.getByText("투표 완료");
 
-    votingBtn.click();
+    fireEvent.click(votingBtn);
+
+    const lightDB = await getDatabase();
+    expect(lightDB.database[DATABASE_KEYS.GAME_DATA_KEY][TABLE_KEYS.VOTE_LIST]).toMatchObject({
+      [nickname]: userNickname
+    });
 
     const activityLog = screen.getByText(/활동 로그/);
     const logDisplay = activityLog.nextElementSibling;
@@ -101,10 +108,15 @@ describe("투표 테스트", () => {
         await setupVoting(state, addPlayerList, true);
 
         const votingBtn = screen.getByText("투표 완료");
-        votingBtn.click();
+        fireEvent.click(votingBtn);
 
         const skipBtn = screen.getByText("투표 스킵");
-        skipBtn.click();
+        fireEvent.click(skipBtn);
+
+        const lightDB = await getDatabase();
+        expect(lightDB.database[DATABASE_KEYS.GAME_DATA_KEY][TABLE_KEYS.VOTE_SKIP_LIST]).toMatchObject({
+          [nickname]: true
+        });
 
         await checkAlert(expectedAlertText);
       });
@@ -130,7 +142,7 @@ describe("투표 테스트", () => {
           target : { value: suspectAnswerSetting }
         });
         const suspectAnswerBtn = screen.getByText("정답 맞추기");
-        suspectAnswerBtn.click();
+        fireEvent.click(suspectAnswerBtn);
         await checkAlert(expectedAlertText);
       });
     });
