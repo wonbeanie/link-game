@@ -7,13 +7,13 @@ import { GameEvents } from "../lib/events.js";
 import lightDB from "../database/lightDB.js";
 
 class GameHandler {
-  sendLastAnswer(){
+  async sendLastAnswer(){
     if(gameStore.isLastAnswerTurn){
       const newDatabase = {
         [TABLE_KEYS.SELECT_CULPRIT] : "",
         [TABLE_KEYS.LAST_ANSWER] : gameElements.answer.value
       };
-      gameDatabase.updateData(newDatabase);
+      await lightDB.update(DATABASE_KEYS.GAME_DATA_KEY, newDatabase);
     }
   }
   

@@ -1,11 +1,12 @@
 import gameDatabase from "../database/database.js";
 import gameStore from "../lib/game-store.js";
 import gameElements from "../lib/game-elements.js";
-import { TABLE_KEYS, timer } from "../lib/modules.js";
+import { DATABASE_KEYS, TABLE_KEYS, timer } from "../lib/modules.js";
 import gameHandler from "./game-handler.js";
 import eventBus from "../lib/event-bus.js";
 import { GameEvents } from "../lib/events.js";
 import gameManager from "../lib/game-manager.js";
+import lightDB from "../database/lightDB.js";
 
 class VoteHandler {
   playerSelectCheck = {};
@@ -24,7 +25,7 @@ class VoteHandler {
     eventBus.on(GameEvents.VOTE_SKIP, () => this.processVoteSkip());
   }
 
-  init(){
+  async init(){
     this.playerSelectCheck = {};
     this.sendSuspectCheck = false;
     
@@ -34,21 +35,21 @@ class VoteHandler {
     });
   
     this.selectTimeout = false;
-    this.getVoteTransitionData();
+    await this.getVoteTransitionData();
     eventBus.emit(GameEvents.TURN_START_VOTE);
   }
 
-  getVoteTransitionData(){
+  async getVoteTransitionData(){
     const newDatabase = {
       [TABLE_KEYS.RE_SELECT_CULPRIT] : null,
       [TABLE_KEYS.SEQUENCE] : null,
       [TABLE_KEYS.SELECT_TIMEOUT] : null
     };
 
-    gameDatabase.updateData(newDatabase);
+    await lightDB.update(DATABASE_KEYS.GAME_DATA_KEY, newDatabase);
   }
 
-  send = () => {
+  send = async () => {
     const {nickname} = gameStore;
     const {selectTimeout, sendSuspectCheck, playerSelectCheck} = this;
 
@@ -63,7 +64,7 @@ class VoteHandler {
 
     if(Object.keys(newDatabase).length > 0){
       this.sendCheck = true;
-      gameDatabase.updateData(newDatabase);
+      await lightDB.update(DATABASE_KEYS.GAME_DATA_KEY, newDatabase);
 
       if(isPossibleVote){
         this.sendSuspectCheck = true;
@@ -71,7 +72,7 @@ class VoteHandler {
     }
   }
 
-  calculateResult = () => {
+  calculateResult = async () => {
     let selectList = {};
 
     for (const value of Object.values(this.playerSelectCheck)){
@@ -112,7 +113,7 @@ class VoteHandler {
       ? resetVoteData
       : { [TABLE_KEYS.SELECT_CULPRIT] : maxSuspect.suspect }
 
-    gameDatabase.updateData(newDatabase);
+    await lightDB.update(DATABASE_KEYS.GAME_DATA_KEY, newDatabase);
   }
 
   votesEnd(selectedSuspect){
@@ -158,7 +159,7 @@ class VoteHandler {
     }
   }
 
-  skip = () => {
+  skip = async () => {
     if(!this.sendCheck){
       eventBus.emit(GameEvents.NOT_VOTE_SKIP);
       return;
@@ -176,7 +177,7 @@ class VoteHandler {
       resend = false;
     }
 
-    gameDatabase.updateData(newDatabase, "GameData/", resend);
+    await lightDB.update(DATABASE_KEYS.GAME_DATA_KEY, newDatabase);
   }
 }
 

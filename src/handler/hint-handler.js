@@ -1,9 +1,10 @@
 import gameDatabase from "../database/database.js";
 import gameStore from "../lib/game-store.js";
 import gameElements from "../lib/game-elements.js";
-import { SEQUENCE_END, TABLE_KEYS, timer } from "../lib/modules.js";
+import { DATABASE_KEYS, SEQUENCE_END, TABLE_KEYS, timer } from "../lib/modules.js";
 import eventBus from "../lib/event-bus.js";
 import { GameEvents } from "../lib/events.js";
+import lightDB from "../database/lightDB.js";
 
 class HintHandler {
   constructor(){
@@ -15,7 +16,7 @@ class HintHandler {
     eventBus.emit(GameEvents.INIT_HINT, data);
   }
 
-  send(){
+  async send(){
     const {playSequence, nickname} = gameStore;
 
     if(gameStore.myTurn){
@@ -31,7 +32,7 @@ class HintHandler {
         }
       }
 
-      gameDatabase.updateData(newDatabase);
+      await lightDB.update(DATABASE_KEYS.GAME_DATA_KEY, newDatabase);
       eventBus.emit(GameEvents.TURN_END_HINT);
     }
   }

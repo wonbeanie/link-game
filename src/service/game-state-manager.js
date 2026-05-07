@@ -3,6 +3,7 @@ import gameStore from "../lib/game-store.js";
 import { alert, TABLE_KEYS, timer } from "../lib/modules.js";
 import eventBus from "../lib/event-bus.js";
 import {GameEvents} from "../lib/events.js";
+import lightDB from "../database/lightDB.js";
 
 class GameStateManager {
   constructor(){
@@ -20,12 +21,12 @@ class GameStateManager {
     window.removeEventListener('beforeunload', this.outGameEvent);
   }
 
-  outGameEvent(e){
+  async outGameEvent(e){
     if(gameStore.state !== ""){
       const newDatabase = {
         [TABLE_KEYS.OUT_GAME] : true
       };
-      gameDatabase.updateData(newDatabase);
+      await lightDB.update(DATABASE_KEYS.GAME_DATA_KEY, newDatabase);
     }
   }
 

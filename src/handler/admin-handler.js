@@ -79,7 +79,7 @@ class AdminHandler {
     navigator.clipboard.writeText(gameElements.webrtc.myId.textContent);
   }
 
-  setInitPlayerList = (data) => {
+  setInitPlayerList = async (data) => {
     let playerList = {};
     if(!data && gameStore.admin){
       playerList = Object.fromEntries([
@@ -96,7 +96,7 @@ class AdminHandler {
       };
     }
 
-    gameDatabase.updateData(playerList);
+    await lightDB.update(DATABASE_KEYS.GAME_DATA_KEY, playerList);
   }
 }
 

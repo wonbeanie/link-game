@@ -13,7 +13,6 @@ class GameStore {
   correct = "";
   state = "";
   lastAnswer = "";
-  admin = false;
   chatHistory = [];
   startChat = false;
 

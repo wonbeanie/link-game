@@ -51,7 +51,7 @@ class ChatHandler {
     gameStore.startChat = false;
   }
 
-  onSendClick = (msg) => {
+  onSendClick = async (msg) => {
     if (msg) {
       const MAX_CHAT_LENGTH = 30;
       const newChatHistory = gameStore.chatHistory.length >= MAX_CHAT_LENGTH
@@ -69,7 +69,7 @@ class ChatHandler {
         [TABLE_KEYS.CHAT_HISTORY] : newChatHistory
       };
 
-      gameDatabase.updateData(newDatabase, DATABASE_KEYS.CHAT_DATA_KEY);
+      await lightDB.update(DATABASE_KEYS.CHAT_DATA_KEY, newDatabase);
     }
   }
 
