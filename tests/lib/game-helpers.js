@@ -102,7 +102,8 @@ export async function setupHTMLInit(){
   const html = fs.readFileSync(path.resolve(__dirname, "../../index.html"), 'utf8');
   document.body.innerHTML = html.toString();
   jest.resetModules();
-  await import("../../src/bootstrap.js");
+  const { bootstrapPromise } = await import("../../src/bootstrap.js");
+  await bootstrapPromise;
 }
 
 export async function checkAlert(alertTitle = "", level = 3){

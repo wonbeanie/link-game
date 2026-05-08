@@ -4,15 +4,20 @@ import "./handler/index.js"
 import gameController from "./controller/game-controller.js";
 import gameManager from "./lib/game-manager.js";
 import { DATABASE_KEYS } from "./lib/modules.js";
-import lightDB from "./database/lightDB.js";
+import { initLightDB } from "./database/lightDB.js";
 import { chatHandler } from "./handler/index.js";
 
-uiController.init();
+export async function bootstrap() {
+  uiController.init();
 
-lightDB.on(DATABASE_KEYS.CHAT_DATA_KEY, gameController.updateChat);
-lightDB.on(DATABASE_KEYS.GAME_DATA_KEY, gameManager.updateGame);
-lightDB.onPeer("connection", () => {
-  chatHandler.chatStart();
-});
+  const lightDB = await initLightDB();
+  lightDB.on(DATABASE_KEYS.CHAT_DATA_KEY, gameController.updateChat);
+  lightDB.on(DATABASE_KEYS.GAME_DATA_KEY, gameManager.updateGame);
+  lightDB.onPeer("connection", () => {
+    chatHandler.chatStart();
+  });
 
-gameController.init();
+  gameController.init();
+}
+
+export const bootstrapPromise = bootstrap();

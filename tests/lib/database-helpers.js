@@ -3,7 +3,8 @@ import { DATABASE_KEYS, WATTING_ROOM_STATE } from "../../src/lib/modules.js";
 let playerList = [];
 
 export async function getDatabase(){
-  return (await import("../../src/database/lightDB.js")).default;
+  const { getLightDB } = await import("../../src/database/lightdb-controller.js");
+  return getLightDB();
 }
 
 export const setPlayers = jest.fn(async (addPlayers) => {
