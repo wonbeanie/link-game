@@ -5,7 +5,7 @@
 import { fireEvent, screen, waitFor } from '@testing-library/dom';
 import { checkAlert, setupAdmin, setupHTMLInit } from './lib/game-helpers.js';
 import { getDatabase, mockLightDBUpdate, setPlayers } from './lib/database-helpers.js';
-import { nickname, userNickname } from './__mocks__/mock-peerjs.js';
+import { nickname, userNickname } from './__mocks__/mock-lightdb.js';
 import { DATABASE_KEYS, TABLE_KEYS, WATTING_ROOM_STATE } from '../src/lib/modules.js';
 
 describe('테스트', () => {

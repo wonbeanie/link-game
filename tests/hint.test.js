@@ -1,7 +1,7 @@
 import { fireEvent, screen, within } from "@testing-library/dom";
 import { checkAlert, hintWord, setupGameStart, setupHTMLInit } from "./lib/game-helpers";
 import { getDatabase } from "./lib/database-helpers";
-import { nickname, userNickname } from "./__mocks__/mock-peerjs";
+import { nickname, userNickname } from "./__mocks__/mock-lightdb";
 import { DATABASE_KEYS, TABLE_KEYS } from "../src/lib/modules";
 
 describe("힌트 입력 테스트", () => {

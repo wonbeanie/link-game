@@ -1,10 +1,20 @@
 import { DATABASE_KEYS, WATTING_ROOM_STATE } from "../../src/lib/modules.js";
 
 let playerList = [];
+let databasePromise = null;
 
-export async function getDatabase(){
-  const { getLightDB } = await import("../../src/database/lightdb-controller.js");
-  return getLightDB();
+export function resetDatabaseHelperCache(){
+  databasePromise = null;
+  playerList = [];
+}
+
+export function getDatabase(){
+  if (!databasePromise) {
+    databasePromise = import("../../src/database/lightDB.js")
+      .then(({ initLightDB }) => initLightDB());
+  }
+
+  return databasePromise;
 }
 
 export const setPlayers = jest.fn(async (addPlayers) => {

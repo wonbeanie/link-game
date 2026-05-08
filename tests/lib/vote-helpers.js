@@ -1,6 +1,6 @@
 import { fireEvent, screen, waitFor, within } from "@testing-library/dom";
 import { mockLightDBUpdate } from "../lib/database-helpers.js";
-import { nickname, userNickname } from "../__mocks__/mock-peerjs.js";
+import { nickname, userNickname } from "../__mocks__/mock-lightdb.js";
 import { checkAlert } from "./game-helpers";
 import { TABLE_KEYS } from "../../src/lib/modules.js";
 

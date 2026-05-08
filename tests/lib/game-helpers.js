@@ -2,8 +2,8 @@ import { fireEvent, screen, waitFor } from '@testing-library/dom';
 import fs from 'fs';
 import path from 'path';
 import { DATABASE_KEYS, SEQUENCE_END, TABLE_KEYS } from '../../src/lib/modules.js';
-import { setPlayers, mockLightDBUpdate, getPlayers, getDatabase } from './database-helpers.js';
-import { nickname, userNickname } from '../__mocks__/mock-peerjs.js';
+import { setPlayers, mockLightDBUpdate, getPlayers, getDatabase, resetDatabaseHelperCache } from './database-helpers.js';
+import { nickname, userNickname } from '../__mocks__/mock-lightdb.js';
 
 export async function setupGameStart(initUsers = [userNickname]){
   await setupAdmin();
@@ -102,6 +102,7 @@ export async function setupHTMLInit(){
   const html = fs.readFileSync(path.resolve(__dirname, "../../index.html"), 'utf8');
   document.body.innerHTML = html.toString();
   jest.resetModules();
+  resetDatabaseHelperCache();
   const { bootstrapPromise } = await import("../../src/bootstrap.js");
   await bootstrapPromise;
 }

@@ -2,7 +2,7 @@ import { fireEvent, screen, within } from "@testing-library/dom";
 import { checkAlert, setupGameStart, setupHTMLInit, setupSendHint } from "./lib/game-helpers";
 import { getDatabase } from "./lib/database-helpers";
 import { checkSelectPlayerList, MOCK_CORRECT, MOCK_FAKE_CORRECT, setupVoting, setupVotingSetting } from "./lib/vote-helpers";
-import {nickname, secondNickname, thirdNickname, userNickname} from './__mocks__/mock-peerjs.js';
+import {nickname, secondNickname, thirdNickname, userNickname} from './__mocks__/mock-lightdb.js';
 import { DATABASE_KEYS, TABLE_KEYS } from "../src/lib/modules";
 
 describe("투표 테스트", () => {

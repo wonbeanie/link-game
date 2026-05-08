@@ -123,3 +123,9 @@ export function __getLatestMockLightDB() {
 export function __resetMockLightDB() {
   instances.splice(0, instances.length);
 }
+
+export const userNickname = "유저";
+export const nickname = "방장"
+export const gameDataTable = "GameData/";
+export const secondNickname = "유저2";
+export const thirdNickname = "유저3";
